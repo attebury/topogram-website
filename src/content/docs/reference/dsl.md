@@ -1,0 +1,228 @@
+---
+title: "DSL Reference"
+description: "Topogram files use .tg statements:"
+---
+
+# DSL Reference
+
+> Topogram files use .tg statements:
+
+Status: current
+Audience: Topogram authors and tooling implementers
+Use when: you need DSL statement and field reference material.
+
+Topogram files use `.tg` statements:
+
+```text
+kind identifier {
+  field value
+  block_field {
+    entry values
+  }
+}
+```
+
+The parser accepts generic statement syntax. The validator defines the public
+grammar.
+
+## Statement kinds
+
+- `term`
+- `actor`
+- `role`
+- `enum`
+- `entity`
+- `shape`
+- `rule`
+- `capability`
+- `widget`
+- `journey`
+- `decision`
+- `projection`
+- `orchestration`
+- `verification`
+- `operation`
+- `domain`
+- `pitch`
+- `requirement`
+- `acceptance_criterion`
+- `task`
+- `plan`
+- `bug`
+
+Documents are markdown files with frontmatter under `topo/docs/**`.
+
+## Rule status
+
+Rules use a rule-specific lifecycle: `draft`, `proposed`, `enforced`, and
+`deprecated`. Use `status enforced` for rules that currently apply. Other graph
+kinds may still use `status active` where their lifecycle allows it.
+
+## Terms and Glossary
+
+`term` records define project vocabulary. They are graph-native, can be grouped
+with `category`, and can be tied to a domain with `domain`. Other records can
+reference slice-relevant vocabulary through `related_terms`; entities also keep
+`uses_terms` for business/domain language.
+
+```tg
+term term_context_slice {
+  name "Context Slice"
+  description "A focused graph packet for one implementation target."
+  category agent_workflow
+  domain dom_sdlc_query_agent_context
+  aliases [slice focused_packet]
+  status active
+}
+
+capability cap_query_context {
+  name "Query Focused Context"
+  description "List and show focused query packets."
+  related_terms [term_context_slice]
+  status active
+}
+```
+
+Emit the human glossary from term records:
+
+```bash
+topogram emit glossary ./topo --write --out-dir docs/concepts
+topogram emit glossary ./topo --check docs/concepts/glossary.md
+```
+
+## Projection types
+
+- `ui_contract`
+- `web_surface`
+- `ios_surface`
+- `android_surface`
+- `api_contract`
+- `db_contract`
+- `cli_surface`
+
+## UI ownership
+
+`ui_contract` owns semantic UI blocks:
+
+- `screens`
+- `screen_regions`
+- `navigation`
+- `app_shell`
+- `collection_views`
+- `screen_actions`
+- `visibility_rules`
+- `field_lookups`
+- `widget_bindings`
+- `design_tokens`
+- `messages`
+- `accessibility`
+
+Concrete surfaces own routes and hints:
+
+- `screen_routes`
+- `web_hints`
+- `ios_hints`
+
+`messages` models translation intent, not locale catalogs:
+
+```tg
+messages {
+  locale default "en-US" fallback "en-US" direction ltr supported ["en-US"]
+  message msg_item_list_title key "items.list.title" default "Items" context screen_title screen item_list
+  message msg_items_table_label key "items.table.label" default "Items table" context widget_label widget widget_data_grid
+}
+```
+
+`accessibility` models obligations, not raw `aria-*` attributes:
+
+```tg
+accessibility {
+  screen item_list role main name_from message msg_item_list_title keyboard standard focus visible live off
+  widget widget_data_grid role grid name_from message msg_items_table_label keyboard data_grid focus roving_tabindex live off
+}
+```
+
+## API blocks
+
+`api_contract` projections use blocks such as `endpoints`, `wire_fields`,
+`responses`, `error_responses`, `preconditions`, `idempotency`, `cache`,
+`delete_semantics`, `async_jobs`, `async_status`, `downloads`,
+`authorization`, and `callbacks`.
+
+## DB blocks
+
+`db_contract` projections use `tables`, `columns`, `keys`, `indexes`,
+`relations`, and `lifecycle`.
+
+## CLI surface blocks
+
+`cli_surface` projections use `commands`, `command_options`, `command_outputs`,
+`command_effects`, and `command_examples`.
+
+Allowed command effects are `read_only`, `writes_workspace`, `writes_app`,
+`network`, `package_install`, `git`, and `filesystem`.
+
+## Journeys
+
+`journey` statements model ordered user, maintainer, or agent workflows as graph
+source. Canonical journeys live in `.tg` files, usually under `topo/journeys/`.
+Markdown journey documents are transitional/supporting drafts produced by import
+or reconcile workflows; promote durable journeys into graph-native `journey`
+records.
+
+Required fields:
+
+- `name`
+- `description`
+- `status`
+- `actors`
+- `goal`
+- at least one `step { ... }`
+
+Allowed statuses are `draft`, `canonical`, `active`, and `deprecated`.
+
+Relationship fields may include `domain`, `roles`, `related_capabilities`,
+`related_rules`, `related_projections`, `related_widgets`,
+`related_verifications`, `related_decisions`, and `related_docs`.
+
+Journey steps and alternates use repeated ordered record blocks. The parser
+syntax is the normal block syntax; validators preserve source order and enforce
+known record fields.
+
+```tg
+journey journey_greenfield_start_from_template {
+  name "Greenfield Start From Template"
+  description "A developer starts a new app from a template."
+  status canonical
+  domain dom_catalog_templates
+  actors [actor_consumer_developer]
+  goal "Create a valid generated app from a copied Topogram starter."
+
+  step {
+    id inspect_templates
+    intent "Find available templates."
+    commands ["topogram template list --json"]
+    expects ["Template aliases and package-backed entries are visible."]
+  }
+
+  step {
+    id create_project
+    intent "Copy the selected template into a project."
+    after [inspect_templates]
+    commands ["topogram copy hello-web ./my-app"]
+    expects ["Project contains topo/, topogram.project.json, README.md, and AGENTS.md."]
+  }
+
+  alternate {
+    id use_package_spec
+    from inspect_templates
+    condition "The desired template is not in the catalog."
+    commands ["topogram copy @topogram/template-hello-web ./my-app"]
+  }
+}
+```
+
+`step` records support `id`, `intent`, `after`, `commands`, `expects`, and
+`notes`. `alternate` records support `id`, `from`, `condition`, `commands`,
+`expects`, and `notes`. Step IDs must be unique, `after` must reference existing
+steps, and `alternate.from` must reference an existing step.

@@ -1,0 +1,24 @@
+{
+  "name": "topogram-website",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "docs:sync": "node scripts/sync-docs.mjs",
+    "dev": "npm run docs:sync && astro dev",
+    "build": "npm run docs:sync && astro build",
+    "preview": "astro preview",
+    "check:links": "linkinator dist --recurse --skip 'mailto:|https://topogram.dev|github.com/attebury/topogram/(edit|blob)/'"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.34.0",
+    "astro": "^5.7.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "linkinator": "^6.3.0",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,15 @@
+:root {
+  --sl-content-width: 48rem;
+}
+
+.sl-markdown-content .dual-audience {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+@media (min-width: 48rem) {
+  .sl-markdown-content .dual-audience {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -1,0 +1,26 @@
+---
+import Default from "@astrojs/starlight/components/Footer.astro";
+---
+
+<Default />
+<p class="topogram-footer-extra">
+  <a href="https://github.com/attebury/topogram">GitHub</a>
+  ·
+  <a href="https://github.com/attebury/topogram/blob/main/LICENSE">Apache 2.0</a>
+  ·
+  <a href="/llms.txt">llms.txt</a>
+  ·
+  <code>npm install -D @topogram/cli</code>
+</p>
+
+<style>
+  .topogram-footer-extra {
+    margin-top: 0.75rem;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+    text-align: center;
+  }
+  .topogram-footer-extra code {
+    font-size: var(--sl-text-xs);
+  }
+</style>

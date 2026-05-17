@@ -1,0 +1,65 @@
+# Topogram
+
+> Topogram is a living app map that helps humans and agents change software from bounded context, contracts, and proof.
+
+Topogram uses these public command verbs:
+
+- `init` starts an empty app map for maintained, greenfield, existing-app, or spec-only work.
+- `copy` copies templates or pure Topogram packages into a project.
+- `extract` emits reviewable brownfield candidates without mutating source apps.
+- `adopt` promotes reviewed candidates into canonical `topo/` source.
+- `generate` writes app/runtime outputs from the app map.
+- `emit` prints or writes contracts, reports, snapshots, context, and plans.
+- `query` gives agents focused slices, plans, proof gaps, and review packets.
+
+## Start
+
+- [Docs Map](docs/README.md): Audience-oriented entrypoint for current Topogram docs.
+- [Beta Readiness](docs/beta-readiness.md): What must be true before a beta release and what remains preview-only.
+- [What Topogram Is](docs/concepts/what-is-topogram.md): Short evaluator explanation of Topogram, its value, and what it is not.
+- [Init Workspace](docs/start/init-workspace.md): Create an empty Topogram workspace.
+- [Greenfield Generate](docs/start/greenfield-generate.md): Start from a template or authored spec and generate app outputs.
+- [Brownfield Extract/Adopt](docs/start/brownfield-import.md): Extract candidates from an existing app and adopt reviewed specs.
+- [Database Migrations](docs/start/database-migrations.md): Use Topogram with generated or maintained database migrations.
+- [Agent First Run](docs/agent-first-run.md): First commands and context packets for coding agents.
+
+## Concepts
+
+- [Topogram Model](docs/concepts/topogram-model.md): Core model and ownership boundaries.
+- [Topo Workspace](docs/concepts/topo-workspace.md): Workspace folder, project config, and ownership conventions.
+- [Generate vs Emit](docs/concepts/generate-vs-emit.md): Difference between app generation and artifact emission.
+- [Templates and Catalog](docs/concepts/templates-catalog.md): Template, catalog, and pure Topogram package concepts.
+- [Generators](docs/concepts/generators.md): Package-backed generators and stack realization.
+- [Extractors](docs/concepts/extractors.md): Package-backed extractors and brownfield discovery.
+- [Widgets and Design](docs/widgets.md): Semantic UI widgets, display fields, and design intent.
+- [SDLC](docs/concepts/sdlc.md): Topogram SDLC records and command-owned workflow state.
+- [Glossary](docs/concepts/glossary.md): Current project vocabulary for humans and agents.
+
+## Reference
+
+- [CLI Reference](docs/reference/cli.md): Public commands and options.
+- [DSL Reference](docs/reference/dsl.md): Topogram DSL statement kinds and fields.
+- [Project Config](docs/reference/project-config.md): `topogram.project.json` shape and ownership settings.
+- [Extract/Adopt JSON](docs/reference/import-json.md): Extraction, candidate, plan, and adoption JSON shapes.
+
+## Authoring
+
+- [Templates](docs/authoring/templates.md): Template package authoring and trust expectations.
+- [Generator Packs](docs/authoring/generator-packs.md): Generator package manifest and adapter authoring.
+- [Extractor Packs](docs/authoring/extractor-packs.md): Extractor package manifest and adapter authoring.
+
+## Proofs
+
+- [Proof Walkthrough](docs/proof-walkthrough.md): Runnable proof/demo program and branch/tag convention.
+- [Generated/Maintained Proof Repo](https://github.com/attebury/topogram-proof-content-approval-v2): Greenfield generated-to-maintained proof repository.
+- [Brownfield Proof Repo](https://github.com/attebury/topogram-proof-content-approval-brownfield-v2): Brownfield extract/adopt and cross-stack proof repository.
+
+## Optional
+
+- [Maintainer Docs](docs/maintainers/engine-development.md): Engine maintainer workflow.
+- [Testing](docs/maintainers/testing.md): Maintainer testing guidance.
+- [Releasing](docs/maintainers/releasing.md): Release process for maintainers.
+- [Release Matrix](docs/release-matrix.md): Current package and consumer release status.
+- [ARIA Accessibility Contract](docs/design/aria-accessibility-contract.md): Design note for accessibility obligations, ARIA evidence, focus, keyboard behavior, and proof.
+- [I18n Message Contract](docs/design/i18n-message-contract.md): Design note for glossary terms, translatable messages, message keys, and locale policy.
+- [SvelteKit Realization Shape](docs/design/sveltekit-realization-shape.md): Design note for maintained SvelteKit realization.

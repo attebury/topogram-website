@@ -1,0 +1,5 @@
+actor actor_coding_agent {
+  name "Coding Agent"
+  description "Automated coding agent working in this repository."
+  status active
+}

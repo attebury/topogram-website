@@ -1,0 +1,8 @@
+task task_build_docs_website {
+  name "Build docs-first Topogram website"
+  description "Scaffold Astro Starlight site, sync docs from main Topogram repo, dual-audience home, CI deploy."
+  claimed_by [actor_coding_agent]
+  status in-progress
+  work_type implementation
+  priority high
+}
