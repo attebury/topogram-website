@@ -3,6 +3,9 @@ import Default from "@astrojs/starlight/components/Footer.astro";
 ---
 
 <Default />
+<p class="topogram-footer-copyright">
+  &copy; 2026 Topogram. All rights reserved.
+</p>
 <p class="topogram-footer-extra">
   <a href="https://github.com/attebury/topogram">GitHub</a>
   ·
@@ -14,8 +17,15 @@ import Default from "@astrojs/starlight/components/Footer.astro";
 </p>
 
 <style>
-  .topogram-footer-extra {
+  .topogram-footer-copyright {
     margin-top: 0.75rem;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-3);
+    text-align: center;
+  }
+
+  .topogram-footer-extra {
+    margin-top: 0.25rem;
     font-size: var(--sl-text-xs);
     color: var(--sl-color-gray-3);
     text-align: center;
