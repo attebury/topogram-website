@@ -26,7 +26,7 @@ An SDLC-backed task gives an agent:
 
 - the requirement and acceptance criteria behind the work;
 - blockers, decisions, rules, and ownership context;
-- focused query commands and implementation-prep packets;
+- focused query commands and `work next` packets;
 - verification targets and proof gaps;
 - a command-owned way to claim, verify, and complete work.
 
@@ -108,7 +108,7 @@ topogram sdlc start <task-id> . --actor actor_coding_agent --write --json
 During work, use the task-focused packets:
 
 ```bash
-topogram query implementation-prep ./topo --task <task-id> --detail compact --json
+topogram work next ./topo --task <task-id> --mode implementation --json
 topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram query verification-runs ./topo --task <task-id> --json
 ```

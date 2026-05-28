@@ -82,26 +82,26 @@ topogram query show <name> --json
 topogram check --json
 ```
 
-For implementation work tied to an SDLC task, prefer:
+For implementation work tied to an SDLC task, start with the canonical work
+packet:
 
 ```bash
-topogram query implementation-prep ./topo --task <task-id> --detail compact --json
+topogram work next ./topo --task <task-id> --mode implementation --json
 ```
 
-Good `implementation-prep` output has one state, one active bucket, and a
-`workflow_step` with:
+Good `work next` output has one `state`, one `do_now`, and a compact
+`agent_packet` with:
 
-- `instruction`;
 - `success_condition`;
 - `allowed_actions`;
 - `blocked_actions`;
-- `exact_next_command`;
-- `rerun_command`.
+- `edit_targets`;
+- current endpoint/seed/verification contracts;
+- a `checkpoint` summary for safe context reset.
 
-Read `agent_payload` first in compact mode. It is the model-facing packet:
-current state, active bucket, endpoint or implementation contracts, seed
-summaries, scaffold status, write targets, proof commands, omitted sections,
-and drill-down `next_queries`.
+Read `agent_packet` first. It is the model-facing packet: current state, exact
+next instruction, operation-level code or model targets, seed summaries,
+scaffold status, proof commands, omitted sections, and drill-down commands.
 
 Use these drill-downs only when the packet asks for them:
 
@@ -114,7 +114,7 @@ topogram query verification-runs ./topo --task <task-id> --json
 ```
 
 `modeling-guide` is for sparse or broad modeling work. `repair-model` is for
-failed validation. `slice` is for richer context after the prep packet names a
+failed validation. `slice` is for richer context after `work next` names a
 reason to inspect it.
 
 ## SDLC Task Loop
@@ -177,7 +177,7 @@ The semantic chain is:
 navpoint -> screen -> layout -> region -> render -> widget/action/section -> component_map
 ```
 
-For API or implementation work, prefer `implementation-prep`; it keeps
+For API or implementation work, prefer `work next`; it keeps
 endpoint contracts, seed data, write targets, and proof commands in one packet.
 
 ## Before Commit

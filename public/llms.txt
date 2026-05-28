@@ -10,6 +10,7 @@ Topogram uses these public command verbs:
 - `adopt` promotes reviewed candidates into canonical `topo/` source.
 - `generate` writes app/runtime outputs from the app map.
 - `emit` prints or writes contracts, reports, snapshots, context, and plans.
+- `work next` gives agents one directive next-action packet for a task.
 - `query` gives agents focused slices, plans, proof gaps, and review packets.
 
 ## Start

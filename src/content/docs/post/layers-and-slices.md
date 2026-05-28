@@ -4,14 +4,26 @@ description: "Model the app in layers; query slices when it is time to work."
 draft: true
 ---
 
-# Topogram Layers and Slices
-
 > Model the app in layers; query slices when it is time to work.
 
-Status: current
-Audience: developers, agents, and technical writers evaluating Topogram
-Use when: you need a short explanation of how the app map is structured and how context slices fit in.
-Read time: ~2 minutes
+<dl class="field-note-meta">
+  <div>
+    <dt>Status</dt>
+    <dd>Current</dd>
+  </div>
+  <div>
+    <dt>Audience</dt>
+    <dd>Developers, agents, and technical writers evaluating Topogram</dd>
+  </div>
+  <div>
+    <dt>Use when</dt>
+    <dd>You need a short explanation of how the app map is structured and how context slices fit in.</dd>
+  </div>
+  <div>
+    <dt>Read time</dt>
+    <dd>~2 minutes</dd>
+  </div>
+</dl>
 
 Most teams ask humans and agents to change code in repos they only partly
 understand. Topogram's answer is structural: keep a validated app map in

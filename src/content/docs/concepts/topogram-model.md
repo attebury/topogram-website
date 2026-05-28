@@ -117,7 +117,7 @@ direct edits.
 
 ## Slices And Proof
 
-Context slices and implementation-prep packets are the agent-facing view of the
+Context slices and `work next` packets are the agent-facing view of the
 model. They turn the graph into bounded work packets: frame, read order,
 relationships, work items, implementation contracts, write scope, proof plan,
 and next commands.

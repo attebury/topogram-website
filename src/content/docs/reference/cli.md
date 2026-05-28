@@ -1,11 +1,11 @@
 ---
 title: "CLI Reference"
-description: "Public Topogram commands are organized around onboard, init, copy, extract, adopt, generate, emit, query, and policy workflows."
+description: "Public Topogram commands are organized around onboard, init, work, copy, extract, adopt, generate, emit, query, and policy workflows."
 ---
 
 # CLI Reference
 
-> Public Topogram commands are organized around onboard, init, copy, extract, adopt, generate, emit, query, and policy workflows.
+> Public Topogram commands are organized around onboard, init, work, copy, extract, adopt, generate, emit, query, and policy workflows.
 
 Status: current
 Audience: CLI users and agents executing Topogram commands
@@ -99,9 +99,9 @@ runtimes, links web to API and API to database, and reports the next
 
 ```bash
 topogram agent brief --json
+topogram work next ./topo --task <task-id> --mode implementation --json
 topogram query list --json
 topogram query show <name> --json
-topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json
 topogram query slice ./topo --task <task-id> --json
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --json
 topogram query slice ./topo --task <task-id> --detail compact --format markdown
@@ -138,7 +138,6 @@ Focused query reports:
 | Query | Example |
 | --- | --- |
 | `slice` | `topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format html` |
-| `implementation-prep` | `topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json` |
 | `context-savings` | `topogram query context-savings ./topo --task <task-id> --detail compact --format markdown` |
 | `repair-model` | `topogram query repair-model ./topo --format markdown` |
 | `modeling-guide` | `topogram query modeling-guide ./topo --mode greenfield-app --format markdown` |
@@ -185,41 +184,24 @@ verification, then implementation entry. Its examples cover `domain`, `entity`,
 `capability`, `region`, `layout`, `section`, `screen.renders`, `navpoint`,
 `endpoint`, `journey`, `seed_data`, and `verification`.
 
-`implementation-prep` is the first implementation-agent packet for a task or
-semantic focus. It returns one `state`, one `active_bucket`, and bucketed next
-steps for orienting, repairing the model, modeling a feature, preparing
-implementation, refreshing a scaffold, implementing, and verifying. Compact
-mode keeps the full context slice out of the response and links richer drill-down
-queries through bucket `next_queries`.
+`work next` is the first implementation-agent command for a task. It returns
+one `state`, one `do_now`, a `success_condition`, allowed and blocked actions,
+operation-level `edit_targets`, current endpoint/seed/verification contracts,
+and a compact `checkpoint` for context reset. The model-facing payload is
+`agent_packet`; full context stays behind `drill_down` commands.
 
-In compact mode, the response also includes `agent_payload`: the recommended
-model-facing packet with `workflow_step`, active bucket payload, endpoint
-contracts, seed summaries, scaffold status, proof commands, and summarized
-included files. Full file content and the full slice stay behind drill-down
-queries or artifacts so agents do not spend tokens rereading broad context.
+`work next` states are `model_invalid`, `model_missing`, `model_link_needed`,
+`scaffold_needed`, `code_edit_ready`, `verify_ready`, and `done`. When model
+coverage is missing it returns `proposed_model_work` snippets for the current
+feature only. When matching model records exist but the task is not linked, it
+returns `task_patch`. When code is ready, `code_edit_targets` name endpoint ids,
+HTTP methods, API paths, seed sources, marker anchors, patch intent, and proof
+commands.
 
-The packet also includes `workflow_step`: a CLI-owned instruction with
-`success_condition`, `allowed_actions`, `blocked_actions`, `exact_next_command`,
-and `rerun_command`. Agents should follow that public packet instead of relying
-on prompt-local workflow recipes. `task_unlinked` means the model likely already
-contains matching endpoint/capability contracts, but the selected task lacks
-`affects` or `verification_refs` links; the packet includes candidate links and a
-task patch snippet before app work is considered ready.
-
-For task-focused packets, `implementation-prep` also compares the selected
-task's feature terms with linked endpoint contracts and records named in the
-task's `affects` list, including capabilities, endpoints, entities, screens,
-sections, and journeys. A task that mentions a feature such as waitlist,
-reminders, or audit trail will stay in the `model_feature` bucket when it is
-only linked to unrelated base contracts. Verification refs do not satisfy feature
-coverage by themselves; they remain proof targets. If matching contracts exist
-elsewhere in the model, the packet returns `task_unlinked`; otherwise it returns
-modeling guidance so the feature is modeled before app code is edited.
-
-Use `--mode maintained-app-edit` when implementation code has become
-maintained after an initial scaffold. In that mode, missing or stale scaffold
-markers stay visible in `scaffold_status`, but they are advisory and do not
-block the `implement` bucket.
+Use `--mode maintained-app-edit` when implementation code has become maintained
+after an initial scaffold. In that mode, missing or stale scaffold markers stay
+visible in `scaffold_status`, but `work next` returns patch targets instead of
+blocking app edits on full scaffold regeneration.
 
 `query slice` supports JSON for tools, Markdown for terminal review, and static
 HTML for a local human-readable work cockpit. The slice JSON includes `frame`,
@@ -280,7 +262,7 @@ topogram emit glossary ./topo --json
 seed-backed when matching model `seed_data` or the supplied seed fixture has
 records; other business endpoints remain explicit TODO/501 regions for
 maintained implementation. Once a scaffolded app has meaningful maintained
-code, use `implementation-prep --mode maintained-app-edit` rather than treating
+code, use `topogram work next --mode maintained-app-edit` rather than treating
 scaffold marker drift as a blocking generator failure.
 
 ## Brownfield extract/adopt

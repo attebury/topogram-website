@@ -3,14 +3,26 @@ title: "When Software Work Gets Shopified"
 description: "AI may compress software roles the way CMS and commerce platforms compressed earlier web work."
 ---
 
-# When Software Work Gets Shopified
-
 > AI may compress software roles the way CMS and commerce platforms compressed earlier web work.
 
-Status: draft
-Audience: product owners, engineering leaders, developers, and agents
-Use when: you need a concise framing for how AI may change software team shape and where Topogram fits.
-Read time: ~4 minutes
+<dl class="field-note-meta">
+  <div>
+    <dt>Status</dt>
+    <dd>Current</dd>
+  </div>
+  <div>
+    <dt>Audience</dt>
+    <dd>Product owners, engineering leaders, developers, and agents</dd>
+  </div>
+  <div>
+    <dt>Use when</dt>
+    <dd>You need a concise framing for how AI may change software team shape and where Topogram fits.</dd>
+  </div>
+  <div>
+    <dt>Read time</dt>
+    <dd>~4 minutes</dd>
+  </div>
+</dl>
 
 AI can feel like a break from software history. It may be more useful to see it
 as a continuation.

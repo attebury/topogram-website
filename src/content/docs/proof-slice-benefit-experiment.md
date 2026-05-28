@@ -55,30 +55,31 @@ from endpoint contracts; the vibe arm receives a handwritten base `server.mjs`
 with the same public behavior and no Topogram records. Measured work starts at
 wave 1. Wave 1 uses the scaffold as a blocking generated structure. After wave
 1 passes, the app is treated as maintained implementation: later waves still
-use Topogram to update the model, validate it, read implementation-prep
+use Topogram to update the model, validate it, read `work next`
 contracts, and run proof, but stale scaffold markers are advisory rather than a
 blocker. The vibe arm evolves its base app directly from the feature brief.
 
 Seeded-model runs intentionally use a leaner Topogram tool surface. The
-Topogram arm should run one CLI-native implementation prep packet at wave start.
+Topogram arm should run one CLI-native `work next` packet at wave start.
 Wave 1 uses `--mode implementation`; later progressive parity waves use
 `--mode maintained-app-edit`:
-`topogram query implementation-prep ./topo --mode <mode> --task <current-feature-task> --detail compact --include-file server.mjs --include-file seed-fixture.json --include-file package.json --json`.
-That packet returns one state, one active workflow bucket, a `workflow_step`,
-allowed and blocked actions, and exact next commands. The public CLI packet owns
+`topogram work next ./topo --mode <mode> --task <current-feature-task> --json`.
+That packet returns one state, one `do_now`, allowed and blocked actions,
+operation-level edit targets, endpoint/seed/proof contracts, and a checkpoint
+summary. The public CLI packet owns
 the state machine; experiment prompts provide product/task context and tell the
-agent to follow `workflow_step`. The harness still collects context-savings
+agent to follow `agent_packet`. The harness still collects context-savings
 estimates for reporting, but the seeded agent is not asked to spend model
 iterations on broad context reports unless the packet links them as drill-down
 queries.
 
-For compact packets, the harness sends the packet's `agent_payload` back to the
+For compact packets, the harness sends the packet's `agent_packet` back to the
 model and stores the full JSON separately in `tool-results/`. This keeps the
 conversation focused on the current workflow step while preserving the complete
 evidence packet for audit and debugging.
 
 For the Topogram arm, model validity is a harness-enforced boundary. The agent
-uses `implementation-prep` as the first workflow packet. It may call
+uses `work next` as the first workflow packet. It may call
 `modeling-guide`, `repair-model`, or `slice` only when the CLI packet asks for
 drill-down context. After any `topo/**` edit the harness blocks app code writes
 and app checks until the packet/check flow reports an implementation-ready state
