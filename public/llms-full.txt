@@ -17,17 +17,18 @@ Topogram uses these public command verbs:
 ## Start
 
 - [Docs Map](docs/README.md): Audience-oriented entrypoint for current Topogram docs.
-- [Beta Launch](docs/beta-launch.md): Public beta story, first commands, proof paths, current limits, and feedback asks.
-- [First 30 Minutes](docs/start/first-30-minutes.md): Short evaluator path through current CLI checks, focused context, context-savings, and docs proof.
-- [Beta Demo Path](docs/start/beta-demo-path.md): Curated route through the brownfield, UI/design, workflow, and generated proof demos.
-- [Beta Readiness](docs/beta-readiness.md): What must be true before a beta release and what remains preview-only.
+- [First 30 Minutes](docs/start/first-30-minutes.md): Canonical evaluator path through understand, inspect, run, and verify.
+- [Agent First Run](docs/agent-first-run.md): Coding-agent runbook with read order, work packets, edit boundaries, good output cues, and proof checks.
+- [Beta Demo Path](docs/start/beta-demo-path.md): Curated route for choosing the brownfield, UI/design, workflow, or generated proof demo.
 - [What Topogram Is](docs/concepts/what-is-topogram.md): Short evaluator explanation of Topogram, its value, and what it is not.
+- [Topogram Model](docs/concepts/topogram-model.md): Core app-map concepts: intent, ownership, slices, proof, surfaces, and runtimes.
+- [Beta Launch](docs/beta-launch.md): Public beta story, first commands, proof paths, current limits, and feedback asks.
+- [Beta Readiness](docs/beta-readiness.md): What must be true before a beta release and what remains preview-only.
 - [Init Workspace](docs/start/init-workspace.md): Create an empty Topogram workspace.
 - [Greenfield Generate](docs/start/greenfield-generate.md): Start from a template or authored spec and generate app outputs.
 - [Brownfield Extract/Adopt](docs/start/brownfield-import.md): Extract candidates from an existing app and adopt reviewed specs.
 - [Workflow Extraction](docs/start/workflow-extraction.md): Extract workflow-native state machines or process definitions into reviewable candidates.
 - [Database Migrations](docs/start/database-migrations.md): Use Topogram with generated or maintained database migrations.
-- [Agent First Run](docs/agent-first-run.md): First commands and context packets for coding agents.
 
 ## Concepts
 
@@ -110,53 +111,42 @@ For agent and retrieval use, start from [`../llms.txt`](../llms.txt). The
 generated [`../llms-full.txt`](../llms-full.txt) file bundles the high-priority
 docs listed there.
 
-## I Want To...
+## Start Here
+
+| If you are... | Start with | Why |
+| --- | --- | --- |
+| Evaluating Topogram for the first time | [First 30 Minutes](./start/first-30-minutes.md) | Outcome-first path through understand, inspect, run, and verify. |
+| Dropping a coding agent into a repo | [Agent First Run](./agent-first-run.md) | Read order, work packets, edit boundaries, and proof cues. |
+| Validating public demos or proof claims | [Beta Demo Path](./start/beta-demo-path.md), then [Proof Walkthrough](./proof-walkthrough.md) | Pick the right runnable proof before reading the full catalog. |
+
+If you need the product framing before commands, read
+[What Topogram Is](./concepts/what-is-topogram.md) and
+[Topogram Model](./concepts/topogram-model.md).
+
+## Common Jobs
 
 | Goal | Start Here |
 | --- | --- |
 | Initialize an empty Topogram workspace | [Init Workspace](./start/init-workspace.md) |
-| Evaluate this repo quickly | [First 30 Minutes](./start/first-30-minutes.md) |
-| Make an app safe for agents to change | [Brownfield Extract/Adopt](./start/brownfield-import.md), then [Agent First Run](./agent-first-run.md) |
-| Understand the beta story | [Beta Launch](./beta-launch.md) |
-| Evaluate beta demos | [Beta Demo Path](./start/beta-demo-path.md), then [Proof Walkthrough](./proof-walkthrough.md) |
-| Compare Topogram slices to unguided app coding | [Slice Benefit Experiment](./proof-slice-benefit-experiment.md) |
-| Evaluate beta readiness | [Beta Readiness](./beta-readiness.md) for the one-command smoke and release proof |
-| Understand what Topogram is and is not | [What Topogram Is](./concepts/what-is-topogram.md) |
 | Extract an existing app | [Brownfield Extract/Adopt](./start/brownfield-import.md) |
-| Extract workflow state machines | [Workflow Extraction](./start/workflow-extraction.md) |
 | Generate a new app | [Greenfield Generate](./start/greenfield-generate.md) |
+| Extract workflow state machines | [Workflow Extraction](./start/workflow-extraction.md) |
 | Maintain database migrations | [Database Migrations](./start/database-migrations.md) |
-| Work as an agent | [Agent First Run](./agent-first-run.md) |
-| Understand SDLC philosophy | [How Topogram Manages SDLC](./post/how-topogram-manages-sdlc.md) |
-| Understand the model | [Topogram Model](./concepts/topogram-model.md) |
-| Understand journey-driven layout terms | [Normalized Layout Vocabulary](./concepts/normalized-layout-vocabulary.md) |
-| Understand layers and slices | [Layers and Slices](./post/layers-and-slices.md) |
-| Look up project vocabulary | [Glossary](./concepts/glossary.md) |
-| Understand UI screens, layouts, regions, widgets, and component maps | [UI Work Map By Example](./design/ui-work-map-by-example.md), then [Map A Design System](./design/map-design-system.md) |
-| Inspect where UI work belongs without reading raw slices | Run `topogram query work-map ./topo --surface <id> --format markdown`, then drill into [Agent First Run](./agent-first-run.md) |
-| Map a real component system to Topogram widgets | [Map A Real Component System](./design/map-a-real-component-system.md), then inspect the [Operations Design Review Proof](https://github.com/attebury/topogram-proof-operations-design-review) |
-| Understand `topo/` ownership | [Topo Workspace](./concepts/topo-workspace.md) |
-| Choose between `generate` and `emit` | [Generate vs Emit](./concepts/generate-vs-emit.md) |
-| Author templates | [Template Authoring](./authoring/templates.md) |
-| Author generator packages | [Generator Packs](./authoring/generator-packs.md) |
-| Use or author extractor packages | [Extractor Packs](./authoring/extractor-packs.md) |
-| Inspect runnable proof stories | [Proof Walkthrough](./proof-walkthrough.md) |
-| Maintain this repo | [Engine Development](./maintainers/engine-development.md) |
-| Maintain docs | [Documentation Maintenance](./maintainers/docs.md) |
+| Understand SDLC and proof | [SDLC](./concepts/sdlc.md), then [How Topogram Manages SDLC](./post/how-topogram-manages-sdlc.md) |
+| Understand UI screens, layouts, regions, widgets, and component maps | [UI Work Map By Example](./design/ui-work-map-by-example.md) |
+| Map a real component system | [Map A Real Component System](./design/map-a-real-component-system.md) |
+| Compare Topogram slices to unguided app coding | [Slice Benefit Experiment](./proof-slice-benefit-experiment.md) |
+| Author templates, generators, or extractors | [Template Authoring](./authoring/templates.md), [Generator Packs](./authoring/generator-packs.md), [Extractor Packs](./authoring/extractor-packs.md) |
+| Maintain this repo | [Engine Development](./maintainers/engine-development.md), [Testing](./maintainers/testing.md), [Releasing](./maintainers/releasing.md) |
 
 ## Proof Repositories
 
-Use the public proof repos when you want to inspect complete, runnable workflow
-stories instead of isolated command examples. They are the fastest way to see
-how an app map, extraction/adoption, generation, SDLC, agent packets, and
-maintained ownership fit together.
+Use the public proof repos when you want complete, runnable workflow stories
+instead of isolated command examples. Start with [Beta Demo Path](./start/beta-demo-path.md)
+to choose a route, then use [Proof Walkthrough](./proof-walkthrough.md) for the
+full catalog and checkpoint convention.
 
-- [Proof Walkthrough](./proof-walkthrough.md)
 - [Slice Benefit Experiment](./proof-slice-benefit-experiment.md)
-- [First 30 Minutes](./start/first-30-minutes.md)
-- [Beta Demo Path](./start/beta-demo-path.md)
-- [Beta Launch](./beta-launch.md)
-- [Beta Readiness](./beta-readiness.md)
 - [Generated To Maintained Proof](https://github.com/attebury/topogram-proof-content-approval-v3)
 - [Brownfield Extract/Adopt Proof](https://github.com/attebury/topogram-proof-content-approval-brownfield-v3)
 - [UI Work Map Proof](https://github.com/attebury/topogram-proof-ui-work-map)
@@ -207,249 +197,324 @@ proof audit for that step.
 
 ---
 
-# Source: docs/beta-launch.md
-
-# Topogram Beta Launch
-
-> Topogram beta is for teams that want a living app map agents can safely work from.
-
-Status: current
-Audience: evaluators, engineering leads, maintainers, agents, and package authors
-Use when: you need the public beta story, first commands, proof paths, limits, and useful feedback asks.
-
-## What Topogram Is
-
-Topogram keeps app intent, contracts, ownership, and proof in a `topo/`
-workspace. Humans and agents use that map to understand what exists, what is
-owned by generators, what is maintained by people, and what proof should run
-before a change is trusted.
-
-The beta product wedge is brownfield plus agents:
-
-1. extract reviewable candidates from existing code;
-2. adopt only the candidates a human reviewed;
-3. query a focused slice for one task or surface;
-4. change maintained code or generate owned output;
-5. verify with the commands named by the map.
-
-Generation is still important, but it is one realization path for the app map,
-not the whole product.
-
-## Who Should Try It
-
-- Teams experimenting with coding agents on existing apps.
-- Maintainers who want contracts and proof around brownfield code.
-- Product engineers who want generated starts but expect to graduate parts of
-  the app to maintained ownership.
-- Package authors building generator or extractor packs for a stack.
-- Release owners who want consumer proof, public smoke, and package rollup
-  checks before shipping.
-
-## Five-Minute Evaluation
-
-For the curated route through the proof program, start with
-[Beta Demo Path](./start/beta-demo-path.md). It tells you which demo to run
-first and which proof repos to skip unless they match your evaluation goal.
-
-From this repo, run the published CLI smoke:
-
-```bash
-TOPOGRAM_CLI_PACKAGE_SPEC=@topogram/cli@latest npm run smoke:beta-evaluator
-```
-
-That command installs the public CLI and first-party extractor packages in a
-clean temp project. It creates a small brownfield app, extracts review-only
-candidates, adopts a reviewed bundle, emits agent packets, validates the
-adopted `topo/`, and writes a portable report.
-
-For your own app, use the same shape manually:
-
-```bash
-npx topogram extract ./existing-app --out ./imported-topogram
-cd ./imported-topogram
-npx topogram extract plan
-npx topogram adopt --list
-npx topogram query extract-plan ./topo --json
-npx topogram query single-agent-plan ./topo --mode extract-adopt --json
-npx topogram check
-```
-
-Start with package-backed extractors when the stack is known:
-
-```bash
-npm install --save-dev @topogram/cli @topogram/extractor-express-api @topogram/extractor-prisma-db
-npx topogram extractor recommend ./existing-app --from db,api
-npx topogram extractor policy init
-npx topogram extractor policy pin @topogram/extractor-express-api@1
-npx topogram extractor policy pin @topogram/extractor-prisma-db@1
-npx topogram extract ./existing-app --out ./imported-topogram --from db,api --extractor @topogram/extractor-express-api --extractor @topogram/extractor-prisma-db
-```
-
-## Proof Paths
-
-Use the proof repos when you want a complete story with branches, tags, SDLC
-records, agent packets, artifacts, and `npm run verify` at every checkpoint.
-If you are unsure where to start, use [Beta Demo Path](./start/beta-demo-path.md)
-instead of reading every proof repository.
-
-- [Brownfield proof](https://github.com/attebury/topogram-proof-content-approval-brownfield-v3):
-  best first demo for extract/adopt, maintained feature work, drift refresh,
-  and cross-stack recreation.
-- [Generated to maintained proof](https://github.com/attebury/topogram-proof-content-approval-v3):
-  best demo for generated output, graduation to maintained ownership, and DB
-  migration guidance.
-- [XState workflow proof](https://github.com/attebury/topogram-proof-xstate-workflow):
-  focused workflow-native extraction from an app state-machine library.
-- [Step Functions workflow proof](https://github.com/attebury/topogram-proof-step-functions-workflow):
-  focused workflow-native extraction from local Amazon States Language source.
-- [Widget design realization proof](https://github.com/attebury/topogram-proof-widget-design-realization):
-  focused semantic-design proof for mapping one widget to web, iOS, and Android
-  component refs. It is current on `@topogram/cli@0.3.110` and includes the
-  designer-readable `ui-design-coverage --format markdown` matrix.
-- [Operations UI work-map proof](https://github.com/attebury/topogram-proof-operations-ui-work-map-v2):
-  installable React-to-SvelteKit UI proof for layouts, regions, widgets,
-  component maps, slice-guided feature work, and parity closeout.
-
-## What Is Beta-Ready
-
-- `init`, `copy`, `extract`, `adopt`, `generate`, `emit`, and `query` command
-  vocabulary.
-- `topo/` workspace ownership and project config.
-- Brownfield extraction with bundled and first-party package-backed extractors.
-- Review-only adoption plans and explicit `adopt --write`.
-- Agent briefs, focused context slices, SDLC readiness, and proof-gap queries.
-- Web UI semantic contracts, widget realization reports, and i18n/ARIA
-  obligation markers for generated web output.
-- Widget-first design matrices that show component refs, platform
-  coverage, variant/state coverage, token/a11y/i18n gaps, and review work.
-- Release preflight, strict release status, first-party consumer rollup, proof
-  consumer tracking, and secret scanning.
-
-## Current Limits
-
-Topogram beta does not promise:
-
-- pixel-perfect UI parity;
-- complete runtime translation catalog management;
-- full automated accessibility audit coverage;
-- production deployment orchestration;
-- automatic source mutation during extraction;
-- silent adoption of brownfield candidates;
-- enterprise audit exports, signed history, or external issue tracker sync.
-
-Native generation and some workflow extractor families are preview/future work.
-
-## Feedback That Helps
-
-Useful beta feedback is concrete:
-
-- Which command or artifact was unclear?
-- Which candidate was noisy, missing, or unsafe to adopt?
-- Which slice gave an agent too much or too little context?
-- Which proof command failed to build trust?
-- Which stack needs a generator or extractor pack?
-- Which beta limit blocks real evaluation?
-
-Attach the command, the relevant `topo/` file or candidate artifact, and the
-expected next action when possible.
-
-## Related Docs
-
-- [Beta Readiness](./beta-readiness.md)
-- [Brownfield Extract/Adopt](./start/brownfield-import.md)
-- [Agent First Run](./agent-first-run.md)
-- [Proof Walkthrough](./proof-walkthrough.md)
-- [Extractor Packs](./authoring/extractor-packs.md)
-
----
-
 # Source: docs/start/first-30-minutes.md
 
 # First 30 Minutes
 
-> A short evaluator path for seeing Topogram's current command surface, context slices, token-savings report, and proof loop without reading every subsystem.
+> The canonical evaluator path for understanding, inspecting, running, and verifying Topogram from this repo.
 
 Status: current
-Audience: evaluators, technical leads, and agents doing a first pass
-Use when: you want a fast, runnable route through this repo before choosing a deeper proof or implementation task.
+Audience: evaluators, technical leads, technical buyers, and agents doing a first pass
+Use when: you want the shortest useful route through the current repo before choosing a deeper proof or implementation task.
 
-Run these from the Topogram repo root:
+Run commands from the Topogram repo root. This path is intentionally narrow:
+it helps you judge whether Topogram gives humans and agents a smaller,
+verified operating surface than rediscovering the repo from scratch.
+
+## 1. Understand
+
+Read these first:
+
+- [What Topogram Is](../concepts/what-is-topogram.md)
+- [Topogram Model](../concepts/topogram-model.md)
+- [Agent First Run](../agent-first-run.md), if you are evaluating agent work
+
+The claim to evaluate is not "Topogram reads every repo perfectly." The useful
+claim is: a reviewed app map can preserve product intent, ownership, contracts,
+proof, and focused context so humans and agents make changes from bounded
+evidence instead of broad guessing.
+
+## 2. Inspect
+
+Install dependencies if this checkout has not been prepared:
 
 ```bash
 npm install
-node ./engine/src/cli.js onboard . --json
-node ./engine/src/cli.js agent brief . --json
-node ./engine/src/cli.js check . --json
-node ./engine/src/cli.js query list --json
-node ./engine/src/cli.js query modeling-guide ./topo --format markdown
 ```
 
-`onboard` is the read-first adoption loop. It diagnoses whether the workspace
-needs `init`, reports staged status for check/audit/generate/verify, and prints
-the exact next commands without writing artifacts, generating app output, or
-running project verification.
-
-`query modeling-guide` is the current public DSL authoring guide. Use it before
-starting broad app-map edits. It gives the CLI-owned phase order: feature
-scope, entities/rules, capabilities/persistence, endpoints/seed data,
-navpoints/screens/journeys, verification, then the implementation packet. Use
-`query repair-model` after a failed `check` when you need source-linked recovery
-examples.
-
-Read the smallest useful graph packet next. This one follows the public
-greenfield journey because it exercises the same query path agents use for
-bounded work:
+Then ask the CLI for the current adoption state and agent briefing:
 
 ```bash
+node ./engine/src/cli.js onboard . --json
+node ./engine/src/cli.js agent brief . --json
+```
+
+Good output:
+
+- `onboard` returns an `onboarding_plan` with stages for init, check,
+  audit-bundle, generate, and verify.
+- `agent brief` returns `read_order`, `edit_boundaries`, `first_commands`,
+  workflows, and SDLC policy warnings with portable paths.
+- Neither command writes artifacts, generates app output, or runs project
+  verification unless you pass an explicit write/generate/verify flag.
+
+## 3. Run
+
+Validate the app map and inspect one focused packet:
+
+```bash
+node ./engine/src/cli.js check . --json
 node ./engine/src/cli.js query slice ./topo --journey journey_greenfield_start_from_template --detail compact --format markdown
 ```
 
-For a human-readable cockpit of the same packet, render the static HTML view:
+Good output:
+
+- `check` reports `ok: true` for the current workspace.
+- The slice has a frame, read order, work items, proof plan, related records,
+  and next commands for one bounded focus.
+- The slice should be useful without requiring a reader to inspect every
+  `topo/**/*.tg` file.
+
+For a human-readable view of the same packet, render the static HTML cockpit:
 
 ```bash
 node ./engine/src/cli.js query slice ./topo --journey journey_greenfield_start_from_template --detail compact --format html
 ```
 
-Then compare that focused slice with broad self-discovery:
+For a rough context-size comparison, run:
 
 ```bash
 node ./engine/src/cli.js query context-savings ./topo --journey journey_greenfield_start_from_template --detail compact --format markdown
 ```
 
-Use the result to decide whether Topogram is giving the agent a smaller,
-explicit context surface than reading the whole app map. The report uses
-approximate token estimates; it is a local planning signal, not exact model
-token accounting.
+`context-savings` uses approximate local token estimates. Treat it as an
+attention-budget signal, not exact model-token accounting.
 
-When you want a reviewable evidence directory instead of terminal output, write
-an adoption audit bundle. It includes the agent brief, check summary, SDLC
-reports, context inventory, domain list, manifest, and source excerpts with
-portable paths:
+## 4. Verify
 
-```bash
-node ./engine/src/cli.js onboard . --write --out-dir ./artifacts
-```
-
-For task or bug tracing, use a focused bundle:
-
-```bash
-node ./engine/src/cli.js onboard . --task <task-id> --write --out-dir ./artifacts
-node ./engine/src/cli.js emit audit-bundle ./topo --bug <bug-id> --profile bug --from-topogram ./baseline/topo --write --out-dir ./artifacts
-```
-
-Finish with the smallest repo proof that the docs and public command examples
-are still current:
+Run the smallest docs/repo proof for this evaluator pass:
 
 ```bash
 npm run docs:check
 ```
 
-After that, choose a deeper route:
+Good output:
 
-- [Beta Demo Path](./beta-demo-path.md) for proof repos by evaluator goal.
-- [Brownfield Extract/Adopt](./brownfield-import.md) for existing app discovery.
-- [Agent First Run](../agent-first-run.md) for task-scoped agent work.
-- [CLI Reference](../reference/cli.md) for the full current command map.
+- documented command surfaces still match the current CLI;
+- `llms.txt` and the generated retrieval bundle stay in sync;
+- public docs keep stable headings, audience metadata, and current links.
+
+When you want a portable evidence bundle instead of terminal output, write one:
+
+```bash
+node ./engine/src/cli.js onboard . --write --out-dir ./artifacts
+```
+
+The bundle should contain a manifest, check summary, agent brief, SDLC reports,
+context inventory, source excerpts, and portable paths.
+
+## Deeper Routes
+
+- [Beta Demo Path](./beta-demo-path.md): which public proof to run first.
+- [Proof Walkthrough](../proof-walkthrough.md): full proof catalog and how to
+  read checkpoints.
+- [Brownfield Extract/Adopt](./brownfield-import.md): existing app discovery.
+- [Greenfield Generate](./greenfield-generate.md): starting from authored
+  Topogram or a template.
+- [Agent First Run](../agent-first-run.md): task-scoped agent workflow.
+- [CLI Reference](../reference/cli.md): full current command map.
+
+---
+
+# Source: docs/agent-first-run.md
+
+# Agent First Run
+
+> A coding-agent runbook for reading Topogram first, choosing one work packet, respecting ownership, and proving the change.
+
+Status: current
+Audience: coding agents and humans supervising agents
+Use when: an agent is entering a Topogram project and needs safe read order, commands, output cues, and edit boundaries.
+
+Agents should not start by reading the whole repository. Start with the app
+map, current workflow packet, write scope, and proof commands. The goal is to
+find the smallest useful context for the current task before editing.
+
+## Read First
+
+Read these files when they exist:
+
+1. `AGENTS.md`
+2. `README.md`
+3. `topogram.project.json`
+4. `topogram.sdlc-policy.json`
+5. `topogram.template-policy.json`
+6. `topogram.generator-policy.json`
+7. `.topogram-template-trust.json`
+8. `.topogram-extract.json`
+9. the focused `topogram query ...` packet for the current task
+
+The CLI repeats this order in `agent brief` so agents can consume it as JSON.
+
+## Start With Two Read-Only Commands
+
+```bash
+topogram onboard . --json
+topogram agent brief --json
+```
+
+Generated projects usually expose the same flow as:
+
+```bash
+npm run onboard
+npm run agent:brief
+```
+
+Good `onboard` output has:
+
+- `status` and staged entries for init, check, audit-bundle, generate, and
+  verify;
+- exact `next_command` values;
+- no writes unless an explicit write, generation, or verification-run flag is
+  present.
+
+Good `agent brief` output has:
+
+- `read_order`;
+- `edit_boundaries`;
+- `first_commands`;
+- SDLC policy and trust state;
+- focused workflow suggestions.
+
+Generated projects also expose the standard local first-run scripts:
+
+```bash
+npm run doctor
+npm run source:status
+npm run template:explain
+npm run check
+npm run generate
+npm run verify
+```
+
+## Choose The Work Packet
+
+Discover available query packets when you do not know the task or focus yet:
+
+```bash
+topogram query list --json
+topogram query show <name> --json
+topogram check --json
+```
+
+For implementation work tied to an SDLC task, prefer:
+
+```bash
+topogram query implementation-prep ./topo --task <task-id> --detail compact --json
+```
+
+Good `implementation-prep` output has one state, one active bucket, and a
+`workflow_step` with:
+
+- `instruction`;
+- `success_condition`;
+- `allowed_actions`;
+- `blocked_actions`;
+- `exact_next_command`;
+- `rerun_command`.
+
+Read `agent_payload` first in compact mode. It is the model-facing packet:
+current state, active bucket, endpoint or implementation contracts, seed
+summaries, scaffold status, write targets, proof commands, omitted sections,
+and drill-down `next_queries`.
+
+Use these drill-downs only when the packet asks for them:
+
+```bash
+topogram query modeling-guide ./topo --format markdown
+topogram query repair-model ./topo --format markdown
+topogram query slice ./topo --task <task-id> --detail compact --format markdown
+topogram query sdlc-proof-gaps ./topo --task <task-id> --json
+topogram query verification-runs ./topo --task <task-id> --json
+```
+
+`modeling-guide` is for sparse or broad modeling work. `repair-model` is for
+failed validation. `slice` is for richer context after the prep packet names a
+reason to inspect it.
+
+## SDLC Task Loop
+
+When SDLC is adopted, inspect and start work through the CLI:
+
+```bash
+topogram query sdlc-ready ./topo --json
+topogram sdlc explain <task-id> --json
+topogram sdlc start <task-id> . --actor <actor-id> --json
+topogram sdlc start <task-id> . --actor <actor-id> --write --json
+```
+
+The first `sdlc start` is read-only. Use `--write` only after reviewing
+blockers, decisions, rules, ownership, and verification targets. Status
+history is command-owned; do not hand-edit SDLC sidecars to make checks pass.
+
+## Edit Boundaries
+
+Safe default source edits:
+
+- `topo/**`;
+- `topogram.project.json`;
+- policy files after review;
+- maintained app source named by the packet write scope.
+
+Generated-owned outputs are replaceable only through generation. Do not make
+durable edits in generated-owned output unless the project has moved that path
+to maintained ownership.
+
+For brownfield extract/adopt work, treat `topo/candidates/**` as evidence until
+a reviewed selector is adopted:
+
+```bash
+topogram extract check . --json
+topogram extract plan . --json
+topogram adopt --list . --json
+topogram query extract-plan ./topo --json
+```
+
+## UI And App-Map Context
+
+For UI work, inspect the work map before reading framework files:
+
+```bash
+topogram query work-map ./topo --surface <surface-id> --format markdown
+topogram query slice ./topo --surface <surface-id> --screen <screen-id> --detail compact --json
+topogram widget check ./topo --surface <surface-id> --json
+```
+
+For journey-oriented context:
+
+```bash
+topogram query slice ./topo --journey journey_greenfield_start_from_template --json
+```
+
+The semantic chain is:
+
+```text
+navpoint -> screen -> layout -> region -> render -> widget/action/section -> component_map
+```
+
+For API or implementation work, prefer `implementation-prep`; it keeps
+endpoint contracts, seed data, write targets, and proof commands in one packet.
+
+## Before Commit
+
+Run the proof commands named by the task or packet. Common gates are:
+
+```bash
+topogram query sdlc-proof-gaps ./topo --task <task-id> --json
+topogram sdlc prep commit . --base origin/main --head HEAD --json
+topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
+topogram check . --json
+```
+
+If the project records verification receipts, record only commands that
+actually ran:
+
+```bash
+topogram sdlc verify record <verification-id> . --task <task-id> --actor <actor-id> --command "<command>" --status pass --write --json
+```
+
+Good closeout means proof gaps are empty, verification evidence is current, and
+public artifacts do not contain local absolute paths.
 
 ---
 
@@ -612,6 +677,361 @@ If any answer is unclear, that is useful beta feedback.
 - [Proof Walkthrough](../proof-walkthrough.md)
 - [Brownfield Extract/Adopt](./brownfield-import.md)
 - [Agent First Run](../agent-first-run.md)
+
+---
+
+# Source: docs/concepts/what-is-topogram.md
+
+# What Topogram Is
+
+> Topogram is a living app map that gives humans and agents bounded context, contracts, ownership, and proof before they change software.
+
+Status: current
+Audience: evaluators, developers, agents, and technical decision makers
+Use when: you need the shortest explanation of what Topogram is, what it is not, and why it is useful.
+
+Topogram helps a team answer: what does this app do, who owns each output,
+which contracts matter, what can be generated, what must be maintained, and
+which proof commands show the change is safe?
+
+## What It Does
+
+- Creates a `topo/` app map with data, API, UI, CLI, runtime, rule, and SDLC
+  records.
+- Extracts reviewable candidates from brownfield code without mutating the
+  source app.
+- Promotes only reviewed candidates into canonical `topo/` source.
+- Gives agents focused slices, write scope, rules, and verification commands.
+- Emits contracts, migration plans, reports, and proof artifacts.
+- Generates app/runtime output when ownership is generated.
+- Guides maintained app edits when humans or agents own the source.
+
+## What It Is Not
+
+- Not just a code generator. Generation is one output of the app map.
+- Not a no-code tool. Humans still review, adopt, and maintain source.
+- Not a framework replacement. Generators and maintained apps still use normal
+  framework code.
+- Not a project manager. SDLC records exist to connect work to requirements,
+  proof, and agent context.
+- Not a promise of pixel-perfect UI parity. UI beta proof is semantic: contracts,
+  display fields, markers, compile checks, and realization reports.
+
+## Best First Demo
+
+Use the brownfield proof when you want to see the main differentiator quickly:
+
+```bash
+git clone https://github.com/attebury/topogram-proof-content-approval-brownfield-v3.git
+cd topogram-proof-content-approval-brownfield-v3
+git checkout proof-03-adopt-app-map
+npm install
+npm run verify
+```
+
+That checkpoint shows existing React/Express/Prisma code becoming reviewed
+`topo/` source. Extraction evidence stays separate, the original app remains
+maintained, and agents get focused packets before feature work.
+
+## When To Use It
+
+Use Topogram when agents or humans need to make app changes from a smaller,
+verified operating surface than the full repository. It is especially useful for
+brownfield discovery, generated-to-maintained workflows, database migration
+planning, UI contract proof, and teams that want change work tied to explicit
+requirements and verification.
+
+---
+
+# Source: docs/concepts/topogram-model.md
+
+# Topogram Model
+
+> Topogram is a living app map that separates durable product intent from stack-specific implementation.
+
+Status: current
+Audience: humans and agents learning Topogram concepts
+Use when: you need the core model before editing specs, generators, extractors, or docs.
+
+Topogram exists because humans and agents often change software with too much
+source code and too little product memory. A Topogram model keeps the app's
+intent, contracts, ownership, runtime responsibilities, and proof in a
+validated `topo/` workspace.
+
+The result is an app map. It is not a framework render tree, an ORM schema, a
+ticket tracker, or a pile of generated code. It is the durable shape that lets
+an agent ask: what matters, where is it implemented, who owns the output, and
+how do I prove the change worked?
+
+## What The Map Holds
+
+Topogram records five kinds of project memory:
+
+| Area | What it answers |
+| --- | --- |
+| Product intent | Which domains, terms, rules, journeys, entities, capabilities, and workflows matter? |
+| Runtime contracts | Which navpoints, endpoints, surfaces, databases, widgets, layouts, and seed records exist? |
+| Ownership | Which outputs are generated, maintained, extracted evidence, or human-owned implementation? |
+| Agent context | Which focused slice or implementation packet should guide the current task? |
+| Proof | Which checks, verification targets, acceptance criteria, and evidence close the loop? |
+
+That memory can be authored directly, copied from a template, or extracted from
+brownfield source as reviewable candidates. Validated records can then drive
+contracts, audit bundles, context slices, generated outputs, migration
+proposals, and maintained-app guidance.
+
+## Source
+
+`topo/` contains `.tg` statements and supporting Markdown. Folder layout is for
+humans and agents; the parser flattens files into one graph.
+
+Start with:
+
+- `topogram init` for an empty app map in a maintained repo;
+- `topogram init --adopt-sdlc` when work should be task/proof tracked from the
+  beginning;
+- `topogram copy` when you want a template or reusable pure Topogram package;
+- `topogram extract` when existing source should become reviewable candidates.
+
+Common statement kinds:
+
+- identity and language: `actor`, `role`, `term`, `domain`;
+- data and contracts: `entity`, `shape`, `enum`, `seed_data`;
+- behavior: `rule`, `capability`, `workflow`, `verification`;
+- UI work map: `navpoint`, `screen`, `section`, `widget`, `region`, `layout`,
+  `theme`, `design_language`, `component_map`;
+- API behavior: `endpoint`;
+- surfaces and runtimes: `surface` plus `topogram.project.json` topology;
+- work and proof: `pitch`, `requirement`, `acceptance_criterion`, `task`,
+  `plan`, `bug`, `decision`.
+
+## Navigation, Screens, And Endpoints
+
+Topogram separates UI navigation from API behavior:
+
+- `navpoint` answers "how does a user get to this screen?"
+- `screen` answers "what is shown, in what layout and regions?"
+- `screen.renders` places widgets, actions, or sections into named regions.
+- `endpoint` answers "what HTTP operation realizes this capability?"
+
+The UI chain is:
+
+```text
+navpoint -> screen -> layout -> region -> render -> widget/action/section -> component_map
+```
+
+Stack-specific frameworks may still use terms such as route files, controllers,
+or handlers. Those are implementation details. Topogram's public model keeps
+the product boundary explicit.
+
+## Capabilities, Persistence, And Seed Data
+
+`capability` records describe user or system behavior. Persistence contracts
+connect capabilities to entities through read/create/update/delete intent.
+`endpoint` records can expose those capabilities over HTTP. `seed_data` records
+make catalog, demo, or test fixtures first-class so generators and agents do
+not invent sample data from prose.
+
+This matters for first apps: a model that says "program templates exist" should
+also be able to seed usable program records and expose them through real
+contracts.
+
+## Surfaces, Runtimes, And Ownership
+
+`surface` records describe semantic or platform-facing contracts:
+
+- `semantic_ui` for screens, layouts, regions, renders, navigation intent, and
+  design tokens;
+- `web`, `ios`, and `android` for platform realizations;
+- `api` for endpoint and wire contracts;
+- `db` for database tables, columns, relations, indexes, and lifecycle intent;
+- `cli` for command-line behavior;
+- `design_language`, `theme`, and `component_map` for design realization.
+
+`topogram.project.json` declares workspace path, topology runtimes, output
+ownership, generator bindings, ports, and runtime relationships such as
+`uses_api` and `uses_database`.
+
+Generated outputs can be replaced only when their generated sentinel is
+present. Maintained outputs are never overwritten. For maintained apps,
+Topogram emits contracts, packets, checks, and migration proposals that guide
+direct edits.
+
+## Slices And Proof
+
+Context slices and implementation-prep packets are the agent-facing view of the
+model. They turn the graph into bounded work packets: frame, read order,
+relationships, work items, implementation contracts, write scope, proof plan,
+and next commands.
+
+Verification records connect product claims to commands, tests, checks, and CI
+gates. SDLC records connect work to requirements and acceptance criteria. The
+goal is traceable change: a human or agent can see what was intended, what was
+changed, and what proved it.
+
+## Related Concepts
+
+- [Topo Workspace](./topo-workspace.md)
+- [SDLC](./sdlc.md)
+- [Generate vs Emit](./generate-vs-emit.md)
+- [Normalized Layout Vocabulary](./normalized-layout-vocabulary.md)
+- [Glossary](./glossary.md)
+
+---
+
+# Source: docs/beta-launch.md
+
+# Topogram Beta Launch
+
+> Topogram beta is for teams that want a living app map agents can safely work from.
+
+Status: current
+Audience: evaluators, engineering leads, maintainers, agents, and package authors
+Use when: you need the public beta story, first commands, proof paths, limits, and useful feedback asks.
+
+## What Topogram Is
+
+Topogram keeps app intent, contracts, ownership, and proof in a `topo/`
+workspace. Humans and agents use that map to understand what exists, what is
+owned by generators, what is maintained by people, and what proof should run
+before a change is trusted.
+
+The beta product wedge is brownfield plus agents:
+
+1. extract reviewable candidates from existing code;
+2. adopt only the candidates a human reviewed;
+3. query a focused slice for one task or surface;
+4. change maintained code or generate owned output;
+5. verify with the commands named by the map.
+
+Generation is still important, but it is one realization path for the app map,
+not the whole product.
+
+## Who Should Try It
+
+- Teams experimenting with coding agents on existing apps.
+- Maintainers who want contracts and proof around brownfield code.
+- Product engineers who want generated starts but expect to graduate parts of
+  the app to maintained ownership.
+- Package authors building generator or extractor packs for a stack.
+- Release owners who want consumer proof, public smoke, and package rollup
+  checks before shipping.
+
+## Five-Minute Evaluation
+
+For the curated route through the proof program, start with
+[Beta Demo Path](./start/beta-demo-path.md). It tells you which demo to run
+first and which proof repos to skip unless they match your evaluation goal.
+
+From this repo, run the published CLI smoke:
+
+```bash
+TOPOGRAM_CLI_PACKAGE_SPEC=@topogram/cli@latest npm run smoke:beta-evaluator
+```
+
+That command installs the public CLI and first-party extractor packages in a
+clean temp project. It creates a small brownfield app, extracts review-only
+candidates, adopts a reviewed bundle, emits agent packets, validates the
+adopted `topo/`, and writes a portable report.
+
+For your own app, use the same shape manually:
+
+```bash
+npx topogram extract ./existing-app --out ./imported-topogram
+cd ./imported-topogram
+npx topogram extract plan
+npx topogram adopt --list
+npx topogram query extract-plan ./topo --json
+npx topogram query single-agent-plan ./topo --mode extract-adopt --json
+npx topogram check
+```
+
+Start with package-backed extractors when the stack is known:
+
+```bash
+npm install --save-dev @topogram/cli @topogram/extractor-express-api @topogram/extractor-prisma-db
+npx topogram extractor recommend ./existing-app --from db,api
+npx topogram extractor policy init
+npx topogram extractor policy pin @topogram/extractor-express-api@1
+npx topogram extractor policy pin @topogram/extractor-prisma-db@1
+npx topogram extract ./existing-app --out ./imported-topogram --from db,api --extractor @topogram/extractor-express-api --extractor @topogram/extractor-prisma-db
+```
+
+## Proof Paths
+
+Use the proof repos when you want a complete story with branches, tags, SDLC
+records, agent packets, artifacts, and `npm run verify` at every checkpoint.
+If you are unsure where to start, use [Beta Demo Path](./start/beta-demo-path.md)
+instead of reading every proof repository.
+
+- [Brownfield proof](https://github.com/attebury/topogram-proof-content-approval-brownfield-v3):
+  best first demo for extract/adopt, maintained feature work, drift refresh,
+  and cross-stack recreation.
+- [Generated to maintained proof](https://github.com/attebury/topogram-proof-content-approval-v3):
+  best demo for generated output, graduation to maintained ownership, and DB
+  migration guidance.
+- [XState workflow proof](https://github.com/attebury/topogram-proof-xstate-workflow):
+  focused workflow-native extraction from an app state-machine library.
+- [Step Functions workflow proof](https://github.com/attebury/topogram-proof-step-functions-workflow):
+  focused workflow-native extraction from local Amazon States Language source.
+- [Widget design realization proof](https://github.com/attebury/topogram-proof-widget-design-realization):
+  focused semantic-design proof for mapping one widget to web, iOS, and Android
+  component refs. It is current on `@topogram/cli@0.3.110` and includes the
+  designer-readable `ui-design-coverage --format markdown` matrix.
+- [Operations UI work-map proof](https://github.com/attebury/topogram-proof-operations-ui-work-map-v2):
+  installable React-to-SvelteKit UI proof for layouts, regions, widgets,
+  component maps, slice-guided feature work, and parity closeout.
+
+## What Is Beta-Ready
+
+- `init`, `copy`, `extract`, `adopt`, `generate`, `emit`, and `query` command
+  vocabulary.
+- `topo/` workspace ownership and project config.
+- Brownfield extraction with bundled and first-party package-backed extractors.
+- Review-only adoption plans and explicit `adopt --write`.
+- Agent briefs, focused context slices, SDLC readiness, and proof-gap queries.
+- Web UI semantic contracts, widget realization reports, and i18n/ARIA
+  obligation markers for generated web output.
+- Widget-first design matrices that show component refs, platform
+  coverage, variant/state coverage, token/a11y/i18n gaps, and review work.
+- Release preflight, strict release status, first-party consumer rollup, proof
+  consumer tracking, and secret scanning.
+
+## Current Limits
+
+Topogram beta does not promise:
+
+- pixel-perfect UI parity;
+- complete runtime translation catalog management;
+- full automated accessibility audit coverage;
+- production deployment orchestration;
+- automatic source mutation during extraction;
+- silent adoption of brownfield candidates;
+- enterprise audit exports, signed history, or external issue tracker sync.
+
+Native generation and some workflow extractor families are preview/future work.
+
+## Feedback That Helps
+
+Useful beta feedback is concrete:
+
+- Which command or artifact was unclear?
+- Which candidate was noisy, missing, or unsafe to adopt?
+- Which slice gave an agent too much or too little context?
+- Which proof command failed to build trust?
+- Which stack needs a generator or extractor pack?
+- Which beta limit blocks real evaluation?
+
+Attach the command, the relevant `topo/` file or candidate artifact, and the
+expected next action when possible.
+
+## Related Docs
+
+- [Beta Readiness](./beta-readiness.md)
+- [Brownfield Extract/Adopt](./start/brownfield-import.md)
+- [Agent First Run](./agent-first-run.md)
+- [Proof Walkthrough](./proof-walkthrough.md)
+- [Extractor Packs](./authoring/extractor-packs.md)
 
 ---
 
@@ -813,69 +1233,6 @@ Call a beta release ready only when:
 - the release page names preview-only areas plainly;
 - no open P1/P2 security, path, package-execution, or generated-output boundary
   defects remain.
-
----
-
-# Source: docs/concepts/what-is-topogram.md
-
-# What Topogram Is
-
-> Topogram is a living app map that gives humans and agents bounded context, contracts, ownership, and proof before they change software.
-
-Status: current
-Audience: evaluators, developers, agents, and technical decision makers
-Use when: you need the shortest explanation of what Topogram is, what it is not, and why it is useful.
-
-Topogram helps a team answer: what does this app do, who owns each output,
-which contracts matter, what can be generated, what must be maintained, and
-which proof commands show the change is safe?
-
-## What It Does
-
-- Creates a `topo/` app map with data, API, UI, CLI, runtime, rule, and SDLC
-  records.
-- Extracts reviewable candidates from brownfield code without mutating the
-  source app.
-- Promotes only reviewed candidates into canonical `topo/` source.
-- Gives agents focused slices, write scope, rules, and verification commands.
-- Emits contracts, migration plans, reports, and proof artifacts.
-- Generates app/runtime output when ownership is generated.
-- Guides maintained app edits when humans or agents own the source.
-
-## What It Is Not
-
-- Not just a code generator. Generation is one output of the app map.
-- Not a no-code tool. Humans still review, adopt, and maintain source.
-- Not a framework replacement. Generators and maintained apps still use normal
-  framework code.
-- Not a project manager. SDLC records exist to connect work to requirements,
-  proof, and agent context.
-- Not a promise of pixel-perfect UI parity. UI beta proof is semantic: contracts,
-  display fields, markers, compile checks, and realization reports.
-
-## Best First Demo
-
-Use the brownfield proof when you want to see the main differentiator quickly:
-
-```bash
-git clone https://github.com/attebury/topogram-proof-content-approval-brownfield-v3.git
-cd topogram-proof-content-approval-brownfield-v3
-git checkout proof-03-adopt-app-map
-npm install
-npm run verify
-```
-
-That checkpoint shows existing React/Express/Prisma code becoming reviewed
-`topo/` source. Extraction evidence stays separate, the original app remains
-maintained, and agents get focused packets before feature work.
-
-## When To Use It
-
-Use Topogram when agents or humans need to make app changes from a smaller,
-verified operating surface than the full repository. It is especially useful for
-brownfield discovery, generated-to-maintained workflows, database migration
-planning, UI contract proof, and teams that want change work tied to explicit
-requirements and verification.
 
 ---
 
@@ -1819,391 +2176,6 @@ Drizzle:
 
 See [Project Config](../reference/project-config.md#database-migrations) for
 the validation rules.
-
----
-
-# Source: docs/agent-first-run.md
-
-# Agent First Run
-
-> Start agents from the app map, focused query packets, write scope, and proof commands instead of broad repository reads.
-
-Status: current
-Audience: coding agents and humans supervising agents
-Use when: an agent is entering a Topogram project and needs safe read order, commands, and edit boundaries.
-
-Agents should start from the project briefing and focused query packets. The
-goal is to understand the smallest useful part of the app map, the allowed
-write scope, and the proof commands before reading broad repository context or
-editing code.
-
-## First command
-
-```bash
-topogram onboard --json
-topogram agent brief --json
-```
-
-Generated projects expose the same command as:
-
-```bash
-npm run --silent onboard
-npm run --silent agent:brief
-```
-
-`onboard` and `agent brief` are read-only by default. `onboard` shows the
-staged init/check/audit/generate/verify adoption plan; `agent brief` gives
-machine-readable read order, boundaries, and first commands. Neither generates
-apps, writes files, loads generator adapters, or executes template
-implementation code unless an explicit write/generate/verify flag is supplied
-to the relevant command.
-
-## Read order
-
-1. `AGENTS.md`
-2. `README.md`
-3. `topogram.project.json`
-4. `topogram.sdlc-policy.json`, when present
-5. `topogram.template-policy.json`, when present
-6. `topogram.generator-policy.json`, when present
-7. `.topogram-template-trust.json`, when executable implementation exists
-8. `.topogram-extract.json`, when the project came from brownfield extract/adopt
-9. Focused `topogram query ... --json` output
-
-## First command sequence
-
-```bash
-topogram onboard --json
-topogram agent brief --json
-topogram query list --json
-topogram query implementation-prep ./topo --task <task-id> --detail compact --json
-topogram query modeling-guide ./topo --format markdown
-topogram query show <name> --json
-topogram check --json
-```
-
-Use `query modeling-guide` before broad DSL authoring, especially in sparse or
-invalid workspaces. It is read-only and gives the CLI-owned phase order for the
-smallest valid current-feature model slice: feature scope, entities/rules,
-capabilities/persistence, endpoints/seed data, navpoints/screens/journeys,
-verification, then implementation entry. Use `query repair-model` after a failed
-check for source-linked repair guidance.
-
-For task implementation, prefer `query implementation-prep` before broad slice
-queries. It returns the current state, active workflow bucket, advisory
-model/app-work policy, exact next commands, `workflow_step` allowed/blocked
-actions, and compact implementation contracts. Follow the CLI-owned
-`workflow_step` rather than copying workflow state machines into prompts or
-local notes.
-
-If the project has adopted SDLC and the work is tied to a task or bug, add:
-
-```bash
-topogram query sdlc-grooming ./topo --json
-topogram query sdlc-backlog ./topo --json
-topogram query sdlc-available ./topo --json
-topogram query sdlc-ready ./topo --json
-topogram sdlc explain <task-id> --json
-topogram sdlc start <task-id> . --actor <actor-id> --json
-topogram sdlc start <task-id> . --actor <actor-id> --write --json
-topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json
-topogram query slice ./topo --task <task-id> --json
-topogram onboard . --task <task-id> --write --out-dir ./artifacts
-topogram query sdlc-proof-gaps ./topo --task <task-id> --json
-topogram query verification-runs ./topo --task <task-id> --json
-```
-
-The first `sdlc start` command is read-only and returns the task-start packet.
-Use `--write` only after reviewing blockers, ownership, decisions, rules,
-plans, and verification targets in that packet.
-
-For journey-oriented workflow context:
-
-```bash
-topogram query slice ./topo --journey journey_greenfield_start_from_template --json
-```
-
-For implementation planning:
-
-```bash
-topogram query single-agent-plan . --mode modeling --capability <capability-id> --json
-```
-
-Before commit in an SDLC-adopted project:
-
-```bash
-topogram query sdlc-proof-gaps ./topo --task <task-id> --json
-topogram sdlc prep commit . --base origin/main --head HEAD --json
-topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
-```
-
-## Edit boundaries
-
-Safe default source edits:
-
-- `topo/**`
-- `topogram.project.json`
-- policy files after review
-- `implementation/**` only after reviewing trust state
-
-Generated-owned outputs such as `app/**` are replaceable. Do not make durable
-edits there unless the output ownership is maintained.
-
-## Generated project first-run commands
-
-Generated projects usually expose these local scripts:
-
-```bash
-npm run agent:brief
-npm run doctor
-npm run source:status
-npm run template:explain
-npm run generator:policy:check
-npm run check
-npm run generate
-npm run verify
-```
-
-## UI and widgets
-
-For UI work, inspect widget and surface packets:
-
-```bash
-topogram widget check ./topo --surface proj_web
-topogram widget behavior ./topo --surface proj_web --json
-topogram emit ui-widget-contract ./topo --json
-topogram query slice ./topo --surface proj_web --screen <screen-id> --detail compact --json
-```
-
-`semantic_ui` owns semantic UI. Concrete web/native surfaces inherit it and own
-navpoints and surface hints.
-Focused UI slices include an `agent_readiness` section. It summarizes whether
-the screen, layout, region, widget, or component map is ready to edit, what
-context is missing, which design/i18n/ARIA gaps need review, which widget
-bindings are the likely change targets, and which proof commands should run.
-
-## Slices and vocabulary
-
-Context slices are intended to be cold-start safe without copying the full
-agent brief into every packet. Slices include focused dependencies, standing
-rule references, mode-specific next commands, and glossary terms explicitly
-linked through `related_terms` or entity `uses_terms`. They also include a
-work packet shape for humans and agents: `frame`, `relationships`,
-`work_items`, `proof_plan`, and `attention_budget`.
-
-Each slice includes a `slice_manifest` that tells an agent what is must-read,
-reference-only, proof context, or diagnostic context. Use `--detail compact`
-when you need the shortest safe packet, `standard` for normal work, and `full`
-when reviewing or debugging the slice itself. The manifest `read_order` is the
-canonical order, and `agent_guidance.read_order` mirrors it for compatibility.
-Use static HTML when a human wants a readable cockpit instead of raw JSON.
-Use `onboard --write` or `emit audit-bundle` when first adopting a workspace or
-tracing a bug; it writes the slice, HTML cockpit, proof reports, manifest, and
-bounded source excerpts into a portable evidence directory without replacing
-generated app outputs.
-
-```bash
-topogram query slice ./topo --mode implementation --task <task-id> --json
-topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format markdown
-topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format html
-topogram query implementation-prep ./topo --mode implementation --task <task-id> --detail compact --include-file server.mjs --json
-topogram emit context-slice ./topo --mode implementation --task <task-id> --format html --write --out-dir ./artifacts
-topogram onboard . --task <task-id> --write --out-dir ./artifacts
-topogram emit audit-bundle ./topo --mode implementation --task <task-id> --profile standard --write --out-dir ./artifacts
-topogram emit audit-bundle ./topo --bug <bug-id> --profile bug --from-topogram ./baseline/topo --write --out-dir ./artifacts
-topogram emit audit-bundle ./topo --profile adoption --write --out-dir ./artifacts
-topogram emit glossary ./topo --json
-```
-
-## Brownfield extract/adopt
-
-Before running a package-backed extractor, identify and check the package:
-
-```bash
-topogram extractor list
-topogram extractor show @topogram/extractor-react-router
-npm install -D @topogram/extractor-react-router
-topogram extractor policy init
-topogram extractor policy pin @topogram/extractor-react-router@1
-topogram extractor check @topogram/extractor-react-router
-```
-
-The policy pin uses the extractor manifest version, not the npm package
-version. `topogram extractor list`, `show`, `check`, and `policy status` report
-manifest version, installed package version, compatible CLI range, and policy
-pin state before package-backed execution. `topogram extractor check` proves the
-package boundary can load and run a minimal smoke extraction; it does not prove
-that the package understood the target app. That proof comes from extract/adopt
-review packets.
-
-When `.topogram-extract.json` exists:
-
-```bash
-topogram extract check . --json
-topogram extract diff . --json
-topogram extract plan . --json
-topogram adopt --list . --json
-topogram query extract-plan ./topo --json
-topogram query single-agent-plan ./topo --mode extract-adopt --json
-topogram query multi-agent-plan ./topo --mode extract-adopt --json
-topogram query review-packet ./topo --mode extract-adopt --json
-topogram extract status . --json
-topogram extract history . --verify --json
-```
-
-Use `workspaceRoot` from import JSON as the canonical project-owned workspace
-path.
-
-In extract/adopt mode, query packets include `extraction_context` when
-`.topogram-extract.json` is present. That context tells an agent which
-package-backed extractors ran, how many candidates they produced, where the
-trusted extraction record lives, and which review/adoption commands are safe to
-run next. Treat extractor output as evidence until `topogram adopt ... --write`
-promotes reviewed candidates.
-
-Use query packets before raw `topo/candidates/**` files unless you need the
-evidence details for a specific candidate.
-
-## Command-owned state
-
-Use commands for stateful workflow mutations:
-
-- `topogram sdlc transition`
-- `topogram sdlc plan step ... --write`
-- `topogram sdlc archive`
-- `topogram trust ...`
-- `topogram extract ...`
-- `topogram generate`
-- `topogram emit --write`
-- `topogram release ...`
-
-Declarative `.tg` source may be edited directly. Status history, provenance,
-trust hashes, generated sentinels, archives, and release evidence should not be
-hand-edited to make checks pass.
-
----
-
-# Source: docs/concepts/topogram-model.md
-
-# Topogram Model
-
-> Topogram is a living app map that separates durable intent from stack realization.
-
-Status: current
-Audience: humans and agents learning Topogram concepts
-Use when: you need the core model before editing specs, generators, extractors, or docs.
-
-Topogram is a living app map. It keeps app intent, contracts, ownership,
-runtime topology, rules, and proof in one validated workspace so humans and
-agents can reason from bounded context before changing code.
-
-The map can be authored directly, copied from a template, or extracted from a
-brownfield app as reviewable candidates. Once validated, it can drive generated
-outputs, maintained-app guidance, contracts, migration proposals, and agent
-query packets.
-
-## Source
-
-`topo/` contains `.tg` statements and markdown documents. The parser flattens
-the folder tree into one graph, so folders are a human and agent convention.
-Start with `topogram init` when you want a maintained repo or empty `topo/`
-workspace. `topogram init --adopt-sdlc` also adopts enforced SDLC. Use
-`topogram copy` when you want to copy a starter template into a generated
-project.
-
-Common statement kinds:
-
-- `actor`, `role`, `term`, `domain`
-- `entity`, `shape`, `enum`
-- `rule`, `capability`, `seed_data`, `workflow`, `verification`
-- `widget`, `region`, `layout`, `theme`, `design_language`,
-  `component_map`
-- `journey`, `workflow`
-- `surface`
-- `decision`
-- SDLC kinds: `pitch`, `requirement`, `acceptance_criterion`, `task`, `plan`,
-  `bug`
-
-## Project Config
-
-`topogram.project.json` declares:
-
-- workspace path, usually `./topo`;
-- output ownership, generated or maintained;
-- topology runtimes;
-- generator bindings;
-- runtime relationships such as `uses_api` and `uses_database`;
-- ports and stack-specific runtime settings.
-
-## Contracts And Surfaces
-
-Surface `type` describes the contract or surface:
-
-- `semantic_ui` owns semantic UI: screens, layout usage, screen region
-  overrides, render entries, behavior, visibility, navigation, and design
-  tokens.
-- `region` and `layout` define reusable semantic work areas
-  and templates. They are not DOM, SwiftUI, Android, or CSS layout trees.
-- `web`, `ios`, and `android` realize a UI contract for
-  a concrete platform.
-- `design_language` owns design-system scope, supported platforms, package
-  identity, surfaces, concrete theme selection, and token names.
-- `theme` owns stack-agnostic concrete palette and design token values such as
-  color roles, token paths, radius scale, density, interaction states, and
-  accessibility contrast intent.
-- `component_map` maps shared semantic widgets to platform component
-  refs and behavior support. The graph is a work map, not a framework render
-  tree.
-- `api` owns API endpoints and wire contracts.
-- `db` owns database tables, columns, relations, indexes, and lifecycle
-  intent.
-- `cli` owns command-line commands, options, effects, and examples.
-
-## Journeys
-
-`journey` records describe ordered workflows for users, maintainers, and agents.
-They use repeated `step { ... }` and `alternate { ... }` blocks so the graph can
-preserve sequence, branch points, commands, expected outcomes, and related
-capabilities or surfaces.
-
-Journey steps may also map to screens, capabilities, and frequency. UI
-generators normalize those fields into a journey layout plan and layout-rule
-proof markers. See [Normalized Layout Vocabulary](./normalized-layout-vocabulary.md).
-
-Canonical journeys are graph-native `.tg` statements. Markdown journey text is
-supporting material or an import/reconcile draft until it is reviewed and
-promoted into a `journey` record.
-
-## Workflows
-
-`workflow` records describe app-owned state machines and process flows. They use
-ordered `state { ... }` and `transition { ... }` blocks so agents can inspect
-states, events, guards, linked capabilities, and verification targets without
-reading source code or Markdown prose first.
-
-Workflow-native extractors emit reviewable workflow candidates. Adoption turns
-reviewed candidates into canonical `workflow` records under `topo/`; subsequent
-`query slice --workflow ...` packets provide focused context for maintained
-workflow changes and drift review.
-
-## Runtimes
-
-Topology runtimes are deployable or generated units:
-
-- `web`
-- `api_service`
-- `database`
-- `ios`
-- `android`
-
-Runtimes bind surfaces to generators. Generators receive normalized
-contracts and write stack-specific output.
-
-## Ownership
-
-Generated outputs can be replaced only when their generated sentinel is present.
-Maintained outputs are never overwritten; Topogram can still emit contracts,
-reports, checks, and migration proposals for maintained apps.
 
 ---
 
@@ -3860,36 +3832,37 @@ The [real component-system proof](https://github.com/attebury/topogram-proof-rea
 
 # SDLC
 
-> Topogram can make project work traceable inside topo/.
+> Topogram SDLC keeps work, ownership, proof, and command-owned state traceable inside `topo/`.
 
 Status: current
 Audience: maintainers, product owners, and agents using Topogram SDLC
 Use when: you need SDLC record meanings, transitions, or proof expectations.
 
-Topogram can make project work traceable inside `topo/`.
+Topogram SDLC exists so humans and agents do not treat project management as
+unstructured chat. It connects product intent to implementation work and proof:
+requirements say what must be true, tasks define bounded work, verification
+records say how to prove it, and command-owned history records state changes.
 
-Projects opt in with `topogram.sdlc-policy.json`. Missing policy means SDLC
-commands still work, but `topogram sdlc gate` reports `not_adopted` unless
-`--require-adopted` is passed.
+SDLC is optional for ordinary Topogram use. When adopted with
+`topogram init --adopt-sdlc`, it becomes the recommended working habit for
+protected changes.
+
+## Why It Helps Agents
+
+An SDLC-backed task gives an agent:
+
+- the requirement and acceptance criteria behind the work;
+- blockers, decisions, rules, and ownership context;
+- focused query commands and implementation-prep packets;
+- verification targets and proof gaps;
+- a command-owned way to claim, verify, and complete work.
+
+This keeps reusable workflow state in the CLI instead of in private prompts or
+handwritten checklists.
 
 ## Adoption Profiles
 
-Topogram's default SDLC profile is `standard`: lightweight, enforced repo
-discipline for maintainers and agents. It uses `topogram.sdlc-policy.json`, task
-start packets, proof links, `sdlc prep commit`, and `sdlc gate` to keep
-non-trivial work traceable without enterprise audit metadata.
-
-The optional `audit` profile is stricter. For protected changes, it requires
-task-backed work to declare `risk_class` and `change_type`, have at least one
-passing verification run receipt, and keep exemptions tied to a valid SDLC item
-with a specific reason. It also surfaces future audit obligations such as
-explicit approval/reviewer metadata, release audit-trail exports, and regulated
-or signed history profiles. Those obligations should not become the default for
-small teams.
-
-Use `mode: "advisory"` when a project wants reports without failures. Regulated
-profiles are intentionally deferred until the standard and audit profiles are
-coherent.
+Projects opt in with `topogram.sdlc-policy.json`.
 
 ```json
 {
@@ -3899,6 +3872,16 @@ coherent.
   "profile": "standard"
 }
 ```
+
+The default `standard` profile is lightweight and suitable for small teams. It
+requires traceable protected changes, task start packets, proof links for done
+tasks, and `sdlc prep commit` or `sdlc gate` before closeout.
+
+The optional `audit` profile is stricter. It adds risk/change classification
+and stronger verification evidence for protected work. Regulated or signed
+history profiles are intentionally future work.
+
+Use `mode: "advisory"` when a project wants reports without failing gates.
 
 ## Records
 
@@ -3916,96 +3899,80 @@ topo/sdlc/
   _archive/
 ```
 
-Use one record per file for SDLC kinds. Plans may contain multiple nested step
-definitions.
+Use one record per file for SDLC kinds.
 
-## Normal loop
+| Kind | Job |
+| --- | --- |
+| `pitch` | Explain why a backlog theme matters. |
+| `requirement` | State durable behavior the project commits to. |
+| `acceptance_criterion` | Define observable proof, usually `Given ... when ... then ...`. |
+| `task` | Hold one implementation-sized slice. |
+| `bug` | Record a violated rule, requirement, or verified expectation. |
+| `decision` | Preserve a durable choice and rationale. |
+| `verification` | Name a proof command, test, check, or CI gate. |
+| `plan` | Optional nested execution notes for a task. |
+
+Done tasks require valid `satisfies`, `acceptance_refs`, and
+`verification_refs`.
+
+## Normal Loop
+
+Start read-only:
 
 ```bash
 topogram sdlc policy explain --json
-topogram query sdlc-backlog ./topo --json
-topogram query sdlc-available ./topo --json
 topogram query sdlc-ready ./topo --json
 topogram sdlc start <task-id> . --actor actor_coding_agent --json
+```
+
+Review the returned packet. It includes blockers, rules, decisions, proof gaps,
+verification targets, and next commands. Claim the work only after that review:
+
+```bash
 topogram sdlc start <task-id> . --actor actor_coding_agent --write --json
+```
+
+During work, use the task-focused packets:
+
+```bash
+topogram query implementation-prep ./topo --task <task-id> --detail compact --json
 topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram query verification-runs ./topo --task <task-id> --json
-topogram query sdlc-metrics ./topo --json
-topogram query sdlc-stale-work ./topo --json
+```
+
+Before closeout:
+
+```bash
 topogram sdlc prep commit . --base origin/main --head HEAD --json
 topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
 ```
 
-The default `sdlc start` call is read-only. It returns the task, linked
-requirement, acceptance criteria, decisions, rules, blockers, plans, query
-commands, write-scope hints, and verification targets. Add `--write` only after
-reviewing that packet; the command then owns the legal transition from
-`unclaimed` or same-actor `claimed` work to `in-progress`.
-
-## Chain Of Proof
-
-Use the smallest SDLC record that tells the truth:
-
-- `pitch`: why a backlog theme matters.
-- `requirement`: durable behavior the project commits to.
-- `acceptance_criterion`: observable proof. Approved criteria use
-  `Given ... when ... then ...` wording.
-- `task`: one implementation-sized slice.
-- `verification`: proof command, test, check, or CI gate.
-- `decision`: durable choice.
-- `bug`: violation of an accepted rule, requirement, or verified expectation.
-- `plan`: optional nested execution notes for a task.
-
-Done tasks require valid `satisfies` refs to requirements, approved
-`acceptance_refs`, and valid `verification_refs`.
-
-Finite requirements stay `approved` until done tasks prove them, then they can
-transition to `satisfied`. Durable operating commitments can transition to
-`ongoing`; ongoing requirements must link to at least one rule or verification
-and are intentionally omitted from available-work and closeout queues.
-
-Use `topogram query sdlc-grooming ./topo --json` for lifecycle cleanup after
-work lands. It shows requirements ready to become `satisfied` or `ongoing`,
-pitches ready to become `covered`, plans ready to complete or supersede, and
-stale pitches that still need review.
-
-Use `topogram query sdlc-backlog ./topo --json` for unresolved backlog shaping.
-It shows draft/shaped/submitted pitches, draft or in-review requirements, draft
-journeys, and draft plans. Covered pitches, satisfied requirements, ongoing
-requirements, and completed work are intentionally omitted.
-
-Use `topogram query sdlc-ready ./topo --json` before claiming work. It combines
-startable tasks, blocked tasks, claimed tasks, proof gaps, latest verification
-receipts, risk classification, change type, and next commands.
-
-Before completing work:
+`sdlc verify record` records evidence only. It does not execute the command:
 
 ```bash
-topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram sdlc verify record <verification-id> . --task <task-id> --actor actor_coding_agent --command "<command you ran>" --status pass --write --json
-topogram sdlc complete <task-id> . --verification <verification-id> --actor actor_coding_agent --write
 ```
 
-`sdlc verify record` records evidence only; it does not execute commands. It
-writes portable JSONL receipts under `topo/sdlc/.topogram-verification-runs.jsonl`.
-Use task `risk_class` and `change_type` when the work needs a stronger proof
-posture, for example `risk_class high` and `change_type security`.
+## Backlog And Grooming
 
-Use `topogram query sdlc-claimed ./topo --actor <actor-id> --json` to see work
-already claimed by an actor. Use `topogram query sdlc-blockers ./topo --task
-<task-id> --json` when a task cannot start or complete.
+Use these reports to understand work state:
 
-Use `topogram query sdlc-metrics ./topo --json` for counts, WIP, stale work,
-closeout candidates, proof gaps, ongoing requirements, and transition-duration
-statistics derived from `.topogram-sdlc-history.json`. Use
-`topogram query sdlc-stale-work ./topo --json` for the focused stale/WIP policy
-view. Projects can optionally add `wipLimits` and `staleWork` thresholds to
-`topogram.sdlc-policy.json`; advisory policies warn, enforced policies can fail
-protected-change gates unless an allowed exemption is supplied.
+```bash
+topogram query sdlc-backlog ./topo --json
+topogram query sdlc-available ./topo --json
+topogram query sdlc-ready ./topo --json
+topogram query sdlc-grooming ./topo --json
+topogram query sdlc-metrics ./topo --json
+topogram query sdlc-stale-work ./topo --json
+```
 
-## Command-owned state
+`sdlc-backlog` shows unresolved shaping work. `sdlc-ready` shows startable,
+blocked, claimed, and proof-gap work. `sdlc-grooming` shows lifecycle cleanup
+after implementation lands.
 
-Humans and agents may edit declarative `.tg` text directly. Use commands for
+## Command-Owned State
+
+Humans and agents may edit declarative `.tg` source directly. Use commands for
 stateful mutations:
 
 | State | Command path |
@@ -4019,6 +3986,9 @@ stateful mutations:
 | `app/.topogram-generated.json` | `topogram generate` |
 | Written emitted artifacts | `topogram emit --write` |
 | Release status reports and rollout evidence | `topogram release status` and `topogram release roll-consumers` |
+
+Do not hand-edit history, archives, trust hashes, generated sentinels, or
+release evidence to make a gate pass.
 
 ---
 
@@ -5205,6 +5175,12 @@ implementation, refreshing a scaffold, implementing, and verifying. Compact
 mode keeps the full context slice out of the response and links richer drill-down
 queries through bucket `next_queries`.
 
+In compact mode, the response also includes `agent_payload`: the recommended
+model-facing packet with `workflow_step`, active bucket payload, endpoint
+contracts, seed summaries, scaffold status, proof commands, and summarized
+included files. Full file content and the full slice stay behind drill-down
+queries or artifacts so agents do not spend tokens rereading broad context.
+
 The packet also includes `workflow_step`: a CLI-owned instruction with
 `success_condition`, `allowed_actions`, `blocked_actions`, `exact_next_command`,
 and `rerun_command`. Agents should follow that public packet instead of relying
@@ -5222,6 +5198,11 @@ only linked to unrelated base contracts. Verification refs do not satisfy featur
 coverage by themselves; they remain proof targets. If matching contracts exist
 elsewhere in the model, the packet returns `task_unlinked`; otherwise it returns
 modeling guidance so the feature is modeled before app code is edited.
+
+Use `--mode maintained-app-edit` when implementation code has become
+maintained after an initial scaffold. In that mode, missing or stale scaffold
+markers stay visible in `scaffold_status`, but they are advisory and do not
+block the `implement` bucket.
 
 `query slice` supports JSON for tools, Markdown for terminal review, and static
 HTML for a local human-readable work cockpit. The slice JSON includes `frame`,
@@ -5276,6 +5257,14 @@ topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --
 topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
 topogram emit glossary ./topo --json
 ```
+
+`node-http-api-scaffold` emits a vanilla `node:http` `server.mjs` and
+`topogram-scaffold-manifest.json`. GET endpoints with response entities are
+seed-backed when matching model `seed_data` or the supplied seed fixture has
+records; other business endpoints remain explicit TODO/501 regions for
+maintained implementation. Once a scaffolded app has meaningful maintained
+code, use `implementation-prep --mode maintained-app-edit` rather than treating
+scaffold marker drift as a blocking generator failure.
 
 ## Brownfield extract/adopt
 
@@ -7274,17 +7263,20 @@ Status: current
 Audience: evaluators and maintainers inspecting proof repositories
 Use when: you need runnable proof/demo steps and what each checkpoint proves.
 
-Topogram has current public proof repositories organized into focused product
-stories. They are tutorial-style demos, not fixtures. Use them when you
-want to see how the app map supports real work: branches, tags, README notes,
-SDLC records, agent packets, emitted contracts, and verification commands.
+Topogram proof repositories are runnable product stories. They show how an app
+map, extraction/adoption, generation, SDLC, agent packets, maintained
+ownership, and verification commands work together across branch and tag
+checkpoints.
 
-If you want the short evaluator route instead of the full proof catalog, start
-with [Beta Demo Path](./start/beta-demo-path.md).
+Use [First 30 Minutes](./start/first-30-minutes.md) for the shortest local
+repo evaluation. Use [Beta Demo Path](./start/beta-demo-path.md) when you need
+help choosing which public proof to run. Use this page when you want the full
+proof catalog and checkpoint conventions.
 
-## Five-Minute Demo Path
+## Evaluation Path
 
-Use the brownfield proof when you want the shortest product demo:
+Start with the brownfield proof when you want the clearest validation of
+Topogram's main claim:
 
 ```bash
 git clone https://github.com/attebury/topogram-proof-content-approval-brownfield-v3.git
@@ -7294,59 +7286,44 @@ npm ci --no-audit
 npm run verify
 ```
 
-Then inspect:
+Good output:
 
-- `proof/STEP.md` for what the checkpoint proves;
-- `proof/artifacts/` for the extract/adopt plan, receipts, agent packets, and
-  validation output;
-- `topo/` for the adopted app map.
+- `npm run verify` passes at the checkpoint;
+- `proof/STEP.md` says what the checkpoint proves;
+- `proof/artifacts/` contains extract/adopt plans, receipts, agent packets,
+  and validation output;
+- `topo/` contains the reviewed app map.
 
-That checkpoint shows the core Topogram move: existing React/Express/Prisma
-code becomes reviewed `topo/` source, extraction evidence stays separate, and
-agents get focused packets before maintained-code changes.
+The useful evaluator question is: what did Topogram know before the code
+changed?
 
-If you have only a few minutes, do not read every file. Read `proof/STEP.md`,
-open the latest agent packet under `proof/artifacts/`, then compare the current
-tag with the previous proof tag. The useful question is: what did Topogram know
-before the code changed?
+Then inspect maintained feature work:
 
-## Beta Evaluation Path
+```bash
+git checkout proof-04-feature-from-slice
+npm ci --no-audit
+npm run verify
+```
 
-For the concise version of this section, see
-[Beta Demo Path](./start/beta-demo-path.md).
+Compare the two checkpoints. The proof should show existing source, review-only
+extraction, explicit adoption, focused agent context, maintained source edits,
+and verification.
 
-For beta evaluation, read the proof repos as product demos:
+## What To Validate
 
-1. Run the five-minute brownfield path above.
-2. Open `proof/artifacts/` and inspect the extract plan, adoption list, agent
-   brief, and focused query packets.
-3. Compare `proof-03-adopt-app-map` to `proof-04-feature-from-slice` to see how a
-   maintained feature is planned from `topo/` instead of rediscovering source.
-4. Compare `proof-06-recreate-other-stack` and `proof-07-parity-proof` to see
-   where Topogram can recreate a stack and where parity is only reported.
-5. Use the focused XState or Step Functions proof when you want to inspect
-   workflow-native extraction without the larger UI/API/DB proof story.
-6. Use the focused UI work-map proof when you want to inspect the new UI terms:
-   screen, layout, region, widget, design language, component map,
-   i18n, ARIA, and proof commands in one compact demo.
-7. Use the focused widget design proof when you want to inspect semantic design
-   mappings, component refs, and designer/developer review rows.
-8. Use the operations UI work-map proof when you want to inspect a running
-   React app, a slice-guided maintained UI feature, and a generated SvelteKit
-   app from the same semantic work map.
-9. Use the Storybook design proof when you want to see Storybook metadata become
-   review-only component-mapping candidates before explicit adoption.
-10. Use the operations design-review proof when you want a substantial
-   designer-readable packet over a running React operations SaaS app.
-11. Use the real component-system proof when you want to see a designer-readable
-   matrix, Storybook candidate review, accepted component maps, and agent slices
-   in one practical walkthrough.
-12. Use the generated-to-maintained proof second to see how `generate` fits the
-   same app-map model.
+When reviewing any proof, ask:
 
-The demo claim is intentionally narrow: Topogram provides a reviewable map,
-focused agent context, contracts, and proof commands. It does not promise full
-runtime equivalence or pixel-perfect UI parity.
+- Did extraction stay review-only until adoption?
+- Did adoption use explicit reviewed selectors?
+- Did the committed agent packet identify read order, write scope, and proof?
+- Did maintained changes happen in maintained source, not generated output?
+- Did `npm run verify` check the claim beyond file existence?
+- Did the proof call out limits such as partial parity, unsupported UI work, or
+  contract-only design work?
+
+The proof claim is intentionally narrow: Topogram provides a reviewable map,
+focused agent context, contracts, ownership boundaries, and proof commands. It
+does not promise full runtime equivalence or pixel-perfect UI parity.
 
 ## Proof Repos
 
@@ -7596,6 +7573,12 @@ Status: current
 Audience: maintainers and evaluators testing whether Topogram slices improve agent work
 Use when: you want a repeatable comparison between Topogram-guided and unguided app coding.
 
+This is an advanced evaluation path, not the first evaluator step. Start with
+[First 30 Minutes](./start/first-30-minutes.md) to inspect the local CLI and
+[Beta Demo Path](./start/beta-demo-path.md) to choose a runnable proof repo.
+Use this experiment when you want to measure agent efficiency and quality under
+controlled conditions.
+
 The slice benefit experiment compares two agent arms on the same clinic
 operations app:
 
@@ -7632,13 +7615,17 @@ working base API behavior before provider tokens are measured. The Topogram arm
 also receives the frozen base model and a generated vanilla `node:http` scaffold
 from endpoint contracts; the vibe arm receives a handwritten base `server.mjs`
 with the same public behavior and no Topogram records. Measured work starts at
-wave 1. For later waves, the Topogram arm must update the model for the current
-feature, run `topogram check`, refresh the scaffold markers, then implement
-behavior. The vibe arm evolves its base app directly from the feature brief.
+wave 1. Wave 1 uses the scaffold as a blocking generated structure. After wave
+1 passes, the app is treated as maintained implementation: later waves still
+use Topogram to update the model, validate it, read implementation-prep
+contracts, and run proof, but stale scaffold markers are advisory rather than a
+blocker. The vibe arm evolves its base app directly from the feature brief.
 
 Seeded-model runs intentionally use a leaner Topogram tool surface. The
-Topogram arm should run one CLI-native implementation prep packet at wave start:
-`topogram query implementation-prep ./topo --mode implementation --task <current-feature-task> --detail compact --include-file server.mjs --include-file seed-fixture.json --include-file package.json --json`.
+Topogram arm should run one CLI-native implementation prep packet at wave start.
+Wave 1 uses `--mode implementation`; later progressive parity waves use
+`--mode maintained-app-edit`:
+`topogram query implementation-prep ./topo --mode <mode> --task <current-feature-task> --detail compact --include-file server.mjs --include-file seed-fixture.json --include-file package.json --json`.
 That packet returns one state, one active workflow bucket, a `workflow_step`,
 allowed and blocked actions, and exact next commands. The public CLI packet owns
 the state machine; experiment prompts provide product/task context and tell the
@@ -7647,17 +7634,30 @@ estimates for reporting, but the seeded agent is not asked to spend model
 iterations on broad context reports unless the packet links them as drill-down
 queries.
 
+For compact packets, the harness sends the packet's `agent_payload` back to the
+model and stores the full JSON separately in `tool-results/`. This keeps the
+conversation focused on the current workflow step while preserving the complete
+evidence packet for audit and debugging.
+
 For the Topogram arm, model validity is a harness-enforced boundary. The agent
 uses `implementation-prep` as the first workflow packet. It may call
 `modeling-guide`, `repair-model`, or `slice` only when the CLI packet asks for
 drill-down context. After any `topo/**` edit the harness blocks app code writes
 and app checks until the packet/check flow reports an implementation-ready state
-again. A wave that finishes with an invalid, unlinked, or scaffold-stale
-Topogram workflow state receives an explicit failure state in its wave result.
+again. A wave that finishes with an invalid or unlinked Topogram workflow state
+receives an explicit failure state in its wave result. Scaffold-stale states are
+blocking only while the app is still scaffold-owned; in maintained-app-edit mode
+they remain visible as advisory drift.
 The packet also guards against weak task links: linking a wave task to unrelated
 base capabilities is not enough if linked endpoint contracts and task `affects`
 records do not cover the feature terms named by the task. Verification refs are
 reported as proof targets, not feature coverage.
+
+The node HTTP scaffold now provides seed-backed GET responses for simple read
+endpoints when the model or `seed-fixture.json` supplies matching records. It
+still leaves create/update/delete and domain-specific business behavior as
+agent-owned TODO regions, and the scaffold manifest reports seed-backed read
+counts separately from TODO counts.
 
 ## Commands
 

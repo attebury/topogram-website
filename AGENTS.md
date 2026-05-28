@@ -22,6 +22,11 @@ edited directly after reading focused packets.
 - Start agent work with `topogram agent brief --json` and focused `topogram query ...` packets before broad edits.
 - Use Topogram commands for stateful workflow mutations such as SDLC transitions, trust, provenance, generated sentinels, archives, release state, and rollout state.
 
+## Field Notes Authoring
+
+- Write Topogram posts in the voice of a concise technical writer.
+- Do not use em dashes in Topogram posts.
+
 Use `topogram emit <target>` for contracts, reports, snapshots, migration
 plans, and agent context. Do not expect `topogram generate` to overwrite this
 maintained app unless output ownership is deliberately changed.

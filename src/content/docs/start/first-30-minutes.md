@@ -1,90 +1,119 @@
 ---
 title: "First 30 Minutes"
-description: "A short evaluator path for seeing Topogram's current command surface, context slices, token-savings report, and proof loop without reading every subsystem."
+description: "The canonical evaluator path for understanding, inspecting, running, and verifying Topogram from this repo."
 ---
 
 # First 30 Minutes
 
-> A short evaluator path for seeing Topogram's current command surface, context slices, token-savings report, and proof loop without reading every subsystem.
+> The canonical evaluator path for understanding, inspecting, running, and verifying Topogram from this repo.
 
 Status: current
-Audience: evaluators, technical leads, and agents doing a first pass
-Use when: you want a fast, runnable route through this repo before choosing a deeper proof or implementation task.
+Audience: evaluators, technical leads, technical buyers, and agents doing a first pass
+Use when: you want the shortest useful route through the current repo before choosing a deeper proof or implementation task.
 
-Run these from the Topogram repo root:
+Run commands from the Topogram repo root. This path is intentionally narrow:
+it helps you judge whether Topogram gives humans and agents a smaller,
+verified operating surface than rediscovering the repo from scratch.
+
+## 1. Understand
+
+Read these first:
+
+- [What Topogram Is](/concepts/what-is-topogram/)
+- [Topogram Model](/concepts/topogram-model/)
+- [Agent First Run](/agent-first-run/), if you are evaluating agent work
+
+The claim to evaluate is not "Topogram reads every repo perfectly." The useful
+claim is: a reviewed app map can preserve product intent, ownership, contracts,
+proof, and focused context so humans and agents make changes from bounded
+evidence instead of broad guessing.
+
+## 2. Inspect
+
+Install dependencies if this checkout has not been prepared:
 
 ```bash
 npm install
-node ./engine/src/cli.js onboard . --json
-node ./engine/src/cli.js agent brief . --json
-node ./engine/src/cli.js check . --json
-node ./engine/src/cli.js query list --json
-node ./engine/src/cli.js query modeling-guide ./topo --format markdown
 ```
 
-`onboard` is the read-first adoption loop. It diagnoses whether the workspace
-needs `init`, reports staged status for check/audit/generate/verify, and prints
-the exact next commands without writing artifacts, generating app output, or
-running project verification.
-
-`query modeling-guide` is the current public DSL authoring guide. Use it before
-starting broad app-map edits. It gives the CLI-owned phase order: feature
-scope, entities/rules, capabilities/persistence, endpoints/seed data,
-navpoints/screens/journeys, verification, then the implementation packet. Use
-`query repair-model` after a failed `check` when you need source-linked recovery
-examples.
-
-Read the smallest useful graph packet next. This one follows the public
-greenfield journey because it exercises the same query path agents use for
-bounded work:
+Then ask the CLI for the current adoption state and agent briefing:
 
 ```bash
+node ./engine/src/cli.js onboard . --json
+node ./engine/src/cli.js agent brief . --json
+```
+
+Good output:
+
+- `onboard` returns an `onboarding_plan` with stages for init, check,
+  audit-bundle, generate, and verify.
+- `agent brief` returns `read_order`, `edit_boundaries`, `first_commands`,
+  workflows, and SDLC policy warnings with portable paths.
+- Neither command writes artifacts, generates app output, or runs project
+  verification unless you pass an explicit write/generate/verify flag.
+
+## 3. Run
+
+Validate the app map and inspect one focused packet:
+
+```bash
+node ./engine/src/cli.js check . --json
 node ./engine/src/cli.js query slice ./topo --journey journey_greenfield_start_from_template --detail compact --format markdown
 ```
 
-For a human-readable cockpit of the same packet, render the static HTML view:
+Good output:
+
+- `check` reports `ok: true` for the current workspace.
+- The slice has a frame, read order, work items, proof plan, related records,
+  and next commands for one bounded focus.
+- The slice should be useful without requiring a reader to inspect every
+  `topo/**/*.tg` file.
+
+For a human-readable view of the same packet, render the static HTML cockpit:
 
 ```bash
 node ./engine/src/cli.js query slice ./topo --journey journey_greenfield_start_from_template --detail compact --format html
 ```
 
-Then compare that focused slice with broad self-discovery:
+For a rough context-size comparison, run:
 
 ```bash
 node ./engine/src/cli.js query context-savings ./topo --journey journey_greenfield_start_from_template --detail compact --format markdown
 ```
 
-Use the result to decide whether Topogram is giving the agent a smaller,
-explicit context surface than reading the whole app map. The report uses
-approximate token estimates; it is a local planning signal, not exact model
-token accounting.
+`context-savings` uses approximate local token estimates. Treat it as an
+attention-budget signal, not exact model-token accounting.
 
-When you want a reviewable evidence directory instead of terminal output, write
-an adoption audit bundle. It includes the agent brief, check summary, SDLC
-reports, context inventory, domain list, manifest, and source excerpts with
-portable paths:
+## 4. Verify
 
-```bash
-node ./engine/src/cli.js onboard . --write --out-dir ./artifacts
-```
-
-For task or bug tracing, use a focused bundle:
-
-```bash
-node ./engine/src/cli.js onboard . --task <task-id> --write --out-dir ./artifacts
-node ./engine/src/cli.js emit audit-bundle ./topo --bug <bug-id> --profile bug --from-topogram ./baseline/topo --write --out-dir ./artifacts
-```
-
-Finish with the smallest repo proof that the docs and public command examples
-are still current:
+Run the smallest docs/repo proof for this evaluator pass:
 
 ```bash
 npm run docs:check
 ```
 
-After that, choose a deeper route:
+Good output:
 
-- [Beta Demo Path](/start/beta-demo-path/) for proof repos by evaluator goal.
-- [Brownfield Extract/Adopt](/start/brownfield-import/) for existing app discovery.
-- [Agent First Run](/agent-first-run/) for task-scoped agent work.
-- [CLI Reference](/reference/cli/) for the full current command map.
+- documented command surfaces still match the current CLI;
+- `llms.txt` and the generated retrieval bundle stay in sync;
+- public docs keep stable headings, audience metadata, and current links.
+
+When you want a portable evidence bundle instead of terminal output, write one:
+
+```bash
+node ./engine/src/cli.js onboard . --write --out-dir ./artifacts
+```
+
+The bundle should contain a manifest, check summary, agent brief, SDLC reports,
+context inventory, source excerpts, and portable paths.
+
+## Deeper Routes
+
+- [Beta Demo Path](/start/beta-demo-path/): which public proof to run first.
+- [Proof Walkthrough](/proof-walkthrough/): full proof catalog and how to
+  read checkpoints.
+- [Brownfield Extract/Adopt](/start/brownfield-import/): existing app discovery.
+- [Greenfield Generate](/start/greenfield-generate/): starting from authored
+  Topogram or a template.
+- [Agent First Run](/agent-first-run/): task-scoped agent workflow.
+- [CLI Reference](/reference/cli/): full current command map.

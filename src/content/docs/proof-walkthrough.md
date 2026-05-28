@@ -11,17 +11,20 @@ Status: current
 Audience: evaluators and maintainers inspecting proof repositories
 Use when: you need runnable proof/demo steps and what each checkpoint proves.
 
-Topogram has current public proof repositories organized into focused product
-stories. They are tutorial-style demos, not fixtures. Use them when you
-want to see how the app map supports real work: branches, tags, README notes,
-SDLC records, agent packets, emitted contracts, and verification commands.
+Topogram proof repositories are runnable product stories. They show how an app
+map, extraction/adoption, generation, SDLC, agent packets, maintained
+ownership, and verification commands work together across branch and tag
+checkpoints.
 
-If you want the short evaluator route instead of the full proof catalog, start
-with [Beta Demo Path](/start/beta-demo-path/).
+Use [First 30 Minutes](/start/first-30-minutes/) for the shortest local
+repo evaluation. Use [Beta Demo Path](/start/beta-demo-path/) when you need
+help choosing which public proof to run. Use this page when you want the full
+proof catalog and checkpoint conventions.
 
-## Five-Minute Demo Path
+## Evaluation Path
 
-Use the brownfield proof when you want the shortest product demo:
+Start with the brownfield proof when you want the clearest validation of
+Topogram's main claim:
 
 ```bash
 git clone https://github.com/attebury/topogram-proof-content-approval-brownfield-v3.git
@@ -31,59 +34,44 @@ npm ci --no-audit
 npm run verify
 ```
 
-Then inspect:
+Good output:
 
-- `proof/STEP.md` for what the checkpoint proves;
-- `proof/artifacts/` for the extract/adopt plan, receipts, agent packets, and
-  validation output;
-- `topo/` for the adopted app map.
+- `npm run verify` passes at the checkpoint;
+- `proof/STEP.md` says what the checkpoint proves;
+- `proof/artifacts/` contains extract/adopt plans, receipts, agent packets,
+  and validation output;
+- `topo/` contains the reviewed app map.
 
-That checkpoint shows the core Topogram move: existing React/Express/Prisma
-code becomes reviewed `topo/` source, extraction evidence stays separate, and
-agents get focused packets before maintained-code changes.
+The useful evaluator question is: what did Topogram know before the code
+changed?
 
-If you have only a few minutes, do not read every file. Read `proof/STEP.md`,
-open the latest agent packet under `proof/artifacts/`, then compare the current
-tag with the previous proof tag. The useful question is: what did Topogram know
-before the code changed?
+Then inspect maintained feature work:
 
-## Beta Evaluation Path
+```bash
+git checkout proof-04-feature-from-slice
+npm ci --no-audit
+npm run verify
+```
 
-For the concise version of this section, see
-[Beta Demo Path](/start/beta-demo-path/).
+Compare the two checkpoints. The proof should show existing source, review-only
+extraction, explicit adoption, focused agent context, maintained source edits,
+and verification.
 
-For beta evaluation, read the proof repos as product demos:
+## What To Validate
 
-1. Run the five-minute brownfield path above.
-2. Open `proof/artifacts/` and inspect the extract plan, adoption list, agent
-   brief, and focused query packets.
-3. Compare `proof-03-adopt-app-map` to `proof-04-feature-from-slice` to see how a
-   maintained feature is planned from `topo/` instead of rediscovering source.
-4. Compare `proof-06-recreate-other-stack` and `proof-07-parity-proof` to see
-   where Topogram can recreate a stack and where parity is only reported.
-5. Use the focused XState or Step Functions proof when you want to inspect
-   workflow-native extraction without the larger UI/API/DB proof story.
-6. Use the focused UI work-map proof when you want to inspect the new UI terms:
-   screen, layout, region, widget, design language, component map,
-   i18n, ARIA, and proof commands in one compact demo.
-7. Use the focused widget design proof when you want to inspect semantic design
-   mappings, component refs, and designer/developer review rows.
-8. Use the operations UI work-map proof when you want to inspect a running
-   React app, a slice-guided maintained UI feature, and a generated SvelteKit
-   app from the same semantic work map.
-9. Use the Storybook design proof when you want to see Storybook metadata become
-   review-only component-mapping candidates before explicit adoption.
-10. Use the operations design-review proof when you want a substantial
-   designer-readable packet over a running React operations SaaS app.
-11. Use the real component-system proof when you want to see a designer-readable
-   matrix, Storybook candidate review, accepted component maps, and agent slices
-   in one practical walkthrough.
-12. Use the generated-to-maintained proof second to see how `generate` fits the
-   same app-map model.
+When reviewing any proof, ask:
 
-The demo claim is intentionally narrow: Topogram provides a reviewable map,
-focused agent context, contracts, and proof commands. It does not promise full
-runtime equivalence or pixel-perfect UI parity.
+- Did extraction stay review-only until adoption?
+- Did adoption use explicit reviewed selectors?
+- Did the committed agent packet identify read order, write scope, and proof?
+- Did maintained changes happen in maintained source, not generated output?
+- Did `npm run verify` check the claim beyond file existence?
+- Did the proof call out limits such as partial parity, unsupported UI work, or
+  contract-only design work?
+
+The proof claim is intentionally narrow: Topogram provides a reviewable map,
+focused agent context, contracts, ownership boundaries, and proof commands. It
+does not promise full runtime equivalence or pixel-perfect UI parity.
 
 ## Proof Repos
 

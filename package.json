@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@astrojs/starlight": "^0.39.2",
+    "@plausible-analytics/tracker": "^0.4.5",
     "astro": "^6.3.8",
     "sharp": "^0.33.5"
   },

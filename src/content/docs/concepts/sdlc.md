@@ -1,40 +1,41 @@
 ---
 title: "SDLC"
-description: "Topogram can make project work traceable inside topo/."
+description: "Topogram SDLC keeps work, ownership, proof, and command-owned state traceable inside `topo/`."
 ---
 
 # SDLC
 
-> Topogram can make project work traceable inside topo/.
+> Topogram SDLC keeps work, ownership, proof, and command-owned state traceable inside `topo/`.
 
 Status: current
 Audience: maintainers, product owners, and agents using Topogram SDLC
 Use when: you need SDLC record meanings, transitions, or proof expectations.
 
-Topogram can make project work traceable inside `topo/`.
+Topogram SDLC exists so humans and agents do not treat project management as
+unstructured chat. It connects product intent to implementation work and proof:
+requirements say what must be true, tasks define bounded work, verification
+records say how to prove it, and command-owned history records state changes.
 
-Projects opt in with `topogram.sdlc-policy.json`. Missing policy means SDLC
-commands still work, but `topogram sdlc gate` reports `not_adopted` unless
-`--require-adopted` is passed.
+SDLC is optional for ordinary Topogram use. When adopted with
+`topogram init --adopt-sdlc`, it becomes the recommended working habit for
+protected changes.
+
+## Why It Helps Agents
+
+An SDLC-backed task gives an agent:
+
+- the requirement and acceptance criteria behind the work;
+- blockers, decisions, rules, and ownership context;
+- focused query commands and implementation-prep packets;
+- verification targets and proof gaps;
+- a command-owned way to claim, verify, and complete work.
+
+This keeps reusable workflow state in the CLI instead of in private prompts or
+handwritten checklists.
 
 ## Adoption Profiles
 
-Topogram's default SDLC profile is `standard`: lightweight, enforced repo
-discipline for maintainers and agents. It uses `topogram.sdlc-policy.json`, task
-start packets, proof links, `sdlc prep commit`, and `sdlc gate` to keep
-non-trivial work traceable without enterprise audit metadata.
-
-The optional `audit` profile is stricter. For protected changes, it requires
-task-backed work to declare `risk_class` and `change_type`, have at least one
-passing verification run receipt, and keep exemptions tied to a valid SDLC item
-with a specific reason. It also surfaces future audit obligations such as
-explicit approval/reviewer metadata, release audit-trail exports, and regulated
-or signed history profiles. Those obligations should not become the default for
-small teams.
-
-Use `mode: "advisory"` when a project wants reports without failures. Regulated
-profiles are intentionally deferred until the standard and audit profiles are
-coherent.
+Projects opt in with `topogram.sdlc-policy.json`.
 
 ```json
 {
@@ -44,6 +45,16 @@ coherent.
   "profile": "standard"
 }
 ```
+
+The default `standard` profile is lightweight and suitable for small teams. It
+requires traceable protected changes, task start packets, proof links for done
+tasks, and `sdlc prep commit` or `sdlc gate` before closeout.
+
+The optional `audit` profile is stricter. It adds risk/change classification
+and stronger verification evidence for protected work. Regulated or signed
+history profiles are intentionally future work.
+
+Use `mode: "advisory"` when a project wants reports without failing gates.
 
 ## Records
 
@@ -61,96 +72,80 @@ topo/sdlc/
   _archive/
 ```
 
-Use one record per file for SDLC kinds. Plans may contain multiple nested step
-definitions.
+Use one record per file for SDLC kinds.
 
-## Normal loop
+| Kind | Job |
+| --- | --- |
+| `pitch` | Explain why a backlog theme matters. |
+| `requirement` | State durable behavior the project commits to. |
+| `acceptance_criterion` | Define observable proof, usually `Given ... when ... then ...`. |
+| `task` | Hold one implementation-sized slice. |
+| `bug` | Record a violated rule, requirement, or verified expectation. |
+| `decision` | Preserve a durable choice and rationale. |
+| `verification` | Name a proof command, test, check, or CI gate. |
+| `plan` | Optional nested execution notes for a task. |
+
+Done tasks require valid `satisfies`, `acceptance_refs`, and
+`verification_refs`.
+
+## Normal Loop
+
+Start read-only:
 
 ```bash
 topogram sdlc policy explain --json
-topogram query sdlc-backlog ./topo --json
-topogram query sdlc-available ./topo --json
 topogram query sdlc-ready ./topo --json
 topogram sdlc start <task-id> . --actor actor_coding_agent --json
+```
+
+Review the returned packet. It includes blockers, rules, decisions, proof gaps,
+verification targets, and next commands. Claim the work only after that review:
+
+```bash
 topogram sdlc start <task-id> . --actor actor_coding_agent --write --json
+```
+
+During work, use the task-focused packets:
+
+```bash
+topogram query implementation-prep ./topo --task <task-id> --detail compact --json
 topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram query verification-runs ./topo --task <task-id> --json
-topogram query sdlc-metrics ./topo --json
-topogram query sdlc-stale-work ./topo --json
+```
+
+Before closeout:
+
+```bash
 topogram sdlc prep commit . --base origin/main --head HEAD --json
 topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
 ```
 
-The default `sdlc start` call is read-only. It returns the task, linked
-requirement, acceptance criteria, decisions, rules, blockers, plans, query
-commands, write-scope hints, and verification targets. Add `--write` only after
-reviewing that packet; the command then owns the legal transition from
-`unclaimed` or same-actor `claimed` work to `in-progress`.
-
-## Chain Of Proof
-
-Use the smallest SDLC record that tells the truth:
-
-- `pitch`: why a backlog theme matters.
-- `requirement`: durable behavior the project commits to.
-- `acceptance_criterion`: observable proof. Approved criteria use
-  `Given ... when ... then ...` wording.
-- `task`: one implementation-sized slice.
-- `verification`: proof command, test, check, or CI gate.
-- `decision`: durable choice.
-- `bug`: violation of an accepted rule, requirement, or verified expectation.
-- `plan`: optional nested execution notes for a task.
-
-Done tasks require valid `satisfies` refs to requirements, approved
-`acceptance_refs`, and valid `verification_refs`.
-
-Finite requirements stay `approved` until done tasks prove them, then they can
-transition to `satisfied`. Durable operating commitments can transition to
-`ongoing`; ongoing requirements must link to at least one rule or verification
-and are intentionally omitted from available-work and closeout queues.
-
-Use `topogram query sdlc-grooming ./topo --json` for lifecycle cleanup after
-work lands. It shows requirements ready to become `satisfied` or `ongoing`,
-pitches ready to become `covered`, plans ready to complete or supersede, and
-stale pitches that still need review.
-
-Use `topogram query sdlc-backlog ./topo --json` for unresolved backlog shaping.
-It shows draft/shaped/submitted pitches, draft or in-review requirements, draft
-journeys, and draft plans. Covered pitches, satisfied requirements, ongoing
-requirements, and completed work are intentionally omitted.
-
-Use `topogram query sdlc-ready ./topo --json` before claiming work. It combines
-startable tasks, blocked tasks, claimed tasks, proof gaps, latest verification
-receipts, risk classification, change type, and next commands.
-
-Before completing work:
+`sdlc verify record` records evidence only. It does not execute the command:
 
 ```bash
-topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram sdlc verify record <verification-id> . --task <task-id> --actor actor_coding_agent --command "<command you ran>" --status pass --write --json
-topogram sdlc complete <task-id> . --verification <verification-id> --actor actor_coding_agent --write
 ```
 
-`sdlc verify record` records evidence only; it does not execute commands. It
-writes portable JSONL receipts under `topo/sdlc/.topogram-verification-runs.jsonl`.
-Use task `risk_class` and `change_type` when the work needs a stronger proof
-posture, for example `risk_class high` and `change_type security`.
+## Backlog And Grooming
 
-Use `topogram query sdlc-claimed ./topo --actor <actor-id> --json` to see work
-already claimed by an actor. Use `topogram query sdlc-blockers ./topo --task
-<task-id> --json` when a task cannot start or complete.
+Use these reports to understand work state:
 
-Use `topogram query sdlc-metrics ./topo --json` for counts, WIP, stale work,
-closeout candidates, proof gaps, ongoing requirements, and transition-duration
-statistics derived from `.topogram-sdlc-history.json`. Use
-`topogram query sdlc-stale-work ./topo --json` for the focused stale/WIP policy
-view. Projects can optionally add `wipLimits` and `staleWork` thresholds to
-`topogram.sdlc-policy.json`; advisory policies warn, enforced policies can fail
-protected-change gates unless an allowed exemption is supplied.
+```bash
+topogram query sdlc-backlog ./topo --json
+topogram query sdlc-available ./topo --json
+topogram query sdlc-ready ./topo --json
+topogram query sdlc-grooming ./topo --json
+topogram query sdlc-metrics ./topo --json
+topogram query sdlc-stale-work ./topo --json
+```
 
-## Command-owned state
+`sdlc-backlog` shows unresolved shaping work. `sdlc-ready` shows startable,
+blocked, claimed, and proof-gap work. `sdlc-grooming` shows lifecycle cleanup
+after implementation lands.
 
-Humans and agents may edit declarative `.tg` text directly. Use commands for
+## Command-Owned State
+
+Humans and agents may edit declarative `.tg` source directly. Use commands for
 stateful mutations:
 
 | State | Command path |
@@ -164,6 +159,9 @@ stateful mutations:
 | `app/.topogram-generated.json` | `topogram generate` |
 | Written emitted artifacts | `topogram emit --write` |
 | Release status reports and rollout evidence | `topogram release status` and `topogram release roll-consumers` |
+
+Do not hand-edit history, archives, trust hashes, generated sentinels, or
+release evidence to make a gate pass.
 
 <!-- topogram-website:field-notes:start -->
 

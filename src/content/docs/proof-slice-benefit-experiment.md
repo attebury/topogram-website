@@ -11,6 +11,12 @@ Status: current
 Audience: maintainers and evaluators testing whether Topogram slices improve agent work
 Use when: you want a repeatable comparison between Topogram-guided and unguided app coding.
 
+This is an advanced evaluation path, not the first evaluator step. Start with
+[First 30 Minutes](/start/first-30-minutes/) to inspect the local CLI and
+[Beta Demo Path](/start/beta-demo-path/) to choose a runnable proof repo.
+Use this experiment when you want to measure agent efficiency and quality under
+controlled conditions.
+
 The slice benefit experiment compares two agent arms on the same clinic
 operations app:
 
@@ -47,13 +53,17 @@ working base API behavior before provider tokens are measured. The Topogram arm
 also receives the frozen base model and a generated vanilla `node:http` scaffold
 from endpoint contracts; the vibe arm receives a handwritten base `server.mjs`
 with the same public behavior and no Topogram records. Measured work starts at
-wave 1. For later waves, the Topogram arm must update the model for the current
-feature, run `topogram check`, refresh the scaffold markers, then implement
-behavior. The vibe arm evolves its base app directly from the feature brief.
+wave 1. Wave 1 uses the scaffold as a blocking generated structure. After wave
+1 passes, the app is treated as maintained implementation: later waves still
+use Topogram to update the model, validate it, read implementation-prep
+contracts, and run proof, but stale scaffold markers are advisory rather than a
+blocker. The vibe arm evolves its base app directly from the feature brief.
 
 Seeded-model runs intentionally use a leaner Topogram tool surface. The
-Topogram arm should run one CLI-native implementation prep packet at wave start:
-`topogram query implementation-prep ./topo --mode implementation --task <current-feature-task> --detail compact --include-file server.mjs --include-file seed-fixture.json --include-file package.json --json`.
+Topogram arm should run one CLI-native implementation prep packet at wave start.
+Wave 1 uses `--mode implementation`; later progressive parity waves use
+`--mode maintained-app-edit`:
+`topogram query implementation-prep ./topo --mode <mode> --task <current-feature-task> --detail compact --include-file server.mjs --include-file seed-fixture.json --include-file package.json --json`.
 That packet returns one state, one active workflow bucket, a `workflow_step`,
 allowed and blocked actions, and exact next commands. The public CLI packet owns
 the state machine; experiment prompts provide product/task context and tell the
@@ -62,17 +72,30 @@ estimates for reporting, but the seeded agent is not asked to spend model
 iterations on broad context reports unless the packet links them as drill-down
 queries.
 
+For compact packets, the harness sends the packet's `agent_payload` back to the
+model and stores the full JSON separately in `tool-results/`. This keeps the
+conversation focused on the current workflow step while preserving the complete
+evidence packet for audit and debugging.
+
 For the Topogram arm, model validity is a harness-enforced boundary. The agent
 uses `implementation-prep` as the first workflow packet. It may call
 `modeling-guide`, `repair-model`, or `slice` only when the CLI packet asks for
 drill-down context. After any `topo/**` edit the harness blocks app code writes
 and app checks until the packet/check flow reports an implementation-ready state
-again. A wave that finishes with an invalid, unlinked, or scaffold-stale
-Topogram workflow state receives an explicit failure state in its wave result.
+again. A wave that finishes with an invalid or unlinked Topogram workflow state
+receives an explicit failure state in its wave result. Scaffold-stale states are
+blocking only while the app is still scaffold-owned; in maintained-app-edit mode
+they remain visible as advisory drift.
 The packet also guards against weak task links: linking a wave task to unrelated
 base capabilities is not enough if linked endpoint contracts and task `affects`
 records do not cover the feature terms named by the task. Verification refs are
 reported as proof targets, not feature coverage.
+
+The node HTTP scaffold now provides seed-backed GET responses for simple read
+endpoints when the model or `seed-fixture.json` supplies matching records. It
+still leaves create/update/delete and domain-specific business behavior as
+agent-owned TODO regions, and the scaffold manifest reports seed-backed read
+counts separately from TODO counts.
 
 ## Commands
 

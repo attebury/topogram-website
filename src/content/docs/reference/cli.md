@@ -192,6 +192,12 @@ implementation, refreshing a scaffold, implementing, and verifying. Compact
 mode keeps the full context slice out of the response and links richer drill-down
 queries through bucket `next_queries`.
 
+In compact mode, the response also includes `agent_payload`: the recommended
+model-facing packet with `workflow_step`, active bucket payload, endpoint
+contracts, seed summaries, scaffold status, proof commands, and summarized
+included files. Full file content and the full slice stay behind drill-down
+queries or artifacts so agents do not spend tokens rereading broad context.
+
 The packet also includes `workflow_step`: a CLI-owned instruction with
 `success_condition`, `allowed_actions`, `blocked_actions`, `exact_next_command`,
 and `rerun_command`. Agents should follow that public packet instead of relying
@@ -209,6 +215,11 @@ only linked to unrelated base contracts. Verification refs do not satisfy featur
 coverage by themselves; they remain proof targets. If matching contracts exist
 elsewhere in the model, the packet returns `task_unlinked`; otherwise it returns
 modeling guidance so the feature is modeled before app code is edited.
+
+Use `--mode maintained-app-edit` when implementation code has become
+maintained after an initial scaffold. In that mode, missing or stale scaffold
+markers stay visible in `scaffold_status`, but they are advisory and do not
+block the `implement` bucket.
 
 `query slice` supports JSON for tools, Markdown for terminal review, and static
 HTML for a local human-readable work cockpit. The slice JSON includes `frame`,
@@ -263,6 +274,14 @@ topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --
 topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
 topogram emit glossary ./topo --json
 ```
+
+`node-http-api-scaffold` emits a vanilla `node:http` `server.mjs` and
+`topogram-scaffold-manifest.json`. GET endpoints with response entities are
+seed-backed when matching model `seed_data` or the supplied seed fixture has
+records; other business endpoints remain explicit TODO/501 regions for
+maintained implementation. Once a scaffolded app has meaningful maintained
+code, use `implementation-prep --mode maintained-app-edit` rather than treating
+scaffold marker drift as a blocking generator failure.
 
 ## Brownfield extract/adopt
 

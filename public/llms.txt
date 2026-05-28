@@ -15,17 +15,18 @@ Topogram uses these public command verbs:
 ## Start
 
 - [Docs Map](docs/README.md): Audience-oriented entrypoint for current Topogram docs.
-- [Beta Launch](docs/beta-launch.md): Public beta story, first commands, proof paths, current limits, and feedback asks.
-- [First 30 Minutes](docs/start/first-30-minutes.md): Short evaluator path through current CLI checks, focused context, context-savings, and docs proof.
-- [Beta Demo Path](docs/start/beta-demo-path.md): Curated route through the brownfield, UI/design, workflow, and generated proof demos.
-- [Beta Readiness](docs/beta-readiness.md): What must be true before a beta release and what remains preview-only.
+- [First 30 Minutes](docs/start/first-30-minutes.md): Canonical evaluator path through understand, inspect, run, and verify.
+- [Agent First Run](docs/agent-first-run.md): Coding-agent runbook with read order, work packets, edit boundaries, good output cues, and proof checks.
+- [Beta Demo Path](docs/start/beta-demo-path.md): Curated route for choosing the brownfield, UI/design, workflow, or generated proof demo.
 - [What Topogram Is](docs/concepts/what-is-topogram.md): Short evaluator explanation of Topogram, its value, and what it is not.
+- [Topogram Model](docs/concepts/topogram-model.md): Core app-map concepts: intent, ownership, slices, proof, surfaces, and runtimes.
+- [Beta Launch](docs/beta-launch.md): Public beta story, first commands, proof paths, current limits, and feedback asks.
+- [Beta Readiness](docs/beta-readiness.md): What must be true before a beta release and what remains preview-only.
 - [Init Workspace](docs/start/init-workspace.md): Create an empty Topogram workspace.
 - [Greenfield Generate](docs/start/greenfield-generate.md): Start from a template or authored spec and generate app outputs.
 - [Brownfield Extract/Adopt](docs/start/brownfield-import.md): Extract candidates from an existing app and adopt reviewed specs.
 - [Workflow Extraction](docs/start/workflow-extraction.md): Extract workflow-native state machines or process definitions into reviewable candidates.
 - [Database Migrations](docs/start/database-migrations.md): Use Topogram with generated or maintained database migrations.
-- [Agent First Run](docs/agent-first-run.md): First commands and context packets for coding agents.
 
 ## Concepts
 
