@@ -5,24 +5,12 @@ description: "Topogram gives agents structured app context that harnesses, tools
 
 > Topogram gives agents structured app context that harnesses, tools, rules, and skills do not provide by themselves.
 
-<dl class="field-note-meta">
-  <div>
-    <dt>Status</dt>
-    <dd>Current</dd>
-  </div>
-  <div>
-    <dt>Audience</dt>
-    <dd>Developers, product owners, and technical evaluators</dd>
-  </div>
-  <div>
-    <dt>Use when</dt>
-    <dd>You need to explain where Topogram fits beside agent harnesses, graph tools, rules, and skills.</dd>
-  </div>
-  <div>
-    <dt>Read time</dt>
-    <dd>~3 minutes</dd>
-  </div>
-</dl>
+- **Status:** Current
+- **Created:** 2026-05-28
+- **Modified:** 2026-05-28
+- **Read time:** ~3 minutes
+- **Audience:** Developers, product owners, and technical evaluators
+- **Use when:** You need to explain where Topogram fits beside agent harnesses, graph tools, rules, and skills.
 
 Topogram is easy to confuse with other parts of an AI coding workflow. It is not
 the harness that runs an agent. It is not a repository graph tool. It is not a

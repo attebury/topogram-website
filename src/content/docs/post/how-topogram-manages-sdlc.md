@@ -5,24 +5,12 @@ description: "SDLC records live in the app map; stateful changes go through the 
 
 > SDLC records live in the app map; stateful changes go through the CLI.
 
-<dl class="field-note-meta">
-  <div>
-    <dt>Status</dt>
-    <dd>Current</dd>
-  </div>
-  <div>
-    <dt>Audience</dt>
-    <dd>Maintainers, product owners, agents, and technical writers</dd>
-  </div>
-  <div>
-    <dt>Use when</dt>
-    <dd>You need to understand Topogram SDLC philosophy, command-owned state, and how graph nodes connect to work and proof.</dd>
-  </div>
-  <div>
-    <dt>Read time</dt>
-    <dd>~3 minutes</dd>
-  </div>
-</dl>
+- **Status:** Current
+- **Created:** 2026-05-28
+- **Modified:** 2026-05-28
+- **Read time:** ~3 minutes
+- **Audience:** Maintainers, product owners, agents, and technical writers
+- **Use when:** You need to understand Topogram SDLC philosophy, command-owned state, and how graph nodes connect to work and proof.
 
 Topogram is not a project manager bolted onto a generator. When a project adopts
 SDLC, **work records live in `topo/`** beside entities, capabilities, surfaces,
