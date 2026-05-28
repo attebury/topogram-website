@@ -5,6 +5,11 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [topogram-docs-updated]
+  schedule:
+    - cron: "17 8 * * *"
 
 concurrency:
   group: pages-${{ github.ref }}
@@ -29,28 +34,24 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Sync docs from topogram
-        run: npm run docs:sync
-        env:
-          TOPOGRAM_DOCS_REF: main
-
       - name: Build
         run: npm run build
         env:
           ASTRO_SITE: https://topogram.dev
           ASTRO_BASE: /
+          TOPOGRAM_DOCS_REF: ${{ github.event.client_payload.ref || 'main' }}
 
       - name: Check links
         run: npm run check:links
 
       - name: Upload Pages artifact
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+        if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     needs: build
     runs-on: ubuntu-latest
     environment:

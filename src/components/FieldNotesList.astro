@@ -1,0 +1,20 @@
+---
+import { LinkCard } from "@astrojs/starlight/components";
+import { fileURLToPath } from "node:url";
+import { discoverFieldNotes } from "../lib/field-notes.mjs";
+
+const { limit } = Astro.props;
+const docsRoot = fileURLToPath(new URL("../content/docs", import.meta.url));
+const notes = discoverFieldNotes(docsRoot);
+const visibleNotes = typeof limit === "number" ? notes.slice(0, limit) : notes;
+---
+
+{
+  visibleNotes.length > 0 && (
+    <div class="dual-audience">
+      {visibleNotes.map((note) => (
+        <LinkCard title={note.title} description={note.description} href={note.href} />
+      ))}
+    </div>
+  )
+}

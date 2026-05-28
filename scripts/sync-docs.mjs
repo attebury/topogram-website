@@ -9,6 +9,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { discoverFieldNotes } from "../src/lib/field-notes.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -195,6 +196,11 @@ function injectFieldNotesBlock(relativePath, items) {
 
 function writeFieldNotesLandingPage() {
   const postDir = path.join(docsOut, "post");
+  const fieldNotes = discoverFieldNotes(docsOut);
+  const fieldNotesIntro =
+    fieldNotes.length === 0
+      ? "Field notes will appear here after upstream posts are synced."
+      : "Short narrative guides for the product ideas behind Topogram.";
   fs.mkdirSync(postDir, { recursive: true });
   fs.writeFileSync(
     path.join(postDir, "index.mdx"),
@@ -203,27 +209,13 @@ title: Field Notes
 description: Narrative guides for understanding Topogram's app-map model, slices, and proof workflow.
 ---
 
-import { LinkCard } from '@astrojs/starlight/components';
+import FieldNotesList from '../../../components/FieldNotesList.astro';
 
 # Field Notes
 
-Short narrative guides for the product ideas behind Topogram.
+${fieldNotesIntro}
 
-<div class="dual-audience">
-
-<LinkCard
-  title="Topogram Layers and Slices"
-  description="Model the app in layers, then query focused slices when it is time to work."
-  href="/post/layers-and-slices/"
-/>
-
-<LinkCard
-  title="How Topogram Manages SDLC"
-  description="SDLC records live in the app map; stateful changes go through the CLI."
-  href="/post/how-topogram-manages-sdlc/"
-/>
-
-</div>
+<FieldNotesList />
 `,
     "utf8",
   );
