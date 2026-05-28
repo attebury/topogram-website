@@ -1,7 +1,6 @@
 ---
 title: "Topogram, Harnesses, Tools, Rules, and Skills"
 description: "Topogram gives agents structured app context that harnesses, tools, rules, and skills do not provide by themselves."
-draft: true
 ---
 
 # Topogram, Harnesses, Tools, Rules, and Skills
