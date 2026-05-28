@@ -266,6 +266,5 @@ commands, graph nodes linked to work, verification before done.
 ## Related
 
 - [SDLC](/concepts/sdlc/): profiles, commands, grooming, and commit gates
-- [Layers and Slices](/post/layers-and-slices/): task slices and proof sections
 - [Agent First Run](/agent-first-run/): first commands for SDLC-adopted projects
 - [Glossary](/concepts/glossary/): `term_task`, `term_verification`, `term_enforced_rule`

@@ -64,6 +64,7 @@ function fieldNoteFromFile(docsRoot, filePath) {
     slug,
     href: `/${slug}/`,
     title,
+    draft: metadata.draft,
     description: metadata.description ?? firstBlockquote(content) ?? "",
   };
 }
@@ -88,7 +89,8 @@ export function discoverFieldNotes(docsRoot) {
     .filter((entry) => entry.isFile())
     .filter((entry) => /^index\.mdx?$/i.test(entry.name) === false)
     .filter((entry) => /\.mdx?$/i.test(entry.name))
-    .map((entry) => fieldNoteFromFile(docsRoot, path.join(postDir, entry.name)));
+    .map((entry) => fieldNoteFromFile(docsRoot, path.join(postDir, entry.name)))
+    .filter((note) => note.draft !== "true");
 
   return sortFieldNotes(notes);
 }

@@ -22,7 +22,7 @@ For web beta, Topogram proves semantic parity rather than screenshot parity:
 - `ui-surface-contract` includes screen and widget `displayFields` derived from
   screen shapes, capability output shapes, and widget data bindings.
 - `topogram emit ui-realization-report ./topo --surface <web> --json`
-  reports each screen, route, region, widget usage, behavior realization,
+  reports each screen, navpoint, region, widget usage, behavior realization,
   display field set, design-token mapping, and generator support status.
 - React and SvelteKit bundled generators render supported widget patterns from
   those contract display fields and record marker coverage in
@@ -38,7 +38,7 @@ For web beta, Topogram proves semantic parity rather than screenshot parity:
 **How to tell instances apart** when tests, agents, or A11y need a narrower target:
 
 - **`data-topogram-region`** — different regions (`results` vs `toolbar`) are already distinct slots in the `semantic_ui`.
-- **Layout / route context** — scope queries under the screen’s route or a parent `<main>` keyed to the current screen.
+- **Layout / navpoint context** — scope queries under the screen’s navpoint path or a parent `<main>` keyed to the current screen.
 - **Optional team convention** — if you need a stable **binding-level** id (e.g. two grids bound to different capabilities), add a second attribute in the Svelte layer only, such as `data-topogram-use="item_list_results"` or `aria-labelledby` tied to a unique heading, without changing the **contract** id on `data-topogram-widget`.
 
 Coverage that greps for a single marker per file still passes when the string appears more than once; tests that need “exactly one” should be written against **binding** or **region**, not against uniqueness of `data-topogram-widget`.
@@ -86,7 +86,7 @@ This section is about **where decisions live** so teams don’t improvise stack 
    Reference: [engine/tests/fixtures/workspaces/app-basic/topogram.project.json](https://github.com/attebury/topogram/blob/main/engine/tests/fixtures/workspaces/app-basic/topogram.project.json).
 
 2. **`topo/` declares the semantic web surface**  
-   A `surface` with `type web` (e.g. `proj_web`) **realizes** the shared `semantic_ui` and owns **routes** (`route records`), **`web_hints`**, and links to capabilities. The **UI intent** (screens, widgets, tokens) stays in the **`semantic_ui`**; SvelteKit vs React vs vanilla is a **runtime/generator** choice, not a second copy of the product graph.
+   A `surface` with `type web` (e.g. `proj_web`) **realizes** the shared `semantic_ui` and owns **navpoints** (`navpoint` records), **`web_hints`**, and links to capabilities. The **UI intent** (screens, widgets, tokens) stays in the **`semantic_ui`**; SvelteKit vs React vs vanilla is a **runtime/generator** choice, not a second copy of the product graph.
 
 3. **Org-owned generator**  
    Swap `"generator"` for a package-backed id (e.g. `@acme/generator-sveltekit`) per [docs/authoring/generator-packs.md](/authoring/generator-packs/). Still a `web`; still fed normalized contracts.
@@ -126,7 +126,7 @@ This section is about **where decisions live** so teams don’t improvise stack 
 
 ### Multiple web stacks (e.g. React and SvelteKit)
 
-One **`semantic_ui`** stays canonical in `topo/` (screens, widgets, `design_tokens`). **Each stack** gets its own **`web`** surface that **realizes** that contract plus the same capabilities—only routes and hints differ where the product allows. The fixture pair illustrates this: [proj-web-surface.tg](https://github.com/attebury/topogram/blob/main/engine/tests/fixtures/workspaces/app-basic/surfaces/proj-web-surface.tg) vs [proj-web-surface-react.tg](https://github.com/attebury/topogram/blob/main/engine/tests/fixtures/workspaces/app-basic/surfaces/proj-web-surface-react.tg), both listing `proj_semantic_ui` under `realizes`.
+One **`semantic_ui`** stays canonical in `topo/` (screens, widgets, `design_tokens`). **Each stack** gets its own **`web`** surface that **realizes** that contract plus the same capabilities—only navpoints and hints differ where the product allows. The fixture pair illustrates this: [proj-web-surface.tg](https://github.com/attebury/topogram/blob/main/engine/tests/fixtures/workspaces/app-basic/surfaces/proj-web-surface.tg) vs [proj-web-surface-react.tg](https://github.com/attebury/topogram/blob/main/engine/tests/fixtures/workspaces/app-basic/surfaces/proj-web-surface-react.tg), both listing `proj_semantic_ui` under `realizes`.
 
 In **`topogram.project.json`**, add **two** `web` runtimes with **different** `surface` ids and **different** `generator` ids, and point **`outputs`** at two trees (example shapes):
 
@@ -487,7 +487,7 @@ After adapters exist, **yes**—teams often want **stable hooks** in **maintaine
 
 **Script / codemod (prefer when structure is boring):**
 
-- Best when **one convention** holds: e.g. each Topogram-backed widget is a **single wrapper** component or a known outer `div`; **screen ↔ route** mapping is stable from `web` `route records`.
+- Best when **one convention** holds: e.g. each Topogram-backed widget is a **single wrapper** component or a known outer `div`; **navpoint ↔ screen** mapping is stable from `web` `navpoint` records.
 - Use **AST-aware** tools (Svelte compiler API, Babel, TypeScript transformer, SwiftSyntax) so you don’t break templates/JSX. Output is a **normal diff** for code review and CI.
 - **Idempotent** transforms (skip if marker already present; don’t double-wrap).
 - Fits **repeatability**: same codemod on many files after a spec change.
@@ -498,15 +498,15 @@ After adapters exist, **yes**—teams often want **stable hooks** in **maintaine
 - Give the agent **`query slice --widget …`**, **`emit ui-widget-contract`**, and **edit boundaries** from **`topogram agent brief`**; require **human review** of every file.
 - Higher **variance** and cost; still valuable for **one-off** migrations.
 
-**Hybrid (what many teams will do):** codemod inserts markers on **your** wrapper components only; agent handles **edge routes**; CI runs **`topogram widget check`** (and optional **grep/assert** that each bound screen’s realization includes the expected widget id).
+**Hybrid (what many teams will do):** codemod inserts markers on **your** wrapper components only; agent handles **edge navpoints**; CI runs **`topogram widget check`** (and optional **grep/assert** that each bound screen’s realization includes the expected widget id).
 
-**Product-shaped future:** an emit artifact listing **expected markers per route/binding** would let CI **fail** when maintained code drifts from **adopted** `screen.renders`—insertion itself can stay **script or agent**; **verification** should be **command-owned** where possible.
+**Product-shaped future:** an emit artifact listing **expected markers per navpoint/binding** would let CI **fail** when maintained code drifts from **adopted** `screen.renders`—insertion itself can stay **script or agent**; **verification** should be **command-owned** where possible.
 
 ---
 
 ## Complete example (copy-paste walkthrough)
 
-Below is a **minimal but end-to-end illustration**: one widget (`widget_data_grid`), one screen binding (`item_list` / `results`), a web route (`/items`), and a maintained Svelte component that implements the contract’s props/events at the JS level. Real projects should mirror the richer **`app-basic`** fixture under [engine/tests/fixtures/workspaces/app-basic](https://github.com/attebury/topogram/tree/main/engine/tests/fixtures/workspaces/app-basic) for valid graphs.
+Below is a **minimal but end-to-end illustration**: one widget (`widget_data_grid`), one screen binding (`item_list` / `results`), a web navpoint (`/items`), and a maintained Svelte component that implements the contract’s props/events at the JS level. Real projects should mirror the richer **`app-basic`** fixture under [engine/tests/fixtures/workspaces/app-basic](https://github.com/attebury/topogram/tree/main/engine/tests/fixtures/workspaces/app-basic) for valid graphs.
 
 ### 1) `topo/widgets/widget-data-grid.tg`
 
@@ -586,8 +586,8 @@ screen screen_item_list {
   status active
 }
 
-route route_item_list {
-  name "Items Route"
+navpoint nav_item_list {
+  name "Items Navpoint"
   description "Open the item list."
   path "/items"
   screen screen_item_list
@@ -598,7 +598,7 @@ route route_item_list {
 
 (You still need **`cap_list_items`**, **`shape_output_item_card`**, **`entity_item`**, etc., elsewhere in `topo/` for a passing `topogram check`—pull from **app-basic** rather than inventing partial shapes.)
 
-### 3) `topo/surfaces/proj-web-surface.tg` (route for the list)
+### 3) `topo/surfaces/proj-web-surface.tg` (navpoint for the list)
 
 ```tg
 surface proj_web {
@@ -608,12 +608,12 @@ surface proj_web {
 
   outputs [semantic_ui, web_app]
 
-  routes {
-    route route_item_list path "/items"
+  navpoints {
+    navpoint nav_item_list path "/items"
   }
 
   navigation {
-    route route_item_list group main label "Items" order 10 visible true default true
+    navpoint nav_item_list group main label "Items" order 10 visible true default true
   }
 
   status active

@@ -80,7 +80,7 @@ screen item_list {
 ```
 
 Concrete `web`, `ios`, and `android` surfaces realize
-the shared UI contract. They own routes and surface hints, not widget placement.
+the shared UI contract. They own navpoints and surface hints, not widget placement.
 
 Use `layout.pattern` to name the reusable work archetype and slot `role` to
 name why a region exists in that layout. `screen.renders` entries are the agent
@@ -257,8 +257,8 @@ style evidence, unproved structured component references, and `contract_only`
 or `unsupported` behavior.
 
 Use `work-map` when the question is broader than one slice. It summarizes the
-readable chain from route to screen to layout to region to render to widget to
-component map, then lists design/style gaps and drill-down proof commands. It is
+readable chain from navpoint to screen to layout to region to render to widget
+to component map, then lists design/style gaps and drill-down proof commands. It is
 an explorer report, not a renderer:
 
 ```bash
@@ -336,7 +336,7 @@ disappear or be replaced by an unmarked generic fallback.
 ## Web UI beta proof
 
 Topogram's beta UI proof is web-first and semantic. React and SvelteKit
-generation must preserve the same screens, routes, regions, widget usages,
+generation must preserve the same screens, navpoints, regions, widget usages,
 display fields, behavior coverage, and design-token intent from one
 `semantic_ui`.
 

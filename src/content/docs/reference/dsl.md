@@ -48,7 +48,8 @@ names.
 - `theme`
 - `widget`
 - `section`
-- `route`
+- `navpoint`
+- `endpoint`
 - `region`
 - `layout`
 - `design_language`
@@ -238,19 +239,20 @@ reusable regions from `region` records.
 `screen_regions` remains available for one-off regions and per-screen
 overrides.
 
-Concrete surfaces own routes and hints:
+Concrete surfaces own navpoints and hints:
 
-- `routes`
+- `navpoints`
 - `navigation`
 - `web_hints`
 - `ios_hints`
 
-`route` records are surface-neutral product destinations. They answer how a
-user reaches a screen, not what the screen renders.
+`navpoint` records are surface-neutral product destinations. They answer how a
+user reaches a screen, not what the screen renders. HTTP/API behavior belongs
+in `endpoint` records.
 
 ```tg
-route route_workout_logger {
-  name "Workout Logger Route"
+navpoint nav_workout_logger {
+  name "Workout Logger Navpoint"
   description "Open a specific workout session."
   path "/workouts/:id"
   params [id]
@@ -262,9 +264,9 @@ route route_workout_logger {
 }
 ```
 
-Concrete UI surfaces realize the routes they expose. A surface may override
-route realization concerns such as `path`, `auth`, `loader`, or `action`; path
-overrides must preserve the canonical route params.
+Concrete UI surfaces realize the navpoints they expose. A surface may override
+navpoint realization concerns such as `path`, `auth`, `loader`, or `action`;
+path overrides must preserve the canonical navpoint params.
 
 ```tg
 surface proj_web {
@@ -274,27 +276,63 @@ surface proj_web {
   realizes [proj_semantic_ui]
   outputs [app]
 
-  routes {
-    route route_home
-    route route_workout_logger path "/training/:id"
+  navpoints {
+    navpoint nav_home
+    navpoint nav_workout_logger path "/training/:id"
   }
 
   navigation {
     group main label "Main" placement primary pattern navigation_rail
-    route route_home group main label "Home" order 10 default true visible true sitemap include
-    route route_workout_logger visible false sitemap exclude breadcrumb route_home
+    navpoint nav_home group main label "Home" order 10 default true visible true sitemap include
+    navpoint nav_workout_logger visible false sitemap exclude breadcrumb nav_home
   }
 
   status active
 }
 ```
 
-Route-targeted `navigation` uses the existing navigation vocabulary:
+Navpoint-targeted `navigation` uses the existing navigation vocabulary:
 `placement` values are `primary`, `secondary`, or `utility`; `visible` and
 `default` are `true` or `false`; `sitemap` is `include` or `exclude`; and
 `pattern` uses normalized navigation patterns such as `navigation_rail`,
 `tabs`, `bottom_tabs`, and `stack_navigation`. Workflow frequency and setup
-ordering stay in `journey` records, not route navigation.
+ordering stay in `journey` records, not navpoint navigation.
+
+API surfaces use `endpoint` records. Endpoint ids should name the product
+operation, such as `endpoint_list_patients`, while HTTP method remains metadata.
+Endpoint response intent is explicit so agents and generators can distinguish
+array list APIs from object detail APIs without inferring shape from prose.
+
+```tg
+endpoint endpoint_list_patients {
+  name "List Patients Endpoint"
+  description "List patients for the API."
+  method GET
+  path "/api/patients"
+  capability cap_list_patients
+  success 200
+  auth user
+  request none
+  response_result collection
+  response_entity entity_patient
+  response_container json_array
+  status active
+}
+
+surface proj_api {
+  name "API"
+  description "HTTP API service."
+  type api
+  realizes [cap_list_patients]
+  outputs [server_contract]
+
+  endpoints {
+    endpoint endpoint_list_patients
+  }
+
+  status active
+}
+```
 
 `messages` models translation intent, not locale catalogs:
 

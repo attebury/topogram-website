@@ -68,6 +68,7 @@ Topogram uses these public command verbs:
 ## Proofs
 
 - [Proof Walkthrough](docs/proof-walkthrough.md): Runnable proof/demo program and branch/tag convention.
+- [Slice Benefit Experiment](docs/proof-slice-benefit-experiment.md): Repeatable clinic-ops comparison between Topogram slice-guided and unguided app coding.
 - [Generated/Maintained Proof Repo](https://github.com/attebury/topogram-proof-content-approval-v3): Current beta-story generated-to-maintained proof repository.
 - [Brownfield Proof Repo](https://github.com/attebury/topogram-proof-content-approval-brownfield-v3): Current beta-story brownfield extract/adopt and cross-stack proof repository.
 - [Widget Design Realization Proof Repo](https://github.com/attebury/topogram-proof-widget-design-realization): Focused proof for widget-first component maps, including the Markdown design matrix from `ui-design-coverage --format markdown`.
@@ -118,6 +119,7 @@ docs listed there.
 | Make an app safe for agents to change | [Brownfield Extract/Adopt](./start/brownfield-import.md), then [Agent First Run](./agent-first-run.md) |
 | Understand the beta story | [Beta Launch](./beta-launch.md) |
 | Evaluate beta demos | [Beta Demo Path](./start/beta-demo-path.md), then [Proof Walkthrough](./proof-walkthrough.md) |
+| Compare Topogram slices to unguided app coding | [Slice Benefit Experiment](./proof-slice-benefit-experiment.md) |
 | Evaluate beta readiness | [Beta Readiness](./beta-readiness.md) for the one-command smoke and release proof |
 | Understand what Topogram is and is not | [What Topogram Is](./concepts/what-is-topogram.md) |
 | Extract an existing app | [Brownfield Extract/Adopt](./start/brownfield-import.md) |
@@ -150,6 +152,7 @@ how an app map, extraction/adoption, generation, SDLC, agent packets, and
 maintained ownership fit together.
 
 - [Proof Walkthrough](./proof-walkthrough.md)
+- [Slice Benefit Experiment](./proof-slice-benefit-experiment.md)
 - [First 30 Minutes](./start/first-30-minutes.md)
 - [Beta Demo Path](./start/beta-demo-path.md)
 - [Beta Launch](./beta-launch.md)
@@ -378,12 +381,20 @@ node ./engine/src/cli.js onboard . --json
 node ./engine/src/cli.js agent brief . --json
 node ./engine/src/cli.js check . --json
 node ./engine/src/cli.js query list --json
+node ./engine/src/cli.js query modeling-guide ./topo --format markdown
 ```
 
 `onboard` is the read-first adoption loop. It diagnoses whether the workspace
 needs `init`, reports staged status for check/audit/generate/verify, and prints
 the exact next commands without writing artifacts, generating app output, or
 running project verification.
+
+`query modeling-guide` is the current public DSL authoring guide. Use it before
+starting broad app-map edits. It gives the CLI-owned phase order: feature
+scope, entities/rules, capabilities/persistence, endpoints/seed data,
+navpoints/screens/journeys, verification, then the implementation packet. Use
+`query repair-model` after a failed `check` when you need source-linked recovery
+examples.
 
 Read the smallest useful graph packet next. This one follows the public
 greenfield journey because it exercises the same query path agents use for
@@ -1865,9 +1876,22 @@ to the relevant command.
 topogram onboard --json
 topogram agent brief --json
 topogram query list --json
+topogram query implementation-prep ./topo --task <task-id> --detail compact --json
+topogram query modeling-guide ./topo --format markdown
 topogram query show <name> --json
 topogram check --json
 ```
+
+Use `query modeling-guide` before broad DSL authoring, especially in sparse or
+invalid workspaces. It is read-only and gives the CLI-owned phase order for the
+smallest valid current-feature model slice: feature scope, entities/rules,
+capabilities/persistence, endpoints/seed data, navpoints/screens/journeys,
+verification, then implementation entry. Use `query repair-model` after a failed
+check for source-linked repair guidance.
+
+For task implementation, prefer `query implementation-prep` before broad slice
+queries. It returns the current state, active workflow bucket, advisory
+model/app-work policy, exact next commands, and compact implementation contracts.
 
 If the project has adopted SDLC and the work is tied to a task or bug, add:
 
@@ -1879,6 +1903,7 @@ topogram query sdlc-ready ./topo --json
 topogram sdlc explain <task-id> --json
 topogram sdlc start <task-id> . --actor <actor-id> --json
 topogram sdlc start <task-id> . --actor <actor-id> --write --json
+topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json
 topogram query slice ./topo --task <task-id> --json
 topogram onboard . --task <task-id> --write --out-dir ./artifacts
 topogram query sdlc-proof-gaps ./topo --task <task-id> --json
@@ -1948,7 +1973,7 @@ topogram query slice ./topo --surface proj_web --screen <screen-id> --detail com
 ```
 
 `semantic_ui` owns semantic UI. Concrete web/native surfaces inherit it and own
-routes and surface hints.
+navpoints and surface hints.
 Focused UI slices include an `agent_readiness` section. It summarizes whether
 the screen, layout, region, widget, or component map is ready to edit, what
 context is missing, which design/i18n/ARIA gaps need review, which widget
@@ -1978,6 +2003,7 @@ generated app outputs.
 topogram query slice ./topo --mode implementation --task <task-id> --json
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format markdown
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format html
+topogram query implementation-prep ./topo --mode implementation --task <task-id> --detail compact --include-file server.mjs --json
 topogram emit context-slice ./topo --mode implementation --task <task-id> --format html --write --out-dir ./artifacts
 topogram onboard . --task <task-id> --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --mode implementation --task <task-id> --profile standard --write --out-dir ./artifacts
@@ -2718,7 +2744,7 @@ screen item_list {
 ```
 
 Concrete `web`, `ios`, and `android` surfaces realize
-the shared UI contract. They own routes and surface hints, not widget placement.
+the shared UI contract. They own navpoints and surface hints, not widget placement.
 
 Use `layout.pattern` to name the reusable work archetype and slot `role` to
 name why a region exists in that layout. `screen.renders` entries are the agent
@@ -2895,8 +2921,8 @@ style evidence, unproved structured component references, and `contract_only`
 or `unsupported` behavior.
 
 Use `work-map` when the question is broader than one slice. It summarizes the
-readable chain from route to screen to layout to region to render to widget to
-component map, then lists design/style gaps and drill-down proof commands. It is
+readable chain from navpoint to screen to layout to region to render to widget
+to component map, then lists design/style gaps and drill-down proof commands. It is
 an explorer report, not a renderer:
 
 ```bash
@@ -2974,7 +3000,7 @@ disappear or be replaced by an unmarked generic fallback.
 ## Web UI beta proof
 
 Topogram's beta UI proof is web-first and semantic. React and SvelteKit
-generation must preserve the same screens, routes, regions, widget usages,
+generation must preserve the same screens, navpoints, regions, widget usages,
 display fields, behavior coverage, and design-token intent from one
 `semantic_ui`.
 
@@ -3006,12 +3032,12 @@ what remains preview-only.
 
 Status: current
 Audience: front-end developers, designers, and coding agents
-Use when: you need to understand how routes, screens, layouts, regions, renders, widgets, and component maps work together.
+Use when: you need to understand how navpoints, screens, layouts, regions, renders, widgets, and component maps work together.
 
 Topogram UI structure follows this chain:
 
 ```text
-route -> screen -> layout -> region -> render -> widget -> component_map
+navpoint -> screen -> layout -> region -> render -> widget -> component_map
 ```
 
 The graph is not a render tree. It is a work map. It names the reusable UI
@@ -3055,13 +3081,13 @@ screen screen_intake_queue {
   load cap_list_intake_items
   item_shape shape_intake_item
   renders {
-    region results widget widget_review_queue id intake_queue_results intent "Review, select, and assign intake items." priority high style_intent [review_density] data rows from cap_list_intake_items event row_select navigate route_intake_detail
+    region results widget widget_review_queue id intake_queue_results intent "Review, select, and assign intake items." priority high style_intent [review_density] data rows from cap_list_intake_items event row_select navigate nav_intake_detail
   }
   status active
 }
 
-route route_intake_queue {
-  name "Intake Queue Route"
+navpoint nav_intake_queue {
+  name "Intake Queue Navpoint"
   description "Open the intake queue."
   path "/intake"
   screen screen_intake_queue
@@ -3126,7 +3152,7 @@ topogram query slice ./topo --surface proj_web --screen intake_queue --detail co
 The useful parts are:
 
 - readiness: whether the agent can start safely;
-- work map chain: screen, layout, route, inherited regions, and slot roles;
+- work map chain: screen, layout, navpoint, inherited regions, and slot roles;
 - render entries: the work leaves where region, widget, data, action, and design obligations meet;
 - design review: unsupported, contract-only, missing-platform, missing-state, missing-token, missing ARIA, and missing i18n work;
 - proof commands: `topogram widget check`, `topogram widget behavior`, `topogram query ui-design-coverage`, and `topogram emit ui-realization-report`.
@@ -4524,14 +4550,14 @@ flowchart TB
 | Contracts           | `semantic_ui`, `api`, `db`, `cli` surfaces                      | Typed intent without framework trees                 |
 | UI work map         | `layout`, `region`, `render`, `widget`, `component_map` | Where product work belongs                           |
 | Design              | `design_language`, token mappings, style intent                 | Semantic design scope, not CSS                       |
-| Platform            | `web`, `ios`, `android`                                         | Routes and hints that inherit the shared UI contract |
+| Platform            | `web`, `ios`, `android`                                         | Navpoints and hints that inherit the shared UI contract |
 | Stack realization   | generator output or maintained source                           | React, SvelteKit, Prisma, and so on                  |
 | Proof               | `verification`, emit reports, gate commands                     | Whether a change is safe                             |
 
 The UI graph is a **work map**, not a render tree:
 
 ```text
-route → screen → layout → region → render → widget → component_map
+navpoint → screen → layout → region → render → widget → component_map
 ```
 
 Layouts say where work belongs. Widgets say what reusable semantic UI is needed.
@@ -5057,6 +5083,8 @@ topogram generate
 topogram generate ./topo --out ./app
 topogram emit <target> ./topo --json
 topogram emit <target> ./topo --write --out-dir ./artifacts
+topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
+topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --write --out-dir ./generated-scaffold
 topogram emit glossary ./topo --write --out-dir docs/concepts
 topogram emit glossary ./topo --check docs/concepts/glossary.md
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
@@ -5083,7 +5111,9 @@ runtimes, links web to API and API to database, and reports the next
 topogram agent brief --json
 topogram query list --json
 topogram query show <name> --json
+topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json
 topogram query slice ./topo --task <task-id> --json
+topogram query slice ./topo --mode implementation --task <task-id> --detail compact --json
 topogram query slice ./topo --task <task-id> --detail compact --format markdown
 topogram query slice ./topo --task <task-id> --detail compact --format html
 topogram query slice ./topo --journey journey_greenfield_start_from_template --json
@@ -5095,6 +5125,10 @@ topogram query slice ./topo --surface proj_web --screen item_list --widget widge
 topogram query context-savings ./topo --task <task-id> --detail compact --format markdown
 topogram query context-savings ./topo --journey journey_greenfield_start_from_template --detail compact --json
 topogram query context-savings ./topo --task <task-id> --transcript ./agent-run.jsonl --json
+topogram query repair-model ./topo --json
+topogram query repair-model ./topo --format markdown
+topogram query modeling-guide ./topo --json
+topogram query modeling-guide ./topo --mode greenfield-app --format markdown
 topogram query work-map ./topo --surface proj_web --screen item_list --format markdown
 topogram query work-map ./topo --surface proj_web --json
 topogram query sdlc-grooming ./topo --json
@@ -5113,8 +5147,11 @@ Focused query reports:
 
 | Query | Example |
 | --- | --- |
-| `slice` | `topogram query slice ./topo --task <task-id> --detail compact --format html` |
+| `slice` | `topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format html` |
+| `implementation-prep` | `topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json` |
 | `context-savings` | `topogram query context-savings ./topo --task <task-id> --detail compact --format markdown` |
+| `repair-model` | `topogram query repair-model ./topo --format markdown` |
+| `modeling-guide` | `topogram query modeling-guide ./topo --mode greenfield-app --format markdown` |
 | `verification-targets` | `topogram query verification-targets ./topo --task <task-id> --json` |
 | `widget-behavior` | `topogram query widget-behavior ./topo --surface proj_web --json` |
 | `ui-design-coverage` | `topogram query ui-design-coverage ./topo --surface proj_web --json` |
@@ -5145,10 +5182,33 @@ Focused query reports:
 defensive local transcript comparison. Its token counts are approximate and
 reported as estimates.
 
+`repair-model` is a read-only recovery packet for invalid Topogram DSL. It
+works when `topogram check` fails, groups diagnostics by likely repair category,
+includes portable source excerpts and examples, and does not edit or silently
+rescue invalid `topo/**` source.
+
+`modeling-guide` is the read-only public authoring guide for sparse, invalid,
+or greenfield app maps. It works before a valid resolved graph exists and shows
+a recommended authoring order: feature scope, entities/rules,
+capabilities/persistence, endpoints/seed data, navpoints/screens/journeys,
+verification, then implementation entry. Its examples cover `domain`, `entity`,
+`capability`, `region`, `layout`, `section`, `screen.renders`, `navpoint`,
+`endpoint`, `journey`, `seed_data`, and `verification`.
+
+`implementation-prep` is the first implementation-agent packet for a task or
+semantic focus. It returns one `state`, one `active_bucket`, and bucketed next
+steps for orienting, repairing the model, modeling a feature, preparing
+implementation, refreshing a scaffold, implementing, and verifying. Compact
+mode keeps the full context slice out of the response and links richer drill-down
+queries through bucket `next_queries`.
+
 `query slice` supports JSON for tools, Markdown for terminal review, and static
 HTML for a local human-readable work cockpit. The slice JSON includes `frame`,
 `relationships`, `work_items`, `proof_plan`, and `attention_budget` alongside
 compatible `depends_on`, `related`, and `verification_targets` fields.
+Compact implementation slices use a lean packet profile: they prioritize
+`implementation_contracts`, proof plan, write scope, and omitted-section
+follow-up queries instead of embedding broad related context by default.
 `emit context-slice --format html --write --out-dir <dir>` writes
 `<focus-id>.context-slice.html`.
 
@@ -5192,6 +5252,7 @@ topogram emit work-map-report ./topo --surface proj_web --format markdown
 topogram emit work-map-report ./topo --surface proj_web --format markdown --write --out-dir ./artifacts
 topogram emit context-slice ./topo --task <task-id> --format html --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
+topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
 topogram emit glossary ./topo --json
 ```
 
@@ -5348,7 +5409,8 @@ names.
 - `theme`
 - `widget`
 - `section`
-- `route`
+- `navpoint`
+- `endpoint`
 - `region`
 - `layout`
 - `design_language`
@@ -5538,19 +5600,20 @@ reusable regions from `region` records.
 `screen_regions` remains available for one-off regions and per-screen
 overrides.
 
-Concrete surfaces own routes and hints:
+Concrete surfaces own navpoints and hints:
 
-- `routes`
+- `navpoints`
 - `navigation`
 - `web_hints`
 - `ios_hints`
 
-`route` records are surface-neutral product destinations. They answer how a
-user reaches a screen, not what the screen renders.
+`navpoint` records are surface-neutral product destinations. They answer how a
+user reaches a screen, not what the screen renders. HTTP/API behavior belongs
+in `endpoint` records.
 
 ```tg
-route route_workout_logger {
-  name "Workout Logger Route"
+navpoint nav_workout_logger {
+  name "Workout Logger Navpoint"
   description "Open a specific workout session."
   path "/workouts/:id"
   params [id]
@@ -5562,9 +5625,9 @@ route route_workout_logger {
 }
 ```
 
-Concrete UI surfaces realize the routes they expose. A surface may override
-route realization concerns such as `path`, `auth`, `loader`, or `action`; path
-overrides must preserve the canonical route params.
+Concrete UI surfaces realize the navpoints they expose. A surface may override
+navpoint realization concerns such as `path`, `auth`, `loader`, or `action`;
+path overrides must preserve the canonical navpoint params.
 
 ```tg
 surface proj_web {
@@ -5574,27 +5637,63 @@ surface proj_web {
   realizes [proj_semantic_ui]
   outputs [app]
 
-  routes {
-    route route_home
-    route route_workout_logger path "/training/:id"
+  navpoints {
+    navpoint nav_home
+    navpoint nav_workout_logger path "/training/:id"
   }
 
   navigation {
     group main label "Main" placement primary pattern navigation_rail
-    route route_home group main label "Home" order 10 default true visible true sitemap include
-    route route_workout_logger visible false sitemap exclude breadcrumb route_home
+    navpoint nav_home group main label "Home" order 10 default true visible true sitemap include
+    navpoint nav_workout_logger visible false sitemap exclude breadcrumb nav_home
   }
 
   status active
 }
 ```
 
-Route-targeted `navigation` uses the existing navigation vocabulary:
+Navpoint-targeted `navigation` uses the existing navigation vocabulary:
 `placement` values are `primary`, `secondary`, or `utility`; `visible` and
 `default` are `true` or `false`; `sitemap` is `include` or `exclude`; and
 `pattern` uses normalized navigation patterns such as `navigation_rail`,
 `tabs`, `bottom_tabs`, and `stack_navigation`. Workflow frequency and setup
-ordering stay in `journey` records, not route navigation.
+ordering stay in `journey` records, not navpoint navigation.
+
+API surfaces use `endpoint` records. Endpoint ids should name the product
+operation, such as `endpoint_list_patients`, while HTTP method remains metadata.
+Endpoint response intent is explicit so agents and generators can distinguish
+array list APIs from object detail APIs without inferring shape from prose.
+
+```tg
+endpoint endpoint_list_patients {
+  name "List Patients Endpoint"
+  description "List patients for the API."
+  method GET
+  path "/api/patients"
+  capability cap_list_patients
+  success 200
+  auth user
+  request none
+  response_result collection
+  response_entity entity_patient
+  response_container json_array
+  status active
+}
+
+surface proj_api {
+  name "API"
+  description "HTTP API service."
+  type api
+  realizes [cap_list_patients]
+  outputs [server_contract]
+
+  endpoints {
+    endpoint endpoint_list_patients
+  }
+
+  status active
+}
+```
 
 `messages` models translation intent, not locale catalogs:
 
@@ -7463,3 +7562,202 @@ The proofs show contract, compile, and workflow parity. They do not claim pixel
 parity, full production deployment readiness, or exhaustive runtime equivalence.
 When a proof cannot establish something, it should say so in the step result or
 parity report.
+
+---
+
+# Source: docs/proof-slice-benefit-experiment.md
+
+# Slice Benefit Experiment
+
+> A repeatable clinic-ops proof for comparing Topogram slice-guided agent work with unguided app coding.
+
+Status: current
+Audience: maintainers and evaluators testing whether Topogram slices improve agent work
+Use when: you want a repeatable comparison between Topogram-guided and unguided app coding.
+
+The slice benefit experiment compares two agent arms on the same clinic
+operations app:
+
+- `topogram`: the workspace is initialized through the public
+  `topogram init --adopt-sdlc` path, receives deterministic experiment overlays
+  for the actor, aggregate requirement, acceptance criterion, and per-feature
+  implementation tasks, the agent models the product in `topo/`, uses focused
+  mode-specific slices from the current feature task, then implements the app.
+- `vibe`: the agent works directly from the same product brief and feature waves
+  without Topogram records or slices.
+
+Both arms use the same model, temperature, stack constraints, feature waves,
+canonical seed fixture, public API acceptance contract, iteration budget,
+workspace isolation, and evaluator checks. The public API contract is copied to
+each workspace as `api-contract.json`; hidden checks must remain a subset of
+that visible contract. The Topogram bootstrap is local harness setup and is
+reported in the run manifest; Topogram modeling cost performed by the agent
+counts toward the Topogram arm so the result can be unfavorable or inconclusive
+without being hidden.
+
+The harness also supports a separate seeded-model mode:
+`--seed-topogram-model full`. In that mode, the Topogram arm starts from a
+frozen valid clinic-ops model in
+`experiments/slice-benefit-clinic-ops/topogram/clinic-ops-full-model.tg`, while
+the vibe arm remains unchanged. Seeded runs answer a narrower question: whether
+an existing Topogram model helps implementation and feature evolution. The
+seeded model footprint is reported separately as prepaid setup and is not
+included in API token totals.
+
+The primary real-world comparison mode is progressive parity:
+`--seed-topogram-model base --topogram-scaffold node-http-api
+--progressive-seed base-app`. In this mode both arms start from equivalent
+working base API behavior before provider tokens are measured. The Topogram arm
+also receives the frozen base model and a generated vanilla `node:http` scaffold
+from endpoint contracts; the vibe arm receives a handwritten base `server.mjs`
+with the same public behavior and no Topogram records. Measured work starts at
+wave 1. For later waves, the Topogram arm must update the model for the current
+feature, run `topogram check`, refresh the scaffold markers, then implement
+behavior. The vibe arm evolves its base app directly from the feature brief.
+
+Seeded-model runs intentionally use a leaner Topogram tool surface. The
+Topogram arm should run one CLI-native implementation prep packet at wave start:
+`topogram query implementation-prep ./topo --mode implementation --task <current-feature-task> --detail compact --include-file server.mjs --include-file seed-fixture.json --include-file package.json --json`.
+That packet returns one state, one active workflow bucket, and exact next
+commands. If the active bucket is `repair_model`, the agent repairs only
+`topo/**`; if it is `model_feature`, the agent adds scoped model records; if it
+is `scaffold`, the agent refreshes generated endpoint markers; if it is
+`implement`, the agent edits `server.mjs` and runs `run_public_check`. The
+harness still collects context-savings estimates for reporting, but the seeded
+agent is not asked to spend model iterations on broad context reports unless the
+packet links them as drill-down queries.
+
+For the Topogram arm, model validity is a harness-enforced boundary. The agent
+uses `implementation-prep` as the first workflow packet. It may call
+`modeling-guide`, `repair-model`, or `slice` only when the active bucket or
+`next_queries` asks for drill-down context. After any `topo/**` edit the harness
+blocks app code writes and app checks until the packet/check flow reports an
+implementation-ready state again. A wave that finishes with an invalid Topogram
+model receives an explicit model-validity failure in its wave result.
+
+## Commands
+
+Validate the frozen experiment inputs without calling an API:
+
+```bash
+npm run experiment:slice-benefit:dry-run -- --json
+```
+
+Run a deterministic mocked harness check:
+
+```bash
+npm run experiment:slice-benefit:run -- --provider mock --arms topogram --trials 1 --out-dir ./.tmp/slice-benefit-demo --json
+npm run experiment:slice-benefit:report -- --run-dir ./.tmp/slice-benefit-demo/mock-run --json
+```
+
+Run a deterministic seeded-model harness check:
+
+```bash
+npm run experiment:slice-benefit:run -- --provider mock --arms both --seed-topogram-model full --trials 1 --out-dir ./.tmp/slice-benefit-seeded-demo --json
+npm run experiment:slice-benefit:report -- --run-dir ./.tmp/slice-benefit-seeded-demo/mock-run --json
+```
+
+Run a deterministic progressive parity harness check:
+
+```bash
+npm run experiment:slice-benefit:run -- --provider mock --arms both --seed-topogram-model base --topogram-scaffold node-http-api --progressive-seed base-app --trials 1 --out-dir ./.tmp/slice-benefit-progressive-parity-demo --json
+npm run experiment:slice-benefit:report -- --run-dir ./.tmp/slice-benefit-progressive-parity-demo/mock-run --json
+```
+
+Run a Topogram-only real API stabilization pass manually:
+
+```bash
+cp .env.example .env.local
+# Edit .env.local and set OPENAI_API_KEY to a real OpenAI Platform API key.
+npm run experiment:slice-benefit:run -- --provider openai --arms topogram --trials 1 --json
+```
+
+Run a seeded-model paired pass manually when testing implementation leverage
+from an existing Topogram model:
+
+```bash
+npm run experiment:slice-benefit:run -- --provider openai --arms both --seed-topogram-model full --trials 3 --json
+```
+
+Run a progressive parity paired pass manually when testing scaffold leverage
+with a prepaid base app:
+
+```bash
+npm run experiment:slice-benefit:run -- --provider openai --arms both --seed-topogram-model base --topogram-scaffold node-http-api --progressive-seed base-app --trials 3 --json
+```
+
+Topogram-only runs are stabilization evidence, not comparative evidence. Run the
+paired comparison only after the Topogram arm can complete all waves with a
+valid model and hidden checks passing:
+
+```bash
+npm run experiment:slice-benefit:run -- --provider openai --arms both --trials 3 --json
+```
+
+Real runs are not part of fast CI. The harness writes run manifests, frozen input
+copies, usage logs, wave results, and Markdown/JSON reports under `.tmp/` by
+default. The harness loads ignored local secrets from `.env.local` by default,
+or from a relative file passed with `--env-file <path>`. Existing process
+environment values win over env-file values, and secret values are never written
+to manifests, usage logs, reports, or prompts. OpenAI runs preflight the
+selected model and tool schema before the paired trials start; pass
+`--skip-preflight` only when intentionally bypassing that guard. Transient
+provider failures are retried for 408, 409, 429, and 5xx
+responses; retry attempts are written to the usage log with provider request IDs
+and sanitized request-shape summaries when available. Tune retry behavior with
+`TOPOGRAM_OPENAI_MAX_RETRIES`, `TOPOGRAM_OPENAI_RETRY_BASE_MS`, and
+`TOPOGRAM_OPENAI_RETRY_MAX_MS`. The default real-run output budget is 12000
+tokens; set `TOPOGRAM_EXPERIMENT_MAX_OUTPUT_TOKENS` to a larger value when a
+model repeatedly truncates file edits.
+
+The real-provider harness uses the Responses function-calling item-list pattern:
+each tool turn passes prior `response.output` items plus matching
+`function_call_output` items as the next `input`. It sets
+`TOPOGRAM_OPENAI_STORE=false` behavior by default and requests
+`reasoning.encrypted_content` so reasoning-model state can be carried through
+stateless turns. Set `TOPOGRAM_OPENAI_STORE=true` only when you explicitly want
+provider-side response storage in addition to local item-list continuation.
+
+If the provider exhausts the retry budget for one wave, the harness records a
+wave-level `provider_error`, evaluates the partial workspace state, and
+continues. Published reports should treat those provider failures as caveats and
+should not silently omit them.
+
+## Evidence
+
+The frozen experiment lives in `experiments/slice-benefit-clinic-ops/` and
+includes:
+
+- product brief and stack constraints
+- canonical seed fixture in `seed-fixture.json`
+- public API acceptance contract in `evaluator/public-api-contract.json`
+- shared, Topogram-arm, and vibe-arm prompts
+- base app plus three feature waves
+- evaluator rubric and predeclared hidden route checks
+- manifest with paired trials, metrics, and fairness controls
+
+Both arms receive `seed-fixture.json`. The Topogram arm must convert it into
+Topogram `seed_data` records, while the vibe arm implements the same records
+directly in local code or local JSON fixtures. Hidden checks assert representative
+fixture ids so a passing app cannot satisfy the route shape while ignoring the
+shared data.
+
+In seeded-model mode, those `seed_data` records are already present in the
+frozen Topogram model. The Topogram arm should consume and verify that model,
+not spend experiment iterations recreating it.
+
+Each workspace also receives a local copy of `seed-fixture.json` at its root so
+both arms can read the same canonical fixture without relying on prompt memory.
+
+The report shows exact API usage fields when the real provider returns them. It
+also separates full Topogram cost from post-model amortized feature cost and
+keeps approximate `context-savings` estimates separate from API token usage.
+Reports include per-wave token/pass-rate breakdowns and tool-usage summaries so
+readers can distinguish base-app success, later-wave regressions, Topogram
+context use, and provider/output-limit failures.
+
+## Caveats
+
+Mock provider runs prove the harness, not Topogram's product value. Publishable
+claims require real API runs plus blind human review receipts for UX,
+maintainability, traceability, and code clarity.

@@ -122,11 +122,3 @@ contracts and write stack-specific output.
 Generated outputs can be replaced only when their generated sentinel is present.
 Maintained outputs are never overwritten; Topogram can still emit contracts,
 reports, checks, and migration proposals for maintained apps.
-
-<!-- topogram-website:field-notes:start -->
-
-## Field Notes
-
-- [Topogram Layers and Slices](/post/layers-and-slices/) — a narrative overview of app-map layers and focused work packets.
-
-<!-- topogram-website:field-notes:end -->

@@ -9,12 +9,12 @@ description: "A UI work map shows where an agent should make a UI change without
 
 Status: current
 Audience: front-end developers, designers, and coding agents
-Use when: you need to understand how routes, screens, layouts, regions, renders, widgets, and component maps work together.
+Use when: you need to understand how navpoints, screens, layouts, regions, renders, widgets, and component maps work together.
 
 Topogram UI structure follows this chain:
 
 ```text
-route -> screen -> layout -> region -> render -> widget -> component_map
+navpoint -> screen -> layout -> region -> render -> widget -> component_map
 ```
 
 The graph is not a render tree. It is a work map. It names the reusable UI
@@ -58,13 +58,13 @@ screen screen_intake_queue {
   load cap_list_intake_items
   item_shape shape_intake_item
   renders {
-    region results widget widget_review_queue id intake_queue_results intent "Review, select, and assign intake items." priority high style_intent [review_density] data rows from cap_list_intake_items event row_select navigate route_intake_detail
+    region results widget widget_review_queue id intake_queue_results intent "Review, select, and assign intake items." priority high style_intent [review_density] data rows from cap_list_intake_items event row_select navigate nav_intake_detail
   }
   status active
 }
 
-route route_intake_queue {
-  name "Intake Queue Route"
+navpoint nav_intake_queue {
+  name "Intake Queue Navpoint"
   description "Open the intake queue."
   path "/intake"
   screen screen_intake_queue
@@ -129,7 +129,7 @@ topogram query slice ./topo --surface proj_web --screen intake_queue --detail co
 The useful parts are:
 
 - readiness: whether the agent can start safely;
-- work map chain: screen, layout, route, inherited regions, and slot roles;
+- work map chain: screen, layout, navpoint, inherited regions, and slot roles;
 - render entries: the work leaves where region, widget, data, action, and design obligations meet;
 - design review: unsupported, contract-only, missing-platform, missing-state, missing-token, missing ARIA, and missing i18n work;
 - proof commands: `topogram widget check`, `topogram widget behavior`, `topogram query ui-design-coverage`, and `topogram emit ui-realization-report`.

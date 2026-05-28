@@ -19,12 +19,20 @@ node ./engine/src/cli.js onboard . --json
 node ./engine/src/cli.js agent brief . --json
 node ./engine/src/cli.js check . --json
 node ./engine/src/cli.js query list --json
+node ./engine/src/cli.js query modeling-guide ./topo --format markdown
 ```
 
 `onboard` is the read-first adoption loop. It diagnoses whether the workspace
 needs `init`, reports staged status for check/audit/generate/verify, and prints
 the exact next commands without writing artifacts, generating app output, or
 running project verification.
+
+`query modeling-guide` is the current public DSL authoring guide. Use it before
+starting broad app-map edits. It gives the CLI-owned phase order: feature
+scope, entities/rules, capabilities/persistence, endpoints/seed data,
+navpoints/screens/journeys, verification, then the implementation packet. Use
+`query repair-model` after a failed `check` when you need source-linked recovery
+examples.
 
 Read the smallest useful graph packet next. This one follows the public
 greenfield journey because it exercises the same query path agents use for

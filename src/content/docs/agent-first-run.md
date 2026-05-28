@@ -55,9 +55,22 @@ to the relevant command.
 topogram onboard --json
 topogram agent brief --json
 topogram query list --json
+topogram query implementation-prep ./topo --task <task-id> --detail compact --json
+topogram query modeling-guide ./topo --format markdown
 topogram query show <name> --json
 topogram check --json
 ```
+
+Use `query modeling-guide` before broad DSL authoring, especially in sparse or
+invalid workspaces. It is read-only and gives the CLI-owned phase order for the
+smallest valid current-feature model slice: feature scope, entities/rules,
+capabilities/persistence, endpoints/seed data, navpoints/screens/journeys,
+verification, then implementation entry. Use `query repair-model` after a failed
+check for source-linked repair guidance.
+
+For task implementation, prefer `query implementation-prep` before broad slice
+queries. It returns the current state, active workflow bucket, advisory
+model/app-work policy, exact next commands, and compact implementation contracts.
 
 If the project has adopted SDLC and the work is tied to a task or bug, add:
 
@@ -69,6 +82,7 @@ topogram query sdlc-ready ./topo --json
 topogram sdlc explain <task-id> --json
 topogram sdlc start <task-id> . --actor <actor-id> --json
 topogram sdlc start <task-id> . --actor <actor-id> --write --json
+topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json
 topogram query slice ./topo --task <task-id> --json
 topogram onboard . --task <task-id> --write --out-dir ./artifacts
 topogram query sdlc-proof-gaps ./topo --task <task-id> --json
@@ -138,7 +152,7 @@ topogram query slice ./topo --surface proj_web --screen <screen-id> --detail com
 ```
 
 `semantic_ui` owns semantic UI. Concrete web/native surfaces inherit it and own
-routes and surface hints.
+navpoints and surface hints.
 Focused UI slices include an `agent_readiness` section. It summarizes whether
 the screen, layout, region, widget, or component map is ready to edit, what
 context is missing, which design/i18n/ARIA gaps need review, which widget
@@ -168,6 +182,7 @@ generated app outputs.
 topogram query slice ./topo --mode implementation --task <task-id> --json
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format markdown
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format html
+topogram query implementation-prep ./topo --mode implementation --task <task-id> --detail compact --include-file server.mjs --json
 topogram emit context-slice ./topo --mode implementation --task <task-id> --format html --write --out-dir ./artifacts
 topogram onboard . --task <task-id> --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --mode implementation --task <task-id> --profile standard --write --out-dir ./artifacts
@@ -246,7 +261,6 @@ hand-edited to make checks pass.
 
 ## Field Notes
 
-- [Topogram Layers and Slices](/post/layers-and-slices/) — how focused context packets fit into the larger app map.
 - [How Topogram Manages SDLC](/post/how-topogram-manages-sdlc/) — how agents should treat work state, proof, and CLI-owned mutations.
 
 <!-- topogram-website:field-notes:end -->

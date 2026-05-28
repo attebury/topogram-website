@@ -73,6 +73,8 @@ topogram generate
 topogram generate ./topo --out ./app
 topogram emit <target> ./topo --json
 topogram emit <target> ./topo --write --out-dir ./artifacts
+topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
+topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --write --out-dir ./generated-scaffold
 topogram emit glossary ./topo --write --out-dir docs/concepts
 topogram emit glossary ./topo --check docs/concepts/glossary.md
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
@@ -99,7 +101,9 @@ runtimes, links web to API and API to database, and reports the next
 topogram agent brief --json
 topogram query list --json
 topogram query show <name> --json
+topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json
 topogram query slice ./topo --task <task-id> --json
+topogram query slice ./topo --mode implementation --task <task-id> --detail compact --json
 topogram query slice ./topo --task <task-id> --detail compact --format markdown
 topogram query slice ./topo --task <task-id> --detail compact --format html
 topogram query slice ./topo --journey journey_greenfield_start_from_template --json
@@ -111,6 +115,10 @@ topogram query slice ./topo --surface proj_web --screen item_list --widget widge
 topogram query context-savings ./topo --task <task-id> --detail compact --format markdown
 topogram query context-savings ./topo --journey journey_greenfield_start_from_template --detail compact --json
 topogram query context-savings ./topo --task <task-id> --transcript ./agent-run.jsonl --json
+topogram query repair-model ./topo --json
+topogram query repair-model ./topo --format markdown
+topogram query modeling-guide ./topo --json
+topogram query modeling-guide ./topo --mode greenfield-app --format markdown
 topogram query work-map ./topo --surface proj_web --screen item_list --format markdown
 topogram query work-map ./topo --surface proj_web --json
 topogram query sdlc-grooming ./topo --json
@@ -129,8 +137,11 @@ Focused query reports:
 
 | Query | Example |
 | --- | --- |
-| `slice` | `topogram query slice ./topo --task <task-id> --detail compact --format html` |
+| `slice` | `topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format html` |
+| `implementation-prep` | `topogram query implementation-prep ./topo --task <task-id> --detail compact --include-file server.mjs --json` |
 | `context-savings` | `topogram query context-savings ./topo --task <task-id> --detail compact --format markdown` |
+| `repair-model` | `topogram query repair-model ./topo --format markdown` |
+| `modeling-guide` | `topogram query modeling-guide ./topo --mode greenfield-app --format markdown` |
 | `verification-targets` | `topogram query verification-targets ./topo --task <task-id> --json` |
 | `widget-behavior` | `topogram query widget-behavior ./topo --surface proj_web --json` |
 | `ui-design-coverage` | `topogram query ui-design-coverage ./topo --surface proj_web --json` |
@@ -161,10 +172,33 @@ Focused query reports:
 defensive local transcript comparison. Its token counts are approximate and
 reported as estimates.
 
+`repair-model` is a read-only recovery packet for invalid Topogram DSL. It
+works when `topogram check` fails, groups diagnostics by likely repair category,
+includes portable source excerpts and examples, and does not edit or silently
+rescue invalid `topo/**` source.
+
+`modeling-guide` is the read-only public authoring guide for sparse, invalid,
+or greenfield app maps. It works before a valid resolved graph exists and shows
+a recommended authoring order: feature scope, entities/rules,
+capabilities/persistence, endpoints/seed data, navpoints/screens/journeys,
+verification, then implementation entry. Its examples cover `domain`, `entity`,
+`capability`, `region`, `layout`, `section`, `screen.renders`, `navpoint`,
+`endpoint`, `journey`, `seed_data`, and `verification`.
+
+`implementation-prep` is the first implementation-agent packet for a task or
+semantic focus. It returns one `state`, one `active_bucket`, and bucketed next
+steps for orienting, repairing the model, modeling a feature, preparing
+implementation, refreshing a scaffold, implementing, and verifying. Compact
+mode keeps the full context slice out of the response and links richer drill-down
+queries through bucket `next_queries`.
+
 `query slice` supports JSON for tools, Markdown for terminal review, and static
 HTML for a local human-readable work cockpit. The slice JSON includes `frame`,
 `relationships`, `work_items`, `proof_plan`, and `attention_budget` alongside
 compatible `depends_on`, `related`, and `verification_targets` fields.
+Compact implementation slices use a lean packet profile: they prioritize
+`implementation_contracts`, proof plan, write scope, and omitted-section
+follow-up queries instead of embedding broad related context by default.
 `emit context-slice --format html --write --out-dir <dir>` writes
 `<focus-id>.context-slice.html`.
 
@@ -208,6 +242,7 @@ topogram emit work-map-report ./topo --surface proj_web --format markdown
 topogram emit work-map-report ./topo --surface proj_web --format markdown --write --out-dir ./artifacts
 topogram emit context-slice ./topo --task <task-id> --format html --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
+topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
 topogram emit glossary ./topo --json
 ```
 

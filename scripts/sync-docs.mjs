@@ -197,13 +197,6 @@ function injectFieldNotesBlock(relativePath, items) {
 }
 
 function applyFieldNotesIntegration() {
-  injectFieldNotesBlock("concepts/topogram-model.md", [
-    {
-      title: "Topogram Layers and Slices",
-      href: "/post/layers-and-slices/",
-      description: "a narrative overview of app-map layers and focused work packets.",
-    },
-  ]);
   injectFieldNotesBlock("concepts/sdlc.md", [
     {
       title: "How Topogram Manages SDLC",
@@ -212,11 +205,6 @@ function applyFieldNotesIntegration() {
     },
   ]);
   injectFieldNotesBlock("agent-first-run.md", [
-    {
-      title: "Topogram Layers and Slices",
-      href: "/post/layers-and-slices/",
-      description: "how focused context packets fit into the larger app map.",
-    },
     {
       title: "How Topogram Manages SDLC",
       href: "/post/how-topogram-manages-sdlc/",
