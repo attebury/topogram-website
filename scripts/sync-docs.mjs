@@ -26,6 +26,8 @@ const docsOut = path.join(root, "src", "content", "docs");
 const publicDir = path.join(root, "public");
 const preservedHome = path.join(docsOut, "index.mdx");
 const GITHUB_BLOB = `https://github.com/${repo}/blob/${ref}`;
+const FIELD_NOTES_START = "<!-- topogram-website:field-notes:start -->";
+const FIELD_NOTES_END = "<!-- topogram-website:field-notes:end -->";
 
 function run(cmd, opts = {}) {
   execSync(cmd, { stdio: "inherit", ...opts });
@@ -159,6 +161,104 @@ function removeExcept(dir, keepNames) {
   }
 }
 
+function stripFieldNotesBlock(content) {
+  const pattern = new RegExp(
+    `\\n?${escapeRegExp(FIELD_NOTES_START)}[\\s\\S]*?${escapeRegExp(FIELD_NOTES_END)}\\n?`,
+    "g",
+  );
+  return content.replace(pattern, "\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function fieldNotesBlock(items) {
+  const links = items
+    .map(({ title, href, description }) => `- [${title}](${href}) — ${description}`)
+    .join("\n");
+  return `${FIELD_NOTES_START}
+
+## Field Notes
+
+${links}
+
+${FIELD_NOTES_END}`;
+}
+
+function injectFieldNotesBlock(relativePath, items) {
+  const target = path.join(docsOut, relativePath);
+  if (!fs.existsSync(target)) return;
+  const content = stripFieldNotesBlock(fs.readFileSync(target, "utf8"));
+  fs.writeFileSync(target, `${content.trimEnd()}\n\n${fieldNotesBlock(items)}\n`, "utf8");
+}
+
+function writeFieldNotesLandingPage() {
+  const postDir = path.join(docsOut, "post");
+  fs.mkdirSync(postDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(postDir, "index.mdx"),
+    `---
+title: Field Notes
+description: Narrative guides for understanding Topogram's app-map model, slices, and proof workflow.
+---
+
+import { LinkCard } from '@astrojs/starlight/components';
+
+# Field Notes
+
+Short narrative guides for the product ideas behind Topogram.
+
+<div class="dual-audience">
+
+<LinkCard
+  title="Topogram Layers and Slices"
+  description="Model the app in layers, then query focused slices when it is time to work."
+  href="/post/layers-and-slices/"
+/>
+
+<LinkCard
+  title="How Topogram Manages SDLC"
+  description="SDLC records live in the app map; stateful changes go through the CLI."
+  href="/post/how-topogram-manages-sdlc/"
+/>
+
+</div>
+`,
+    "utf8",
+  );
+}
+
+function applyFieldNotesIntegration() {
+  writeFieldNotesLandingPage();
+  injectFieldNotesBlock("concepts/topogram-model.md", [
+    {
+      title: "Topogram Layers and Slices",
+      href: "/post/layers-and-slices/",
+      description: "a narrative overview of app-map layers and focused work packets.",
+    },
+  ]);
+  injectFieldNotesBlock("concepts/sdlc.md", [
+    {
+      title: "How Topogram Manages SDLC",
+      href: "/post/how-topogram-manages-sdlc/",
+      description: "why work records, proof, and command-owned state live together.",
+    },
+  ]);
+  injectFieldNotesBlock("agent-first-run.md", [
+    {
+      title: "Topogram Layers and Slices",
+      href: "/post/layers-and-slices/",
+      description: "how focused context packets fit into the larger app map.",
+    },
+    {
+      title: "How Topogram Manages SDLC",
+      href: "/post/how-topogram-manages-sdlc/",
+      description: "how agents should treat work state, proof, and CLI-owned mutations.",
+    },
+  ]);
+}
+
 console.log(`Syncing ${repo}@${ref} …`);
 
 fs.mkdirSync(path.dirname(cacheDir), { recursive: true });
@@ -198,6 +298,7 @@ const syncedReadme = path.join(docsOut, "README.md");
 if (fs.existsSync(syncedReadme)) {
   fs.rmSync(syncedReadme);
 }
+applyFieldNotesIntegration();
 
 fs.mkdirSync(publicDir, { recursive: true });
 for (const rag of ["llms.txt", "llms-full.txt"]) {

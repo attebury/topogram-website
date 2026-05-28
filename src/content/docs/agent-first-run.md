@@ -241,3 +241,12 @@ Use commands for stateful workflow mutations:
 Declarative `.tg` source may be edited directly. Status history, provenance,
 trust hashes, generated sentinels, archives, and release evidence should not be
 hand-edited to make checks pass.
+
+<!-- topogram-website:field-notes:start -->
+
+## Field Notes
+
+- [Topogram Layers and Slices](/post/layers-and-slices/) — how focused context packets fit into the larger app map.
+- [How Topogram Manages SDLC](/post/how-topogram-manages-sdlc/) — how agents should treat work state, proof, and CLI-owned mutations.
+
+<!-- topogram-website:field-notes:end -->

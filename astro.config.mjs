@@ -153,8 +153,9 @@ export default defineConfig({
           ],
         },
         {
-          label: "Posts",
+          label: "Field Notes",
           items: [
+            { label: "All field notes", slug: "post" },
             {
               label: "How Topogram manages SDLC",
               slug: "post/how-topogram-manages-sdlc",

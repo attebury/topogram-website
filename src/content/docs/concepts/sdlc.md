@@ -164,3 +164,11 @@ stateful mutations:
 | `app/.topogram-generated.json` | `topogram generate` |
 | Written emitted artifacts | `topogram emit --write` |
 | Release status reports and rollout evidence | `topogram release status` and `topogram release roll-consumers` |
+
+<!-- topogram-website:field-notes:start -->
+
+## Field Notes
+
+- [How Topogram Manages SDLC](/post/how-topogram-manages-sdlc/) — why work records, proof, and command-owned state live together.
+
+<!-- topogram-website:field-notes:end -->
