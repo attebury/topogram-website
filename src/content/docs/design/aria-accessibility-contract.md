@@ -34,7 +34,7 @@ platform UI tests.
 
 The v1 model is the `accessibility` block on `semantic_ui` surfaces:
 
-```tg
+```text
 accessibility {
   screen item_list role main name_from message msg_item_list_title keyboard standard focus visible live off
   widget widget_data_grid role grid name_from message msg_items_table_label keyboard data_grid focus roving_tabindex live off

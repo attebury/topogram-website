@@ -88,7 +88,7 @@ coverage?
 
 ## Component Map Example
 
-```tg
+```text
 component_map component_map_acme_ops_widgets {
   name "Acme Operations Component Map"
   description "Maps semantic operations widgets to stable Acme component refs."

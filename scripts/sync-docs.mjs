@@ -101,6 +101,15 @@ function rewriteMarkdownLinks(filePath) {
   }
 }
 
+/** Shiki does not ship a Topogram grammar; render .tg examples as plain text. */
+function rewriteUnsupportedCodeFences(filePath) {
+  const content = fs.readFileSync(filePath, "utf8");
+  const rewritten = content.replace(/^(\s*```)tg([ \t]*)$/gm, "$1text$2");
+  if (rewritten !== content) {
+    fs.writeFileSync(filePath, rewritten, "utf8");
+  }
+}
+
 function resolveFromDocsRoot(fromDir, pathPart) {
   return path.posix
     .normalize(path.posix.join(`/${fromDir || ""}`, pathPart))
@@ -251,6 +260,9 @@ walkMarkdownFiles(docsOut, ensureStarlightFrontmatter, {
   skipDirs: siteLocalMarkdownDirs,
 });
 walkMarkdownFiles(docsOut, rewriteMarkdownLinks, {
+  skipDirs: siteLocalMarkdownDirs,
+});
+walkMarkdownFiles(docsOut, rewriteUnsupportedCodeFences, {
   skipDirs: siteLocalMarkdownDirs,
 });
 const syncedReadme = path.join(docsOut, "README.md");

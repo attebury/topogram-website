@@ -70,7 +70,10 @@ check for source-linked repair guidance.
 
 For task implementation, prefer `query implementation-prep` before broad slice
 queries. It returns the current state, active workflow bucket, advisory
-model/app-work policy, exact next commands, and compact implementation contracts.
+model/app-work policy, exact next commands, `workflow_step` allowed/blocked
+actions, and compact implementation contracts. Follow the CLI-owned
+`workflow_step` rather than copying workflow state machines into prompts or
+local notes.
 
 If the project has adopted SDLC and the work is tied to a task or bug, add:
 

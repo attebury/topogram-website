@@ -23,7 +23,7 @@ that placement, and the platform component refs that implement the widget.
 
 ## Minimal Shape
 
-```tg
+```text
 region region_queue_results {
   name "Queue Results"
   description "Primary area for reviewing queued work."
@@ -78,7 +78,7 @@ navpoint nav_intake_queue {
 `component_map` says which platform component refs and stable style refs
 realize the widget.
 
-```tg
+```text
 design_language design_ops_ui {
   name "Operations UI"
   description "Shared design language for operations workflows."

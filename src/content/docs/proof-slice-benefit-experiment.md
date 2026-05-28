@@ -54,22 +54,25 @@ behavior. The vibe arm evolves its base app directly from the feature brief.
 Seeded-model runs intentionally use a leaner Topogram tool surface. The
 Topogram arm should run one CLI-native implementation prep packet at wave start:
 `topogram query implementation-prep ./topo --mode implementation --task <current-feature-task> --detail compact --include-file server.mjs --include-file seed-fixture.json --include-file package.json --json`.
-That packet returns one state, one active workflow bucket, and exact next
-commands. If the active bucket is `repair_model`, the agent repairs only
-`topo/**`; if it is `model_feature`, the agent adds scoped model records; if it
-is `scaffold`, the agent refreshes generated endpoint markers; if it is
-`implement`, the agent edits `server.mjs` and runs `run_public_check`. The
-harness still collects context-savings estimates for reporting, but the seeded
-agent is not asked to spend model iterations on broad context reports unless the
-packet links them as drill-down queries.
+That packet returns one state, one active workflow bucket, a `workflow_step`,
+allowed and blocked actions, and exact next commands. The public CLI packet owns
+the state machine; experiment prompts provide product/task context and tell the
+agent to follow `workflow_step`. The harness still collects context-savings
+estimates for reporting, but the seeded agent is not asked to spend model
+iterations on broad context reports unless the packet links them as drill-down
+queries.
 
 For the Topogram arm, model validity is a harness-enforced boundary. The agent
 uses `implementation-prep` as the first workflow packet. It may call
-`modeling-guide`, `repair-model`, or `slice` only when the active bucket or
-`next_queries` asks for drill-down context. After any `topo/**` edit the harness
-blocks app code writes and app checks until the packet/check flow reports an
-implementation-ready state again. A wave that finishes with an invalid Topogram
-model receives an explicit model-validity failure in its wave result.
+`modeling-guide`, `repair-model`, or `slice` only when the CLI packet asks for
+drill-down context. After any `topo/**` edit the harness blocks app code writes
+and app checks until the packet/check flow reports an implementation-ready state
+again. A wave that finishes with an invalid, unlinked, or scaffold-stale
+Topogram workflow state receives an explicit failure state in its wave result.
+The packet also guards against weak task links: linking a wave task to unrelated
+base capabilities is not enough if linked endpoint contracts and task `affects`
+records do not cover the feature terms named by the task. Verification refs are
+reported as proof targets, not feature coverage.
 
 ## Commands
 
@@ -107,6 +110,10 @@ cp .env.example .env.local
 # Edit .env.local and set OPENAI_API_KEY to a real OpenAI Platform API key.
 npm run experiment:slice-benefit:run -- --provider openai --arms topogram --trials 1 --json
 ```
+
+Topogram-only stabilization defaults to 18 iterations per wave. Paired
+comparisons keep the frozen manifest parity budget unless `--max-iterations` is
+passed explicitly.
 
 Run a seeded-model paired pass manually when testing implementation leverage
 from an existing Topogram model:

@@ -192,6 +192,24 @@ implementation, refreshing a scaffold, implementing, and verifying. Compact
 mode keeps the full context slice out of the response and links richer drill-down
 queries through bucket `next_queries`.
 
+The packet also includes `workflow_step`: a CLI-owned instruction with
+`success_condition`, `allowed_actions`, `blocked_actions`, `exact_next_command`,
+and `rerun_command`. Agents should follow that public packet instead of relying
+on prompt-local workflow recipes. `task_unlinked` means the model likely already
+contains matching endpoint/capability contracts, but the selected task lacks
+`affects` or `verification_refs` links; the packet includes candidate links and a
+task patch snippet before app work is considered ready.
+
+For task-focused packets, `implementation-prep` also compares the selected
+task's feature terms with linked endpoint contracts and records named in the
+task's `affects` list, including capabilities, endpoints, entities, screens,
+sections, and journeys. A task that mentions a feature such as waitlist,
+reminders, or audit trail will stay in the `model_feature` bucket when it is
+only linked to unrelated base contracts. Verification refs do not satisfy feature
+coverage by themselves; they remain proof targets. If matching contracts exist
+elsewhere in the model, the packet returns `task_unlinked`; otherwise it returns
+modeling guidance so the feature is modeled before app code is edited.
+
 `query slice` supports JSON for tools, Markdown for terminal review, and static
 HTML for a local human-readable work cockpit. The slice JSON includes `frame`,
 `relationships`, `work_items`, `proof_plan`, and `attention_budget` alongside

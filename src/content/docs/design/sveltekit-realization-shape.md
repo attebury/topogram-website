@@ -512,7 +512,7 @@ Below is a **minimal but end-to-end illustration**: one widget (`widget_data_gri
 
 Use the same widget definition as the fixture (props, events, behaviors, patterns):
 
-```tg
+```text
 widget widget_data_grid {
   name "Data Grid"
   description "Reusable tabular display for item rows"
@@ -550,7 +550,7 @@ widget widget_data_grid {
 Include at least the **screen**, **screen_regions** for `results`, and
 `renders` entries for the visible widget:
 
-```tg
+```text
 surface proj_semantic_ui {
   name "Example UI"
   type semantic_ui
@@ -600,7 +600,7 @@ navpoint nav_item_list {
 
 ### 3) `topo/surfaces/proj-web-surface.tg` (navpoint for the list)
 
-```tg
+```text
 surface proj_web {
   name "Example Web"
   type web

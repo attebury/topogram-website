@@ -82,7 +82,7 @@ with `category`, and can be tied to a domain with `domain`. Other records can
 reference slice-relevant vocabulary through `related_terms`; entities also keep
 `uses_terms` for business/domain language.
 
-```tg
+```text
 term term_context_slice {
   name "Context Slice"
   description "A focused graph packet for one implementation target."
@@ -124,7 +124,7 @@ topogram emit glossary ./topo --check docs/concepts/glossary.md
 normalized into `persistenceContracts`; explicit `persistence { ... }` blocks
 are preferred when generators need read/write semantics.
 
-```tg
+```text
 capability cap_list_program_templates {
   name "List Program Templates"
   description "Browse starter program templates."
@@ -159,7 +159,7 @@ exist on the referenced entity.
 them for catalog rows, demo data, or test data that should travel with the
 model instead of living as hardcoded generator sample rows.
 
-```tg
+```text
 seed_data seed_program_templates {
   name "Program Template Seeds"
   description "Prototype catalog records."
@@ -188,7 +188,7 @@ semantic roles and token paths to values without saying whether those values
 become CSS variables, SwiftUI colors, Compose `MaterialTheme`, Tailwind config,
 React Native theme objects, Figma tokens, or documentation.
 
-```tg
+```text
 theme theme_lifting_light {
   name "Lifting Light"
   description "Concrete light theme tokens for lifting prototypes."
@@ -250,7 +250,7 @@ Concrete surfaces own navpoints and hints:
 user reaches a screen, not what the screen renders. HTTP/API behavior belongs
 in `endpoint` records.
 
-```tg
+```text
 navpoint nav_workout_logger {
   name "Workout Logger Navpoint"
   description "Open a specific workout session."
@@ -268,7 +268,7 @@ Concrete UI surfaces realize the navpoints they expose. A surface may override
 navpoint realization concerns such as `path`, `auth`, `loader`, or `action`;
 path overrides must preserve the canonical navpoint params.
 
-```tg
+```text
 surface proj_web {
   name "Web"
   description "Web app."
@@ -303,7 +303,7 @@ operation, such as `endpoint_list_patients`, while HTTP method remains metadata.
 Endpoint response intent is explicit so agents and generators can distinguish
 array list APIs from object detail APIs without inferring shape from prose.
 
-```tg
+```text
 endpoint endpoint_list_patients {
   name "List Patients Endpoint"
   description "List patients for the API."
@@ -336,7 +336,7 @@ surface proj_api {
 
 `messages` models translation intent, not locale catalogs:
 
-```tg
+```text
 messages {
   locale default "en-US" fallback "en-US" direction ltr supported ["en-US"]
   message msg_item_list_title key "items.list.title" default "Items" context screen_title screen item_list
@@ -346,7 +346,7 @@ messages {
 
 `accessibility` models obligations, not raw `aria-*` attributes:
 
-```tg
+```text
 accessibility {
   screen item_list role main name_from message msg_item_list_title keyboard standard focus visible live off
   widget widget_data_grid role grid name_from message msg_items_table_label keyboard data_grid focus roving_tabindex live off
@@ -356,7 +356,7 @@ accessibility {
 `region` defines a reusable semantic work area. It is not a DOM node,
 component, or CSS class. `style_intent` is semantic guidance, not CSS.
 
-```tg
+```text
 region region_collection_results {
   name "Collection Results"
   description "Primary result collection area for list, board, and calendar screens."
@@ -376,7 +376,7 @@ region region_collection_results {
 `layout` composes region records into a reusable semantic template.
 Layouts are semantic templates, not framework templates.
 
-```tg
+```text
 layout layout_collection_list {
   name "Collection List Layout"
   description "Standard collection screen with toolbar, filters, and results."
@@ -413,7 +413,7 @@ layout layout_collection_list {
 Screens reference the layout and render widgets, actions, or named sections into
 inherited layout regions or explicit `screen_regions` overrides:
 
-```tg
+```text
 screen screen_item_list {
   name "Items"
   description "Browse items."
@@ -431,7 +431,7 @@ Visual composition belongs on `screen.renders`. A render entry places a widget,
 action, or named section into a screen region. `section` records are lightweight
 named UI areas for real screen content that is not yet a reusable widget.
 
-```tg
+```text
 section section_free_lift_form {
   name "Free Lift Form"
   description "One-off free-lift logging form."
@@ -472,7 +472,7 @@ surface bindings, optional concrete `theme`, package identity, and design-token
 mappings. Real projects should keep widget/component mappings in
 `component_map` records so the contract header stays small at scale.
 
-```tg
+```text
 design_language design_company_web {
   name "Company Web Design Language"
   description "Defines company web design-system scope and token names."
@@ -496,7 +496,7 @@ design_language design_company_web {
 behavior support. The graph is not a render tree; it is a work map that shows
 where design/platform realization work belongs and what still needs review.
 
-```tg
+```text
 component_map component_map_company_web_widgets {
   name "Company Web Component Map"
   description "Maps shared widgets to company web component refs."
@@ -630,7 +630,7 @@ Journey steps and alternates use repeated ordered record blocks. The parser
 syntax is the normal block syntax; validators preserve source order and enforce
 known record fields.
 
-```tg
+```text
 journey journey_greenfield_start_from_template {
   name "Greenfield Start From Template"
   description "A developer starts a new app from a template."
@@ -701,7 +701,7 @@ Workflow states and transitions use repeated ordered record blocks. Validators
 preserve source order, require unique IDs, and check transition state and
 capability references.
 
-```tg
+```text
 workflow workflow_review {
   name "Review Workflow"
   description "Tracks an item from draft through review and approval."

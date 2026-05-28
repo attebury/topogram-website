@@ -2,14 +2,21 @@
   --sl-content-width: 48rem;
 }
 
-.sl-markdown-content .dual-audience {
+.sl-markdown-content .dual-audience,
+.sl-markdown-content .path-grid,
+.sl-markdown-content .proof-band {
   display: grid;
   gap: 1rem;
   margin: 1.5rem 0;
 }
 
 @media (min-width: 48rem) {
-  .sl-markdown-content .dual-audience {
+  .sl-markdown-content .dual-audience,
+  .sl-markdown-content .path-grid {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .sl-markdown-content .proof-band {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

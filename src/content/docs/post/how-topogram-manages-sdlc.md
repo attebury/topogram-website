@@ -178,7 +178,7 @@ is never abstract. A requirement without graph impact is incomplete.
 
 **Example** from the SDLC fixture:
 
-```tg
+```text
 requirement req_audit_persistence {
   pitch pitch_audit_logging
   affects [entity_audit_log, cap_record_audit]

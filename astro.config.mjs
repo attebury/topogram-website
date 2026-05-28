@@ -37,11 +37,13 @@ export default defineConfig({
           label: "Start",
           items: [
             { label: "First 30 minutes", slug: "start/first-30-minutes" },
-            { label: "Beta demo path", slug: "start/beta-demo-path" },
+            { label: "What Topogram is", slug: "concepts/what-is-topogram" },
+            { label: "Agent first run", slug: "agent-first-run" },
             { label: "Init workspace", slug: "start/init-workspace" },
             { label: "Brownfield extract/adopt", slug: "start/brownfield-import" },
-            { label: "Workflow extraction", slug: "start/workflow-extraction" },
             { label: "Greenfield generate", slug: "start/greenfield-generate" },
+            { label: "Beta demo path", slug: "start/beta-demo-path" },
+            { label: "Workflow extraction", slug: "start/workflow-extraction" },
             { label: "Database migrations", slug: "start/database-migrations" },
           ],
         },
@@ -130,6 +132,10 @@ export default defineConfig({
           label: "Proof",
           items: [
             { label: "Proof walkthrough", slug: "proof-walkthrough" },
+            {
+              label: "Proof slice benefit experiment",
+              slug: "proof-slice-benefit-experiment",
+            },
             {
               label: "Generated → maintained proof",
               link: "https://github.com/attebury/topogram-proof-content-approval-v2",

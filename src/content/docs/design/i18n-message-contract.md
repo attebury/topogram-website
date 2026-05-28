@@ -30,7 +30,7 @@ team localization system.
 
 The v1 model is the `messages` block on `semantic_ui` surfaces:
 
-```tg
+```text
 messages {
   locale default "en-US" fallback "en-US" direction ltr supported ["en-US"]
   message msg_item_list_title key "items.list.title" default "Items" context screen_title screen item_list
