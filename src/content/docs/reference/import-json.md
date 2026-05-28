@@ -59,7 +59,7 @@ Review payloads:
   review-only `database` bundle in plan output.
 - Non-resource UI flow proposals appear as `uiFlows` in extract counts,
   `candidates.ui.flows` in raw candidate files, and review-only UI items in
-  plan/adoption output. They are proposals for shared `ui_contract` additions,
+  plan/adoption output. They are proposals for shared `semantic_ui` additions,
   not automatic canonical writes.
 - Evidence records can include source type context. Runtime source and
   parser/config files are primary; docs, tests, fixtures, and generated output
@@ -80,12 +80,12 @@ Focused agent review:
 topogram query extract-plan ./topo --json
 topogram query single-agent-plan ./topo --mode extract-adopt --json
 topogram query multi-agent-plan ./topo --mode extract-adopt --json
-topogram query work-packet ./topo --mode extract-adopt --lane adoption_operator --json
+topogram query review-packet ./topo --mode extract-adopt --json
 ```
 
 These queries are read-only and give agents staged items, extractor provenance,
-maintained-boundary risk, write scope, review requirements, lane ownership, and
-verification targets.
+maintained-boundary risk, write scope, review requirements, and verification
+targets.
 
 Agents should use `workspaceRoot`, not older compatibility fields, when deciding
 where project-owned Topogram files live.

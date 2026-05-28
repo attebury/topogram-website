@@ -50,6 +50,16 @@ topogram extract ./existing-cli --out ./imported-topogram --from cli
 Supported tracks are `db`, `api`, `ui`, `cli`, `workflows`, and
 `verification`.
 
+Use `workflows` for two cases. First, use it when the source has workflow-owned
+evidence such as BPMN, Temporal, XState, Step Functions, Camunda, Rails state
+machines, Django FSM, or similar state/orchestration definitions. Second,
+ordinary DB/API extraction can produce conservative review-only workflow
+candidates when API capabilities map to a DB entity with a `status` or `state`
+enum. For broader ordinary app stacks, run the DB, API, UI, CLI, and
+verification tracks first; do not expect per-stack extractors to guess workflow
+semantics. For the focused workflow-native path, see
+[Workflow Extraction](/start/workflow-extraction/).
+
 ## Choose extractor packs before extraction
 
 Topogram has two extractor sources:
@@ -63,7 +73,7 @@ recommend <source>` when you want Topogram to inspect local evidence and suggest
 which first-party packages are worth installing before extraction:
 
 ```bash
-topogram extractor recommend ./existing-app --from db,api,ui,cli
+topogram extractor recommend ./existing-app --from db,api,ui,cli,workflows
 ```
 
 Recommendation is read-only: it does not load extractor adapter code, install
@@ -80,11 +90,15 @@ Current first-party package-backed extractors:
 
 | Source evidence | Extractor package | npm version on the current CLI line | Track | Use it for |
 | --- | --- | --- | --- | --- |
-| Node package CLI code | `@topogram/extractor-node-cli` | `0.1.0` | `cli` | Commands, options, effects, and `cli_surface` candidates |
+| Node package CLI code | `@topogram/extractor-node-cli` | `0.1.0` | `cli` | Commands, options, effects, and `cli` candidates |
 | React Router route trees | `@topogram/extractor-react-router` | `0.1.1` | `ui` | Screens, routes, non-resource flows, widgets, and UI stack evidence |
 | Prisma schema and migrations | `@topogram/extractor-prisma-db` | `0.1.0` | `db` | Entity, enum, relation, index, and maintained DB seam candidates |
 | Express routers and route modules | `@topogram/extractor-express-api` | `0.1.0` | `api` | Route, capability, parameter, auth, and stack evidence |
 | Drizzle config, schema modules, migrations | `@topogram/extractor-drizzle-db` | `0.1.0` | `db` | Table, relation, index, and maintained DB seam candidates |
+| XState state machines | `@topogram/extractor-xstate-workflows` | `0.1.0` | `workflows` | Workflow definition, state, and transition candidates |
+| Step Functions ASL definitions | `@topogram/extractor-step-functions-workflows` | `0.1.0` | `workflows` | Workflow definition, state, and transition candidates |
+| BPMN process definitions | `@topogram/extractor-bpmn-workflows` | `0.1.0` | `workflows` | Workflow definition, state, and transition candidates |
+| Temporal workflow source | `@topogram/extractor-temporal-workflows` | `0.1.0` | `workflows` | Workflow, activity, signal, timer, and child workflow evidence |
 
 The policy pin uses the extractor manifest version, currently `@1`, not the npm
 package version. Install the npm package version you want, then pin the manifest
@@ -100,7 +114,7 @@ version split explicitly:
 
 ```bash
 topogram extractor list
-topogram extractor recommend ./existing-app --from db,api,ui,cli
+topogram extractor recommend ./existing-app --from db,api,ui,cli,workflows
 topogram extractor show @topogram/extractor-prisma-db
 topogram extractor check @topogram/extractor-prisma-db
 topogram extractor policy init
@@ -109,6 +123,7 @@ topogram extractor policy pin @topogram/extractor-react-router@1
 topogram extractor policy pin @topogram/extractor-prisma-db@1
 topogram extractor policy pin @topogram/extractor-express-api@1
 topogram extractor policy pin @topogram/extractor-drizzle-db@1
+topogram extractor policy pin @topogram/extractor-xstate-workflows@1
 ```
 
 Install the packages you plan to execute. Topogram never installs extractor
@@ -120,6 +135,7 @@ npm install -D @topogram/extractor-react-router
 npm install -D @topogram/extractor-prisma-db
 npm install -D @topogram/extractor-express-api
 npm install -D @topogram/extractor-drizzle-db
+npm install -D @topogram/extractor-xstate-workflows
 ```
 
 `topogram extractor check <package>` loads the manifest and adapter, validates
@@ -150,6 +166,7 @@ topogram extract ./react-router-app --out ./imported-topogram --from ui --extrac
 topogram extract ./prisma-app --out ./imported-topogram --from db --extractor @topogram/extractor-prisma-db
 topogram extract ./express-api --out ./imported-topogram --from api --extractor @topogram/extractor-express-api
 topogram extract ./drizzle-app --out ./imported-topogram --from db --extractor @topogram/extractor-drizzle-db
+topogram extract ./xstate-app --out ./imported-topogram --from workflows --extractor @topogram/extractor-xstate-workflows
 ```
 
 Extractor packs return review-only candidates, findings, diagnostics, and
@@ -190,12 +207,12 @@ topogram adopt --list
 topogram query extract-plan ./topo --json
 topogram query single-agent-plan ./topo --mode extract-adopt --json
 topogram query multi-agent-plan ./topo --mode extract-adopt --json
-topogram query work-packet ./topo --mode extract-adopt --lane adoption_operator --json
+topogram query review-packet ./topo --mode extract-adopt --json
 ```
 
 Agent rule: use the query packets before reading raw candidate JSON. The raw
 files are useful when you need evidence details, but `extract-plan`,
-`single-agent-plan`, and `work-packet` summarize extractor provenance, safety
+`single-agent-plan`, and `review-packet` summarize extractor provenance, safety
 notes, candidate counts, and the next review command in a smaller context.
 
 Extract writes:
@@ -231,9 +248,16 @@ UI extraction may emit non-resource flow candidates under
 `topo/candidates/app/ui/candidates.json` as `flows`. These are conservative,
 review-only hints for auth, onboarding/wizard, settings/preferences,
 dashboard/reporting, search/filter, and bulk-review routes. They include route
-evidence, confidence, missing decisions, and proposed `ui_contract` additions.
+evidence, confidence, missing decisions, and proposed `semantic_ui` additions.
 Extract plan carries them as UI review packets; adoption writes only reviewed
 reports/docs when you explicitly adopt the related selector.
+
+UI extraction also writes review-only layout and region drafts under
+`topo/candidates/app/ui/drafts/region-contracts.tg` and
+`topo/candidates/app/ui/drafts/layout-contracts.tg`. Use them to decide whether
+repeated `screen_regions` should become reusable semantic templates before you
+merge a draft `semantic_ui`. Extraction does not silently adopt these layout
+decisions.
 
 Extract classifies evidence by source type. Runtime source and parser/config
 files can create primary candidates. Docs, tests, fixtures, and generated

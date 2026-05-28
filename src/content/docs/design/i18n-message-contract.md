@@ -28,7 +28,7 @@ team localization system.
 
 ## Contract Shape
 
-The v1 model is the `messages` block on `ui_contract` projections:
+The v1 model is the `messages` block on `semantic_ui` surfaces:
 
 ```tg
 messages {
@@ -56,6 +56,24 @@ translation-management system.
 A UI slice should include only relevant glossary terms and message contracts for
 the selected screen, widget, or capability. It should not include the full
 glossary or every locale file.
+
+## Generated Web Realization
+
+React and SvelteKit generators now carry the v1 message contract into generated
+web output:
+
+- app shells render locale policy as `<html lang="..." dir="...">`;
+- generators write `src/lib/topogram/messages.json`;
+- screen titles, widget labels, action labels, and empty-state text use message
+  defaults where present;
+- generated markup includes `data-topogram-message-key` and
+  `data-topogram-message-id` markers;
+- `generation-coverage.json` and `ui-realization-report` show rendered,
+  implementation-owned, or failed message realization.
+
+This proves the semantic message contract is carried into generated web output.
+It does not replace runtime i18n libraries, translated locale catalogs, or
+translation-completeness checks.
 
 ## Current Contract
 

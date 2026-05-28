@@ -29,7 +29,8 @@ First-party examples include:
 - `@topogram/extractor-react-router` for React Router UI surfaces;
 - `@topogram/extractor-prisma-db` for Prisma schema/migration evidence;
 - `@topogram/extractor-express-api` for Express route surfaces;
-- `@topogram/extractor-drizzle-db` for Drizzle schema/migration evidence.
+- `@topogram/extractor-drizzle-db` for Drizzle schema/migration evidence;
+- `@topogram/extractor-xstate-workflows` for XState state machines.
 
 ## Package Shape
 
@@ -42,6 +43,7 @@ npm install
 npm test
 npm run docs:rag:check
 npm run check
+npm run release:preflight
 ```
 
 The initializer writes the package shape below plus a small fixture, unit test,
@@ -64,6 +66,7 @@ llms.txt
 llms-full.txt
 scripts/build-llms-full.mjs
 scripts/verify-docs-rag.mjs
+scripts/run-secret-scan.mjs
 scripts/check-extractor.mjs
 test/adapter.test.mjs
 fixtures/basic-source/
@@ -94,6 +97,11 @@ npm run docs:rag:build
 npm run docs:rag:check
 ```
 
+`npm run release:preflight` is the package-local publish gate. It runs
+`npm run check`, `npm pack --dry-run`, and the package-local Gitleaks secret
+scan. CI may set `TOPOGRAM_SECRET_SCAN_ALREADY_RAN=1` only after a Gitleaks
+workflow step has already passed; local release prep should run the scanner.
+
 `topogram-extractor.json` declares the pack:
 
 ```json
@@ -106,7 +114,7 @@ npm run docs:rag:check
   "compatibleCliRange": "^0.3.89",
   "stack": { "runtime": "node", "framework": "generic-cli" },
   "capabilities": { "commands": true, "options": true, "effects": true },
-  "candidateKinds": ["command", "capability", "cli_surface"],
+  "candidateKinds": ["command", "capability", "cli"],
   "evidenceTypes": ["runtime_source", "parser_config"],
   "extractors": [
     { "id": "cli.node-package", "track": "cli" }
@@ -163,10 +171,66 @@ Extractor candidate buckets are track-specific:
 | --- | --- |
 | `db` | `entities`, `enums`, `relations`, `indexes`, `maintained_seams` |
 | `api` | `capabilities`, `routes`, `stacks` |
-| `ui` | `screens`, `routes`, `actions`, `flows`, `widgets`, `shapes`, `stacks` |
+| `ui` | `screens`, `routes`, `actions`, `flows`, `widgets`, `shapes`, `component_mappings`, `stacks` |
 | `cli` | `commands`, `capabilities`, `surfaces` |
 | `workflows` | `workflow_definitions`, `workflow_states`, `workflow_transitions` |
 | `verification` | `verifications`, `scenarios`, `frameworks`, `scripts` |
+
+Only use the `workflows` track when the source directly owns workflow
+semantics. Good workflow-pack sources include BPMN, Temporal, XState, Step
+Functions, Camunda, Rails state machines, Django FSM, and similar systems that
+encode states, transitions, orchestration, or process definitions. Do not add
+workflow guesses to ordinary DB/API/UI/CLI extractors. Those extractors should
+return their own track evidence. Topogram core already handles the conservative
+DB/API v1 synthesis for entities with `status` or `state` enums; broader
+cross-track synthesis should be added deliberately where the synthesizer can see
+corroborated evidence across tracks.
+
+For Step Functions, prefer a local Amazon States Language v1. Read checked-in
+JSON or YAML state-machine definitions and emit workflow candidates from
+`StartAt`, `States`, `Next`, `Default`, `Choices`, `Catch`, `Retry`, `Map`,
+`Parallel`, `Succeed`, and `Fail` structure. Do not call AWS APIs, load
+credentials, inspect execution history, or infer IAM behavior from an extractor
+package. Infrastructure wrappers such as CloudFormation, CDK, SAM, Serverless,
+and Terraform should be explicit future scope unless the package can recover
+the embedded ASL definition deterministically.
+
+Workflow extractor packages should emit the canonical workflow buckets, not a
+generic `workflows` bucket:
+
+```js
+return {
+  findings: [],
+  candidates: {
+    workflow_definitions: [{
+      id_hint: "workflow_review",
+      label: "Review",
+      source_kind: "workflow_native",
+      source_system: "xstate",
+      evidence: [{ file: "src/review-machine.js", reason: "machine id review" }]
+    }],
+    workflow_states: [{
+      id_hint: "workflow_review_draft",
+      workflow_id: "workflow_review",
+      state_id: "draft",
+      label: "Draft"
+    }],
+    workflow_transitions: [{
+      id_hint: "workflow_review_submit",
+      workflow_id: "workflow_review",
+      from_state: "draft",
+      to_state: "review",
+      event: "SUBMIT"
+    }]
+  },
+  diagnostics: []
+};
+```
+
+`topogram extract plan` and `topogram adopt --list` expose these candidates as
+review-only workflow adoption selectors. The package still does not define
+canonical `workflow` files or adoption semantics; Topogram core owns the
+reviewed graph record and any supporting decision/doc output.
 
 Extractor output is validated before Topogram persists extraction artifacts.
 `findings` and `diagnostics` must be arrays when present, and `candidates` must
@@ -209,6 +273,81 @@ to `required: false`. `input_fields` and `output_fields` may stay as string fiel
 names. Older stack objects are tolerated temporarily and normalized to strings,
 but new extractor packages should emit `stacks: ["express"]`.
 
+UI pattern candidates use the same taxonomy as generators:
+
+- Rendered widget/region patterns may be emitted as `widgets` or
+  `component_mappings`: `resource_table`, `data_grid_view`, `resource_cards`,
+  `search_results`, `detail_panel`, `summary_stats`, `board_view`,
+  `calendar_view`, `activity_feed`, `timeline_view`, `edit_form`,
+  `filter_panel`, `action_bar`, `empty_state_panel`, `settings_section`,
+  `wizard_stepper`, `comment_thread`, and `audit_log`.
+- Embedded patterns are subcomponent evidence: `lookup_select` and
+  `status_badge`.
+- Layout/shell patterns are not widget/component mapping candidates:
+  `app_header`, `primary_navigation`, `hamburger_drawer`, `content_region`,
+  `footer_bar`, `inspector_pane`, and `master_detail`. Emit those as screen,
+  layout, region, route, or action evidence.
+
+UI extractors may propose `component_mappings` when source evidence maps a
+semantic widget to a design-system component. These are review-only candidates,
+not canonical design decisions:
+
+```js
+return {
+  findings: [],
+  candidates: {
+    component_mappings: [{
+      id_hint: "review_queue_web_grid",
+      component_map_id_hint: "component_map_review_queue",
+      design_language_id_hint: "design_acme_product_ui",
+      widget_id: "widget_review_queue",
+      platform: "web",
+      viewport: "wide",
+      component_ref: "acme.reviewQueue.grid",
+      pattern: "resource_table",
+      status: "rendered",
+      behaviors_rendered: ["selection"],
+      behaviors_contract_only: ["bulk_action"],
+      confidence: "medium",
+      evidence: [{ file: "src/review/ReviewQueue.tsx", reason: "Uses Acme ReviewQueueGrid." }],
+      missing_decisions: ["Confirm bulk action support."]
+    }]
+  },
+  diagnostics: []
+};
+```
+
+`component_ref` must be a stable design-system identity, not a source import
+path. `topogram adopt component-mappings --write` stays blocked until the
+referenced widget and design language exist or are selected in the same plan.
+
+Storybook is a good source for these candidates when the component library uses
+static CSF stories. The first-party `@topogram/extractor-storybook-design`
+package reads `*.stories.js`, `*.stories.jsx`, `*.stories.ts`, and
+`*.stories.tsx` files and looks for explicit metadata on the default story meta:
+
+```ts
+parameters: {
+  topogram: {
+    widget: "widget_review_queue",
+    designLanguage: "design_acme_product_ui",
+    componentMap: "component_map_review_queue",
+    componentRef: "acme.reviewQueue.grid",
+    platform: "web",
+    viewport: "wide",
+    pattern: "resource_table",
+    status: "rendered",
+    behaviorsRendered: ["selection"],
+    behaviorsContractOnly: ["bulk_action"]
+  }
+}
+```
+
+The Storybook extractor does not run Storybook, execute components, parse MDX,
+read screenshots, or use generated `storybook-static` output in v1. Stories
+without enough explicit metadata become findings and missing decisions, not
+low-confidence mappings.
+
 ## Safety Boundary
 
 - Extractors are read-only.
@@ -234,6 +373,8 @@ topogram extractor policy pin @topogram/extractor-react-router@1
 topogram extractor policy pin @topogram/extractor-prisma-db@1
 topogram extractor policy pin @topogram/extractor-express-api@1
 topogram extractor policy pin @topogram/extractor-drizzle-db@1
+topogram extractor policy pin @topogram/extractor-storybook-design@1
+topogram extractor policy pin @topogram/extractor-xstate-workflows@1
 topogram extractor policy check
 ```
 
@@ -293,9 +434,13 @@ Consumer loop:
 npm install -D @topogram/extractor-react-router
 topogram extractor policy init
 topogram extractor recommend ./react-router-app --from ui
+topogram extractor recommend ./storybook-library --from ui
 topogram extractor policy pin @topogram/extractor-react-router@1
+topogram extractor policy pin @topogram/extractor-storybook-design@1
 topogram extractor check @topogram/extractor-react-router
+topogram extractor check @topogram/extractor-storybook-design
 topogram extract ./react-router-app --out ./imported-topogram --from ui --extractor @topogram/extractor-react-router
+topogram extract ./storybook-library --out ./storybook-topogram --from ui --extractor @topogram/extractor-storybook-design
 topogram query extract-plan ./imported-topogram/topo --json
 topogram adopt --list ./imported-topogram --json
 topogram adopt <selector> ./imported-topogram --dry-run
@@ -349,7 +494,7 @@ engine internals.
 - Scaffold or maintain the standard package shape:
   `topogram-extractor.json`, `index.cjs`, `fixtures/`, `scripts/check-extractor.mjs`,
   package exports, and `files`.
-- Run `npm run check` from the extractor package root.
+- Run `npm run release:preflight` from the extractor package root.
 - Pack and install the extractor into a temporary consumer project.
 - Run `topogram extractor check <package-or-path>`.
 - Run `topogram extract <fixture> --out <tmp> --from <track> --extractor <package-or-path>`.
@@ -371,6 +516,11 @@ Recommended workflows for public first-party-style packages:
 .github/workflows/package-access.yml
 ```
 
+Publish workflows should run a Gitleaks action first, then `npm run
+release:preflight` before `npm publish`. If the workflow already passed the
+Gitleaks action, it may set `TOPOGRAM_SECRET_SCAN_ALREADY_RAN=1` for the
+preflight script so CI does not need a second scanner binary.
+
 ## First-Party Examples
 
 Current public first-party extractor packages on the current `@topogram/cli`
@@ -383,6 +533,10 @@ release line:
 | `@topogram/extractor-prisma-db` | `0.1.0` | `db` |
 | `@topogram/extractor-express-api` | `0.1.0` | `api` |
 | `@topogram/extractor-drizzle-db` | `0.1.0` | `db` |
+| `@topogram/extractor-xstate-workflows` | `0.1.0` | `workflows` |
+| `@topogram/extractor-step-functions-workflows` | `0.1.0` | `workflows` |
+| `@topogram/extractor-bpmn-workflows` | `0.1.0` | `workflows` |
+| `@topogram/extractor-temporal-workflows` | `0.1.0` | `workflows` |
 
 ```bash
 topogram extract ./existing-cli --out ./extracted-cli --from cli --extractor @topogram/extractor-node-cli
@@ -390,9 +544,18 @@ topogram extract ./react-router-app --out ./extracted-ui --from ui --extractor @
 topogram extract ./prisma-app --out ./extracted-db --from db --extractor @topogram/extractor-prisma-db
 topogram extract ./express-api --out ./extracted-api --from api --extractor @topogram/extractor-express-api
 topogram extract ./drizzle-app --out ./extracted-db --from db --extractor @topogram/extractor-drizzle-db
+topogram extract ./xstate-app --out ./extracted-workflows --from workflows --extractor @topogram/extractor-xstate-workflows
+topogram extract ./step-functions-app --out ./extracted-workflows --from workflows --extractor @topogram/extractor-step-functions-workflows
+topogram extract ./bpmn-app --out ./extracted-workflows --from workflows --extractor @topogram/extractor-bpmn-workflows
+topogram extract ./temporal-app --out ./extracted-workflows --from workflows --extractor @topogram/extractor-temporal-workflows
 ```
 
 These packages emit review-only candidates. React Router can add screen, route,
 non-resource flow, and widget evidence. Prisma and Drizzle can add maintained DB
 seam proposals. Express can add route, capability, parameter, auth, and stack
-evidence. Adoption is still explicit through `topogram adopt`.
+evidence. XState can add workflow definition, state, and transition candidates.
+Step Functions can add workflow definition, state, and transition candidates from
+local Amazon States Language JSON or YAML.
+Temporal can add workflow definition, activity, signal, timer, child workflow,
+state, and transition evidence from local TypeScript and Go source.
+Adoption is still explicit through `topogram adopt`.

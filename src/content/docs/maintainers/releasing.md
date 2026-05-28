@@ -11,8 +11,7 @@ The CLI package is `@topogram/cli` and publishes to npmjs.
 ```bash
 npm run release:prepare -- <version>
 npm run release:check
-npm run check
-npm run cli:check
+npm run release:preflight
 ```
 
 Commit the version changes before publishing.
@@ -22,6 +21,14 @@ Commit the version changes before publishing.
 Use the manual GitHub Actions workflow `Publish CLI Package`.
 
 The repo must define `NPM_TOKEN` with publish access for `@topogram/cli`.
+The publish workflow runs Secret Scan and `scripts/verify-release.sh` before
+`npm publish`, so manual dispatch cannot bypass docs, SDLC, engine, or package
+smoke gates.
+
+The publish workflow is rerun-safe for an already published version: after
+preflight it checks npmjs, skips token validation and `npm publish` when the
+selected `@topogram/cli` version already exists, and can still create the
+release tag when `create_tag` is enabled.
 
 ## After publish
 
@@ -38,6 +45,10 @@ catalog, installs first-party extractor packages, runs package-backed
 extract/adopt review on a small brownfield source, then copies and compiles a
 catalog starter. It is the public-package smoke, not a local fixture test.
 
+`npm run release:status` wraps `topogram release status`, and
+`npm run release:roll-consumers` wraps `topogram release roll-consumers`; those
+commands own release status reports and rollout evidence.
+
 `release:roll-consumers` prints per-consumer progress to stderr while it updates,
 checks, commits, pushes, and optionally watches CI. If a rollout is interrupted,
 rerun the same command; the report includes recovery state for consumers that are
@@ -46,4 +57,8 @@ want to push consumer commits and verify later with `npm run release:status:stri
 use `--no-watch` when you want that choice to be explicit in command logs.
 
 `docs/release-matrix.md` is generated release evidence, not first-run product
-documentation.
+documentation. It is intentionally safe to commit a regenerated
+`docs/release-matrix.md` after the package tag is created: strict release status
+accepts that file as the only post-tag evidence path. Any other source, package,
+SDLC, or docs change after the tag still requires a new patch release before
+strict status can pass on the current checkout.

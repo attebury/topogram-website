@@ -15,25 +15,40 @@ Topogram uses these public command verbs:
 ## Start
 
 - [Docs Map](docs/README.md): Audience-oriented entrypoint for current Topogram docs.
+- [Beta Launch](docs/beta-launch.md): Public beta story, first commands, proof paths, current limits, and feedback asks.
+- [First 30 Minutes](docs/start/first-30-minutes.md): Short evaluator path through current CLI checks, focused context, context-savings, and docs proof.
+- [Beta Demo Path](docs/start/beta-demo-path.md): Curated route through the brownfield, UI/design, workflow, and generated proof demos.
 - [Beta Readiness](docs/beta-readiness.md): What must be true before a beta release and what remains preview-only.
 - [What Topogram Is](docs/concepts/what-is-topogram.md): Short evaluator explanation of Topogram, its value, and what it is not.
 - [Init Workspace](docs/start/init-workspace.md): Create an empty Topogram workspace.
 - [Greenfield Generate](docs/start/greenfield-generate.md): Start from a template or authored spec and generate app outputs.
 - [Brownfield Extract/Adopt](docs/start/brownfield-import.md): Extract candidates from an existing app and adopt reviewed specs.
+- [Workflow Extraction](docs/start/workflow-extraction.md): Extract workflow-native state machines or process definitions into reviewable candidates.
 - [Database Migrations](docs/start/database-migrations.md): Use Topogram with generated or maintained database migrations.
 - [Agent First Run](docs/agent-first-run.md): First commands and context packets for coding agents.
 
 ## Concepts
 
 - [Topogram Model](docs/concepts/topogram-model.md): Core model and ownership boundaries.
+- [Normalized Layout Vocabulary](docs/concepts/normalized-layout-vocabulary.md): Workflow frequency and layout-rule terms used by generated UI proof markers.
 - [Topo Workspace](docs/concepts/topo-workspace.md): Workspace folder, project config, and ownership conventions.
 - [Generate vs Emit](docs/concepts/generate-vs-emit.md): Difference between app generation and artifact emission.
 - [Templates and Catalog](docs/concepts/templates-catalog.md): Template, catalog, and pure Topogram package concepts.
 - [Generators](docs/concepts/generators.md): Package-backed generators and stack realization.
 - [Extractors](docs/concepts/extractors.md): Package-backed extractors and brownfield discovery.
 - [Widgets and Design](docs/widgets.md): Semantic UI widgets, display fields, and design intent.
+- [UI Work Map By Example](docs/design/ui-work-map-by-example.md): Screen-to-layout-to-region-to-widget-to-component-map example for agents and UI reviewers.
+- [Map A Design System](docs/design/map-design-system.md): Widget-first mapping from semantic widgets to platform component refs.
+- [Map A Real Component System](docs/design/map-a-real-component-system.md): Practical designer/front-end-lead walkthrough for mapping real components to Topogram.
+- [Designer Review Checklist](docs/design/designer-review-checklist.md): Review checklist for accepting, deferring, or rejecting component mappings.
+- [Storybook Component Map Walkthrough](docs/design/storybook-component-map-walkthrough.md): Static CSF metadata path from Storybook evidence to review-only component mapping candidates.
 - [SDLC](docs/concepts/sdlc.md): Topogram SDLC records and command-owned workflow state.
 - [Glossary](docs/concepts/glossary.md): Current project vocabulary for humans and agents.
+
+## Posts
+
+- [Layers and Slices](docs/post/layers-and-slices.md): How the app map is layered and how context slices deliver bounded agent context.
+- [How Topogram Manages SDLC](docs/post/how-topogram-manages-sdlc.md): SDLC philosophy, CLI-owned mutations, and how graph nodes connect to work and proof.
 
 ## Reference
 
@@ -51,8 +66,15 @@ Topogram uses these public command verbs:
 ## Proofs
 
 - [Proof Walkthrough](docs/proof-walkthrough.md): Runnable proof/demo program and branch/tag convention.
-- [Generated/Maintained Proof Repo](https://github.com/attebury/topogram-proof-content-approval-v2): Greenfield generated-to-maintained proof repository.
-- [Brownfield Proof Repo](https://github.com/attebury/topogram-proof-content-approval-brownfield-v2): Brownfield extract/adopt and cross-stack proof repository.
+- [Generated/Maintained Proof Repo](https://github.com/attebury/topogram-proof-content-approval-v3): Current beta-story generated-to-maintained proof repository.
+- [Brownfield Proof Repo](https://github.com/attebury/topogram-proof-content-approval-brownfield-v3): Current beta-story brownfield extract/adopt and cross-stack proof repository.
+- [Widget Design Realization Proof Repo](https://github.com/attebury/topogram-proof-widget-design-realization): Focused proof for widget-first component maps, including the Markdown design matrix from `ui-design-coverage --format markdown`.
+- [Operations UI Work Map Proof Repo](https://github.com/attebury/topogram-proof-operations-ui-work-map-v2): Substantial React-to-SvelteKit UI proof for semantic layouts, regions, widgets, component maps, slice-guided feature work, and parity closeout.
+- [Operations Design Review Proof Repo](https://github.com/attebury/topogram-proof-operations-design-review): Substantial React operations SaaS proof for a designer-readable work-map packet, Acme component refs, review rows, and slice-guided UI change.
+- [Storybook Design Realization Proof Repo](https://github.com/attebury/topogram-proof-storybook-design-realization): Focused proof for static Storybook CSF metadata as review-only `component_mappings` evidence.
+- [Real Component System Map Proof Repo](https://github.com/attebury/topogram-proof-real-component-system-map): Practical proof for designer-readable matrices, Storybook candidate review, accepted component maps, and agent slices.
+- [XState Workflow Proof Repo](https://github.com/attebury/topogram-proof-xstate-workflow): Focused workflow-native proof for package-backed XState extraction.
+- [Step Functions Workflow Proof Repo](https://github.com/attebury/topogram-proof-step-functions-workflow): Focused workflow-native proof for package-backed Step Functions ASL extraction.
 
 ## Optional
 
@@ -61,5 +83,7 @@ Topogram uses these public command verbs:
 - [Releasing](docs/maintainers/releasing.md): Release process for maintainers.
 - [Release Matrix](docs/release-matrix.md): Current package and consumer release status.
 - [ARIA Accessibility Contract](docs/design/aria-accessibility-contract.md): Design note for accessibility obligations, ARIA evidence, focus, keyboard behavior, and proof.
+- [Generated/Maintained Proof V2](https://github.com/attebury/topogram-proof-content-approval-v2): Historical generated-to-maintained proof repository.
+- [Brownfield Proof V2](https://github.com/attebury/topogram-proof-content-approval-brownfield-v2): Historical brownfield proof repository.
 - [I18n Message Contract](docs/design/i18n-message-contract.md): Design note for glossary terms, translatable messages, message keys, and locale policy.
 - [SvelteKit Realization Shape](docs/design/sveltekit-realization-shape.md): Design note for maintained SvelteKit realization.

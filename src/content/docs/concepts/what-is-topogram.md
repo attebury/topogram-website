@@ -43,9 +43,9 @@ which proof commands show the change is safe?
 Use the brownfield proof when you want to see the main differentiator quickly:
 
 ```bash
-git clone https://github.com/attebury/topogram-proof-content-approval-brownfield-v2.git
-cd topogram-proof-content-approval-brownfield-v2
-git checkout proof-03-adopt-spec
+git clone https://github.com/attebury/topogram-proof-content-approval-brownfield-v3.git
+cd topogram-proof-content-approval-brownfield-v3
+git checkout proof-03-adopt-app-map
 npm install
 npm run verify
 ```

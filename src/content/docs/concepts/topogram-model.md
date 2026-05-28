@@ -33,10 +33,11 @@ Common statement kinds:
 
 - `actor`, `role`, `term`, `domain`
 - `entity`, `shape`, `enum`
-- `rule`, `capability`, `orchestration`, `verification`
-- `widget`
-- `journey`
-- `projection`
+- `rule`, `capability`, `seed_data`, `workflow`, `verification`
+- `widget`, `region`, `layout`, `theme`, `design_language`,
+  `component_map`
+- `journey`, `workflow`
+- `surface`
 - `decision`
 - SDLC kinds: `pitch`, `requirement`, `acceptance_criterion`, `task`, `plan`,
   `bug`
@@ -54,16 +55,27 @@ Common statement kinds:
 
 ## Contracts And Surfaces
 
-Projection `type` describes the contract or surface:
+Surface `type` describes the contract or surface:
 
-- `ui_contract` owns semantic UI: screens, regions, widget bindings, behavior,
-  visibility, navigation, and design tokens.
-- `web_surface`, `ios_surface`, and `android_surface` realize a UI contract for
+- `semantic_ui` owns semantic UI: screens, layout usage, screen region
+  overrides, render entries, behavior, visibility, navigation, and design
+  tokens.
+- `region` and `layout` define reusable semantic work areas
+  and templates. They are not DOM, SwiftUI, Android, or CSS layout trees.
+- `web`, `ios`, and `android` realize a UI contract for
   a concrete platform.
-- `api_contract` owns API endpoints and wire contracts.
-- `db_contract` owns database tables, columns, relations, indexes, and lifecycle
+- `design_language` owns design-system scope, supported platforms, package
+  identity, surfaces, concrete theme selection, and token names.
+- `theme` owns stack-agnostic concrete palette and design token values such as
+  color roles, token paths, radius scale, density, interaction states, and
+  accessibility contrast intent.
+- `component_map` maps shared semantic widgets to platform component
+  refs and behavior support. The graph is a work map, not a framework render
+  tree.
+- `api` owns API endpoints and wire contracts.
+- `db` owns database tables, columns, relations, indexes, and lifecycle
   intent.
-- `cli_surface` owns command-line commands, options, effects, and examples.
+- `cli` owns command-line commands, options, effects, and examples.
 
 ## Journeys
 
@@ -72,21 +84,37 @@ They use repeated `step { ... }` and `alternate { ... }` blocks so the graph can
 preserve sequence, branch points, commands, expected outcomes, and related
 capabilities or surfaces.
 
+Journey steps may also map to screens, capabilities, and frequency. UI
+generators normalize those fields into a journey layout plan and layout-rule
+proof markers. See [Normalized Layout Vocabulary](/concepts/normalized-layout-vocabulary/).
+
 Canonical journeys are graph-native `.tg` statements. Markdown journey text is
 supporting material or an import/reconcile draft until it is reviewed and
 promoted into a `journey` record.
+
+## Workflows
+
+`workflow` records describe app-owned state machines and process flows. They use
+ordered `state { ... }` and `transition { ... }` blocks so agents can inspect
+states, events, guards, linked capabilities, and verification targets without
+reading source code or Markdown prose first.
+
+Workflow-native extractors emit reviewable workflow candidates. Adoption turns
+reviewed candidates into canonical `workflow` records under `topo/`; subsequent
+`query slice --workflow ...` packets provide focused context for maintained
+workflow changes and drift review.
 
 ## Runtimes
 
 Topology runtimes are deployable or generated units:
 
-- `web_surface`
+- `web`
 - `api_service`
 - `database`
-- `ios_surface`
-- `android_surface`
+- `ios`
+- `android`
 
-Runtimes bind projections to generators. Generators receive normalized
+Runtimes bind surfaces to generators. Generators receive normalized
 contracts and write stack-specific output.
 
 ## Ownership

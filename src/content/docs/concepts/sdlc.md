@@ -17,6 +17,34 @@ Projects opt in with `topogram.sdlc-policy.json`. Missing policy means SDLC
 commands still work, but `topogram sdlc gate` reports `not_adopted` unless
 `--require-adopted` is passed.
 
+## Adoption Profiles
+
+Topogram's default SDLC profile is `standard`: lightweight, enforced repo
+discipline for maintainers and agents. It uses `topogram.sdlc-policy.json`, task
+start packets, proof links, `sdlc prep commit`, and `sdlc gate` to keep
+non-trivial work traceable without enterprise audit metadata.
+
+The optional `audit` profile is stricter. For protected changes, it requires
+task-backed work to declare `risk_class` and `change_type`, have at least one
+passing verification run receipt, and keep exemptions tied to a valid SDLC item
+with a specific reason. It also surfaces future audit obligations such as
+explicit approval/reviewer metadata, release audit-trail exports, and regulated
+or signed history profiles. Those obligations should not become the default for
+small teams.
+
+Use `mode: "advisory"` when a project wants reports without failures. Regulated
+profiles are intentionally deferred until the standard and audit profiles are
+coherent.
+
+```json
+{
+  "version": "1",
+  "status": "adopted",
+  "mode": "enforced",
+  "profile": "standard"
+}
+```
+
 ## Records
 
 Recommended layout:
@@ -81,11 +109,15 @@ transition to `satisfied`. Durable operating commitments can transition to
 `ongoing`; ongoing requirements must link to at least one rule or verification
 and are intentionally omitted from available-work and closeout queues.
 
-Use `topogram query sdlc-backlog ./topo --json` for backlog grooming. It shows
-draft/shaped/submitted pitches, draft or in-review requirements, draft journeys,
-and draft plans. Covered pitches, satisfied requirements, ongoing requirements,
-and completed work are intentionally omitted. A pitch can transition to
-`covered` when linked requirements or decisions already handled the problem.
+Use `topogram query sdlc-grooming ./topo --json` for lifecycle cleanup after
+work lands. It shows requirements ready to become `satisfied` or `ongoing`,
+pitches ready to become `covered`, plans ready to complete or supersede, and
+stale pitches that still need review.
+
+Use `topogram query sdlc-backlog ./topo --json` for unresolved backlog shaping.
+It shows draft/shaped/submitted pitches, draft or in-review requirements, draft
+journeys, and draft plans. Covered pitches, satisfied requirements, ongoing
+requirements, and completed work are intentionally omitted.
 
 Use `topogram query sdlc-ready ./topo --json` before claiming work. It combines
 startable tasks, blocked tasks, claimed tasks, proof gaps, latest verification
@@ -121,11 +153,14 @@ protected-change gates unless an allowed exemption is supplied.
 Humans and agents may edit declarative `.tg` text directly. Use commands for
 stateful mutations:
 
-- `topogram sdlc transition`
-- `topogram sdlc plan step ... --write`
-- `topogram sdlc archive`
-- `topogram trust ...`
-- `topogram extract ...`
-- `topogram generate`
-- `topogram emit --write`
-- `topogram release ...`
+| State | Command path |
+| --- | --- |
+| `topo/sdlc/.topogram-sdlc-history.json` | `topogram sdlc transition` and `topogram sdlc plan step ... --write` |
+| `topo/sdlc/_archive/*.jsonl` | `topogram sdlc archive`, `topogram sdlc unarchive`, and `topogram sdlc compact` |
+| `.topogram-template-trust.json` | `topogram trust status`, `topogram trust diff`, and `topogram trust template` |
+| `.topogram-template-files.json` | `topogram trust template` and reviewed `topogram template update ...` commands |
+| `.topogram-source.json` | `topogram copy` and `topogram source status` |
+| `.topogram-extract.json` and `.topogram-adoptions.jsonl` | `topogram extract status` and `topogram extract history --verify` |
+| `app/.topogram-generated.json` | `topogram generate` |
+| Written emitted artifacts | `topogram emit --write` |
+| Release status reports and rollout evidence | `topogram release status` and `topogram release roll-consumers` |

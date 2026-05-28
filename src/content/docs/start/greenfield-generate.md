@@ -49,6 +49,7 @@ template, install generators, or generate app code. `--adopt-sdlc` also writes
 
 ```bash
 npm run agent:brief
+npm run onboard
 npm run explain
 npm run doctor
 npm run source:status
@@ -81,10 +82,17 @@ maintained. Generated-owned outputs are replaceable.
 ## 4. Validate and generate
 
 ```bash
+npm run onboard
 npm run check
 npm run generate
 npm run verify
 ```
+
+`npm run onboard` is the read-first adoption loop. It reports whether
+check/audit/generate/verify are ready and recommends the next command without
+writing or running anything. Use `npm run onboard -- --generate --run-verify`
+when you deliberately want the loop to write generated-owned output and run the
+detected project verification script.
 
 `npm run verify` is the generated project's strongest standard verification
 script. If a generated app exposes lower-level app scripts, they remain useful
@@ -95,12 +103,19 @@ npm run app:compile
 npm run app:runtime
 ```
 
+Bundled web generators claim `usable_app` output in
+`generation-coverage.json`. That means generated screens must render
+domain-specific screen copy, modeled empty states, form controls when the screen
+is form-like, modeled action markers, and data-bound widget/display-field
+markers. Generator provenance text belongs in reports and coverage files, not
+inside runnable app screens.
+
 ## 5. Inspect contracts when needed
 
 ```bash
 topogram emit ui-widget-contract ./topo --json
-topogram emit widget-conformance-report ./topo --projection proj_web_surface --json
-topogram emit db-schema-snapshot ./topo --projection proj_db --json
+topogram emit widget-conformance-report ./topo --surface proj_web --json
+topogram emit db-schema-snapshot ./topo --surface proj_db --json
 ```
 
 `emit` is read-only by default. Add `--write --out-dir <dir>` when you want
@@ -109,7 +124,7 @@ artifact files.
 ## Loop
 
 1. Edit `topo/**` or `topogram.project.json`.
-2. Run `topogram check`.
+2. Run `topogram onboard` to see the staged adoption plan.
 3. Run focused widget/query/SDLC checks when relevant.
-4. Run `topogram generate`.
-5. Compile or run the generated output.
+4. Run `topogram onboard --generate --run-verify`, or run `topogram generate`
+   and the verification script separately when debugging.

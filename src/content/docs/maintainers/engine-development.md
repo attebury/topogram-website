@@ -26,6 +26,7 @@ Before implementation, inspect available work and start the task through the
 CLI:
 
 ```bash
+node ./engine/src/cli.js query sdlc-grooming ./topo --json
 node ./engine/src/cli.js query sdlc-backlog ./topo --json
 node ./engine/src/cli.js query sdlc-available ./topo --json
 node ./engine/src/cli.js query sdlc-ready ./topo --json
@@ -45,7 +46,9 @@ bash ./scripts/verify-engine.sh
 bash ./scripts/verify-cli-package.sh
 ```
 
-Use focused tests first, then broader gates.
+Use focused tests first, then broader gates. For release-facing changes, run
+`npm run release:preflight`; it adds docs/RAG checks, root Topogram validation,
+strict SDLC validation, and secret scanning around the engine and package gates.
 
 Do not add demo/product coupling to engine tests. Fixtures should prove engine
 behavior with neutral vocabulary.

@@ -63,7 +63,7 @@ topo/
     bugs/
     decisions/
   widgets/
-  projections/
+  surfaces/
   verifications/
   docs/
 ```

@@ -61,13 +61,17 @@ queryable `.tg` records.
 ## 2. Inspect
 
 ```bash
+topogram onboard --json
 topogram agent brief --json
 topogram sdlc policy explain --json
 topogram check --json
 topogram query list --json
 ```
 
-Agents should start from the brief, then use focused query packets instead of
+`topogram onboard --json` is the plan-first loop for new workspaces. It shows
+whether init/check/audit/generate/verify are ready and recommends exact next
+commands without writing artifacts or generating output. Agents should start
+from the onboard plan and brief, then use focused query packets instead of
 reading the whole graph.
 
 ## 3. Add Topogram source
@@ -88,6 +92,7 @@ outputs in `topogram.project.json`.
 ## 4. Before committing
 
 ```bash
+topogram onboard . --json
 topogram check . --json
 topogram sdlc check --strict
 topogram sdlc prep commit . --json

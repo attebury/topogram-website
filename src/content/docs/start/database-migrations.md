@@ -12,7 +12,7 @@ Audience: developers maintaining generated or maintained database schemas
 Use when: you need database snapshot, migration plan, or SQL migration guidance.
 
 Topogram treats database migration ownership as a runtime decision in
-`topogram.project.json`. The `db_contract` describes desired tables, columns,
+`topogram.project.json`. The `db` describes desired tables, columns,
 relations, indexes, and lifecycle intent. The database runtime decides whether
 Topogram owns generated migration output or only emits proposals for a
 maintained app.
@@ -26,7 +26,7 @@ bundle.
 {
   "id": "main_db",
   "kind": "database",
-  "projection": "proj_db",
+  "surface": "proj_db",
   "migration": {
     "ownership": "generated",
     "tool": "sql",
@@ -53,7 +53,7 @@ schema files, migrations, and migration runner.
 {
   "id": "main_db",
   "kind": "database",
-  "projection": "proj_db",
+  "surface": "proj_db",
   "migration": {
     "ownership": "maintained",
     "tool": "prisma",
@@ -72,13 +72,13 @@ do not apply migrations.
 Typical commands:
 
 ```bash
-topogram emit db-lifecycle-plan --projection proj_db --json
-topogram emit db-schema-snapshot --projection proj_db --json
-topogram emit db-migration-plan --projection proj_db --from-snapshot ./topo/state/db/main_db/current.snapshot.json --json
-topogram emit sql-migration --projection proj_db --from-snapshot ./topo/state/db/main_db/current.snapshot.json --write --out-dir ./db-proposals/sql
-topogram emit prisma-schema --projection proj_db --write --out-dir ./db-proposals/prisma
-topogram emit drizzle-schema --projection proj_db --write --out-dir ./db-proposals/drizzle
-topogram emit db-lifecycle-bundle --projection proj_db --write --out-dir ./db-proposals/lifecycle
+topogram emit db-lifecycle-plan --surface proj_db --json
+topogram emit db-schema-snapshot --surface proj_db --json
+topogram emit db-migration-plan --surface proj_db --from-snapshot ./topo/state/db/main_db/current.snapshot.json --json
+topogram emit sql-migration --surface proj_db --from-snapshot ./topo/state/db/main_db/current.snapshot.json --write --out-dir ./db-proposals/sql
+topogram emit prisma-schema --surface proj_db --write --out-dir ./db-proposals/prisma
+topogram emit drizzle-schema --surface proj_db --write --out-dir ./db-proposals/drizzle
+topogram emit db-lifecycle-bundle --surface proj_db --write --out-dir ./db-proposals/lifecycle
 ```
 
 `db-lifecycle-plan` includes `reviewWorkflow`. For maintained databases, that
@@ -138,7 +138,7 @@ The reviewed config target is the matching database runtime under
 {
   "id": "app_db",
   "kind": "database",
-  "projection": "proj_db",
+  "surface": "proj_db",
   "migration": {
     "ownership": "maintained",
     "tool": "prisma",

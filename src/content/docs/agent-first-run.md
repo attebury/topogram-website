@@ -19,18 +19,23 @@ editing code.
 ## First command
 
 ```bash
+topogram onboard --json
 topogram agent brief --json
 ```
 
 Generated projects expose the same command as:
 
 ```bash
+npm run --silent onboard
 npm run --silent agent:brief
 ```
 
-`agent brief` is read-only. It validates the Topogram and project config but
-does not generate apps, write files, load generator adapters, or execute
-template implementation code.
+`onboard` and `agent brief` are read-only by default. `onboard` shows the
+staged init/check/audit/generate/verify adoption plan; `agent brief` gives
+machine-readable read order, boundaries, and first commands. Neither generates
+apps, writes files, loads generator adapters, or executes template
+implementation code unless an explicit write/generate/verify flag is supplied
+to the relevant command.
 
 ## Read order
 
@@ -47,6 +52,7 @@ template implementation code.
 ## First command sequence
 
 ```bash
+topogram onboard --json
 topogram agent brief --json
 topogram query list --json
 topogram query show <name> --json
@@ -56,6 +62,7 @@ topogram check --json
 If the project has adopted SDLC and the work is tied to a task or bug, add:
 
 ```bash
+topogram query sdlc-grooming ./topo --json
 topogram query sdlc-backlog ./topo --json
 topogram query sdlc-available ./topo --json
 topogram query sdlc-ready ./topo --json
@@ -63,6 +70,7 @@ topogram sdlc explain <task-id> --json
 topogram sdlc start <task-id> . --actor <actor-id> --json
 topogram sdlc start <task-id> . --actor <actor-id> --write --json
 topogram query slice ./topo --task <task-id> --json
+topogram onboard . --task <task-id> --write --out-dir ./artifacts
 topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram query verification-runs ./topo --task <task-id> --json
 ```
@@ -123,29 +131,48 @@ npm run verify
 For UI work, inspect widget and surface packets:
 
 ```bash
-topogram widget check ./topo --projection proj_web_surface
-topogram widget behavior ./topo --projection proj_web_surface --json
+topogram widget check ./topo --surface proj_web
+topogram widget behavior ./topo --surface proj_web --json
 topogram emit ui-widget-contract ./topo --json
+topogram query slice ./topo --surface proj_web --screen <screen-id> --detail compact --json
 ```
 
-`ui_contract` owns semantic UI. Concrete web/native surfaces inherit it and own
+`semantic_ui` owns semantic UI. Concrete web/native surfaces inherit it and own
 routes and surface hints.
+Focused UI slices include an `agent_readiness` section. It summarizes whether
+the screen, layout, region, widget, or component map is ready to edit, what
+context is missing, which design/i18n/ARIA gaps need review, which widget
+bindings are the likely change targets, and which proof commands should run.
 
 ## Slices and vocabulary
 
 Context slices are intended to be cold-start safe without copying the full
 agent brief into every packet. Slices include focused dependencies, standing
 rule references, mode-specific next commands, and glossary terms explicitly
-linked through `related_terms` or entity `uses_terms`.
+linked through `related_terms` or entity `uses_terms`. They also include a
+work packet shape for humans and agents: `frame`, `relationships`,
+`work_items`, `proof_plan`, and `attention_budget`.
 
 Each slice includes a `slice_manifest` that tells an agent what is must-read,
 reference-only, proof context, or diagnostic context. Use `--detail compact`
 when you need the shortest safe packet, `standard` for normal work, and `full`
-when reviewing or debugging the slice itself.
+when reviewing or debugging the slice itself. The manifest `read_order` is the
+canonical order, and `agent_guidance.read_order` mirrors it for compatibility.
+Use static HTML when a human wants a readable cockpit instead of raw JSON.
+Use `onboard --write` or `emit audit-bundle` when first adopting a workspace or
+tracing a bug; it writes the slice, HTML cockpit, proof reports, manifest, and
+bounded source excerpts into a portable evidence directory without replacing
+generated app outputs.
 
 ```bash
 topogram query slice ./topo --mode implementation --task <task-id> --json
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format markdown
+topogram query slice ./topo --mode implementation --task <task-id> --detail compact --format html
+topogram emit context-slice ./topo --mode implementation --task <task-id> --format html --write --out-dir ./artifacts
+topogram onboard . --task <task-id> --write --out-dir ./artifacts
+topogram emit audit-bundle ./topo --mode implementation --task <task-id> --profile standard --write --out-dir ./artifacts
+topogram emit audit-bundle ./topo --bug <bug-id> --profile bug --from-topogram ./baseline/topo --write --out-dir ./artifacts
+topogram emit audit-bundle ./topo --profile adoption --write --out-dir ./artifacts
 topogram emit glossary ./topo --json
 ```
 
@@ -180,7 +207,7 @@ topogram adopt --list . --json
 topogram query extract-plan ./topo --json
 topogram query single-agent-plan ./topo --mode extract-adopt --json
 topogram query multi-agent-plan ./topo --mode extract-adopt --json
-topogram query work-packet ./topo --mode extract-adopt --lane adoption_operator --json
+topogram query review-packet ./topo --mode extract-adopt --json
 topogram extract status . --json
 topogram extract history . --verify --json
 ```

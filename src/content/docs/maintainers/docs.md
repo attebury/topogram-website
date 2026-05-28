@@ -13,7 +13,7 @@ belongs in `topogram-project`.
   `topo/` model.
 - Keep first-use docs short and audience-oriented.
 - Separate user workflows from authoring and maintainer workflows.
-- Preserve old doc paths as redirects only when code/tests still reference
+- Avoid redirect-only docs; keep old paths only when code/tests still require
   them.
 - Do not reintroduce stale command names or old DSL vocabulary.
 - Run docs checks after editing public docs.

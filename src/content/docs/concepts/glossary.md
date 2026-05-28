@@ -22,7 +22,7 @@ A semantic promise that a screen, widget, or behavior must be usable by assistiv
 - ID: `term_accessibility_obligation`
 - Domain: `dom_generator_runtime`
 - Aliases: `a11y_obligation`
-- Related terms: `term_ui_contract`, `term_widget`
+- Related terms: `term_semantic_ui`, `term_widget`
 
 ### Accessible Name
 
@@ -99,7 +99,7 @@ The validated Topogram view of an app's intent, contracts, ownership, runtime to
 
 ### Context Slice
 
-A focused app-map packet for one capability, widget, projection, SDLC item, or related target, intended to be small enough for agent work.
+A focused app-map packet for one capability, widget, surface, SDLC item, or related target, intended to be small enough for agent work.
 
 - ID: `term_context_slice`
 - Domain: `dom_sdlc_query_agent_context`
@@ -132,6 +132,14 @@ The read-order map inside a context slice that labels sections as must-read, ref
 - Domain: `dom_sdlc_query_agent_context`
 - Aliases: `read_order`, `section_manifest`
 - Related terms: `term_agent_mode`, `term_context_slice`
+
+### Work Map
+
+A graph organized around where product work belongs and how it is proven, not a framework render tree.
+
+- ID: `term_work_map`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_component_map`, `term_layout`, `term_region`, `term_screen_render`, `term_semantic_ui`, `term_widget`
 
 ## Extract/Adopt
 
@@ -198,7 +206,7 @@ A package or bundled adapter that realizes Topogram contracts into app, runtime,
 
 ### Runtime
 
-A topology unit such as a web surface, API service, database, or native surface that binds a projection to a generator.
+A topology unit such as a web surface, API service, database, or native surface that binds a surface to a generator.
 
 - ID: `term_runtime`
 - Domain: `dom_generator_runtime`
@@ -332,25 +340,116 @@ A proof target or check that demonstrates an accepted expectation holds.
 
 ## UI Widgets
 
+### Component Map
+
+A widget-first group of platform component refs, style refs, and behavior support for one design language.
+
+- ID: `term_component_map`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_component_ref`, `term_design_language`, `term_design_matrix`, `term_platform_realization`, `term_style_ref`, `term_widget`
+
+### Component Ref
+
+A stable design-language identity for a platform component, independent of local source import paths.
+
+- ID: `term_component_ref`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_design_language`, `term_design_matrix`
+
+### Design Language
+
+A Topogram record that owns design-system scope, platforms, surfaces, package identity, semantic style intent, and design-token mappings for semantic UI realization.
+
+- ID: `term_design_language`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_component_map`, `term_platform_realization`, `term_semantic_ui`, `term_style_intent`, `term_widget`
+
+### Design Matrix
+
+A widget-first coverage view that groups component refs, platforms, viewports, density, state coverage, token status, accessibility status, i18n status, and review gaps for design work.
+
+- ID: `term_design_matrix`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_component_map`, `term_component_ref`, `term_design_language`, `term_widget`
+
+### Design Review Gap
+
+A missing or incomplete design realization signal, such as unsupported behavior, contract-only behavior, missing platform, missing state, missing token mapping, missing accessibility obligation, or missing i18n message.
+
+- ID: `term_design_review_gap`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_accessibility_obligation`, `term_design_matrix`, `term_platform_realization`, `term_translatable_message`
+
+### Layout
+
+A reusable semantic template with a layout pattern and slot roles that composes region contracts for screens without defining a framework render tree.
+
+- ID: `term_layout`
+- Domain: `dom_generator_runtime`
+- Aliases: `layout_archetype`, `screen_template`, `semantic_layout`
+- Related terms: `term_region`, `term_semantic_ui`, `term_widget`, `term_work_map`
+
+### Platform Realization
+
+The way a semantic UI widget, behavior, or design-token role is rendered, carried as contract-only, owned by implementation code, or left unsupported for a specific platform.
+
+- ID: `term_platform_realization`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_design_language`, `term_surface`
+
+### Region
+
+A reusable semantic work area, such as content, toolbar, filters, results, navigation, or footer actions, with design, accessibility, i18n, state, and allowed-widget expectations.
+
+- ID: `term_region`
+- Domain: `dom_generator_runtime`
+- Aliases: `semantic_region`, `work_area`
+- Related terms: `term_layout`, `term_semantic_ui`, `term_widget`, `term_work_map`
+
+### Screen Render
+
+The canonical screen-level work-map leaf where a region renders a reusable widget, named section, or action with data source, behavior, design, accessibility, and proof context.
+
+- ID: `term_screen_render`
+- Domain: `dom_generator_runtime`
+- Aliases: `render_entry`, `screen_work_leaf`
+- Related terms: `term_component_map`, `term_layout`, `term_region`, `term_semantic_ui`, `term_widget`
+
+### Style Intent
+
+Scoped semantic visual guidance inherited through the UI work map, such as brand consistency, density, emphasis, or review-focused presentation, without defining CSS or platform modifiers.
+
+- ID: `term_style_intent`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_design_language`, `term_layout`, `term_region`, `term_screen_render`, `term_style_ref`, `term_widget`
+
+### Style Ref
+
+A stable design-system style identity, such as a MAUI style name or component-library style token, used in component maps without naming source paths, CSS selectors, or local classes.
+
+- ID: `term_style_ref`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_component_map`, `term_design_language`, `term_style_intent`
+
 ### Surface
 
-A concrete projection such as web_surface or ios_surface that realizes a platform-neutral contract for a target platform.
+A concrete surface such as web or ios that realizes a platform-neutral contract for a target platform.
 
 - ID: `term_surface`
 - Domain: `dom_generator_runtime`
-- Related terms: `term_ui_contract`
+- Related terms: `term_semantic_ui`
 
 ### UI Contract
 
-The platform-neutral UI projection that owns screens, regions, widget bindings, navigation, behavior, and semantic design intent.
+The platform-neutral UI surface that owns screens, layout usage, screen region overrides, render entries, navigation, behavior, and semantic design intent.
 
-- ID: `term_ui_contract`
+- ID: `term_semantic_ui`
 - Domain: `dom_generator_runtime`
-- Related terms: `term_widget`
+- Related terms: `term_layout`, `term_region`, `term_widget`
 
 ### Widget
 
-A reusable semantic UI contract that can bind to screens and regions without naming a framework component tree.
+A reusable semantic UI contract that can bind to screens and regions without naming a framework component tree. Unsupported widget realization must be visible as contract-only, unsupported, or explicit implementation work for developer and agent review.
 
 - ID: `term_widget`
 - Domain: `dom_generator_runtime`

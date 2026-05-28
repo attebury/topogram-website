@@ -19,13 +19,12 @@ Minimal shape:
 {
   "version": "1",
   "workspace": "./topo",
-  "outputs": [
-    {
-      "id": "app",
+  "outputs": {
+    "app": {
       "path": "./app",
       "ownership": "generated"
     }
-  ],
+  },
   "topology": {
     "runtimes": []
   }
@@ -49,11 +48,11 @@ Outputs are either:
 
 Runtime kinds:
 
-- `web_surface`
+- `web`
 - `api_service`
 - `database`
-- `ios_surface`
-- `android_surface`
+- `ios`
+- `android`
 
 References:
 
@@ -62,11 +61,51 @@ References:
 
 Each runtime can bind a package-backed or bundled generator.
 
+To add a linked generated prototype topology from an existing web surface,
+capabilities, and entities, run:
+
+```bash
+topogram runtime add web api database
+```
+
+The command creates missing API and local SQLite database `surface` records under
+`topo/surfaces/runtime-topology.tg`, adds `outputs.app` with generated ownership
+when no app output is declared, and writes linked runtimes:
+
+- `app_sveltekit` with `uses_api: "app_api"`
+- `app_api` with `uses_database: "app_sqlite"`
+- `app_sqlite` using `topogram/sqlite`
+
+Existing runtimes and links stay authoritative. Re-running the command is
+idempotent; use `--dry-run --json` to review the plan without writing.
+
+`topology.mode` is optional. The default is `explicit`, which means Topogram
+uses only declared runtimes. `local_first` is generation-time prototype mode:
+when routed web screens use capabilities but no API/database runtime is
+declared, Topogram derives a local API runtime and SQLite database runtime for
+the generated bundle without rewriting `topogram.project.json`.
+
+```json
+{
+  "topology": {
+    "mode": "local_first",
+    "runtimes": [
+      {
+        "id": "app_sveltekit",
+        "kind": "web",
+        "surface": "proj_web",
+        "generator": { "id": "topogram/sveltekit", "version": "1" }
+      }
+    ]
+  }
+}
+```
+
 ## Database Migrations
 
 Database runtimes can declare an optional `migration` strategy. This makes the
 database ownership boundary explicit without changing the stack-neutral
-`db_contract`.
+`db`.
 
 Generated database runtime:
 
@@ -74,7 +113,7 @@ Generated database runtime:
 {
   "id": "main_db",
   "kind": "database",
-  "projection": "proj_db",
+  "surface": "proj_db",
   "generator": {
     "id": "@topogram/generator-postgres-db",
     "version": "1",
@@ -95,7 +134,7 @@ Maintained Prisma runtime:
 {
   "id": "main_db",
   "kind": "database",
-  "projection": "proj_db",
+  "surface": "proj_db",
   "generator": {
     "id": "@topogram/generator-postgres-db",
     "version": "1",

@@ -64,6 +64,10 @@ executable `implementation/` code. `catalog copy` records `.topogram-source.json
 so `topogram source status --local` can compare the copied files against their
 catalog package source.
 
+Pure Topogram copy rejects symlinks under `topo/`, `README.md`, and
+`topogram.project.json`. Publish and copy real files so reviewers and agents do
+not read through links into unreviewed local paths.
+
 ## Health
 
 ```bash

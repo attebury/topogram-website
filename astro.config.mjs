@@ -31,8 +31,11 @@ export default defineConfig({
         {
           label: "Start",
           items: [
+            { label: "First 30 minutes", slug: "start/first-30-minutes" },
+            { label: "Beta demo path", slug: "start/beta-demo-path" },
             { label: "Init workspace", slug: "start/init-workspace" },
             { label: "Brownfield extract/adopt", slug: "start/brownfield-import" },
+            { label: "Workflow extraction", slug: "start/workflow-extraction" },
             { label: "Greenfield generate", slug: "start/greenfield-generate" },
             { label: "Database migrations", slug: "start/database-migrations" },
           ],
@@ -53,6 +56,10 @@ export default defineConfig({
             { label: "Topo workspace", slug: "concepts/topo-workspace" },
             { label: "Generate vs emit", slug: "concepts/generate-vs-emit" },
             { label: "Templates and catalog", slug: "concepts/templates-catalog" },
+            {
+              label: "Normalized layout vocabulary",
+              slug: "concepts/normalized-layout-vocabulary",
+            },
             { label: "Generators", slug: "concepts/generators" },
             { label: "Extractors", slug: "concepts/extractors" },
             { label: "SDLC", slug: "concepts/sdlc" },
@@ -84,6 +91,34 @@ export default defineConfig({
               label: "SvelteKit realization shape",
               slug: "design/sveltekit-realization-shape",
             },
+            {
+              label: "Map design system",
+              slug: "design/map-design-system",
+            },
+            {
+              label: "Map a real component system",
+              slug: "design/map-a-real-component-system",
+            },
+            {
+              label: "Storybook component map walkthrough",
+              slug: "design/storybook-component-map-walkthrough",
+            },
+            {
+              label: "UI work map by example",
+              slug: "design/ui-work-map-by-example",
+            },
+            {
+              label: "Designer review checklist",
+              slug: "design/designer-review-checklist",
+            },
+          ],
+        },
+        {
+          label: "Beta",
+          items: [
+            { label: "Beta launch", slug: "beta-launch" },
+            { label: "Beta readiness", slug: "beta-readiness" },
+            { label: "Release matrix", slug: "release-matrix" },
           ],
         },
         {
@@ -106,6 +141,25 @@ export default defineConfig({
             { label: "Templates", slug: "authoring/templates" },
             { label: "Generator packs", slug: "authoring/generator-packs" },
             { label: "Extractor packs", slug: "authoring/extractor-packs" },
+          ],
+        },
+        {
+          label: "Maintainers",
+          items: [
+            { label: "Docs", slug: "maintainers/docs" },
+            { label: "Engine development", slug: "maintainers/engine-development" },
+            { label: "Releasing", slug: "maintainers/releasing" },
+            { label: "Testing", slug: "maintainers/testing" },
+          ],
+        },
+        {
+          label: "Posts",
+          items: [
+            {
+              label: "How Topogram manages SDLC",
+              slug: "post/how-topogram-manages-sdlc",
+            },
+            { label: "Layers and slices", slug: "post/layers-and-slices" },
           ],
         },
       ],

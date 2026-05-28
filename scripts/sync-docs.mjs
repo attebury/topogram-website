@@ -4,7 +4,9 @@
  * Preserves src/content/docs/index.mdx (site homepage).
  */
 import { execSync } from "node:child_process";
+import crypto from "node:crypto";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,7 +14,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const ref = process.env.TOPOGRAM_DOCS_REF ?? "main";
 const repo = process.env.TOPOGRAM_DOCS_REPO ?? "attebury/topogram";
-const cacheDir = path.join(root, ".cache", "topogram-docs");
+const cacheKey = crypto
+  .createHash("sha1")
+  .update(`${root}\0${repo}\0${ref}`)
+  .digest("hex")
+  .slice(0, 12);
+const cacheDir =
+  process.env.TOPOGRAM_DOCS_CACHE_DIR ??
+  path.join(os.tmpdir(), "topogram-website-docs", cacheKey);
 const docsOut = path.join(root, "src", "content", "docs");
 const publicDir = path.join(root, "public");
 const preservedHome = path.join(docsOut, "index.mdx");

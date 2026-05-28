@@ -3,22 +3,22 @@
   "type": "module",
   "private": true,
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12.0"
   },
   "scripts": {
     "docs:sync": "node scripts/sync-docs.mjs",
     "dev": "npm run docs:sync && astro dev",
     "build": "npm run docs:sync && astro build",
     "preview": "astro preview",
-    "check:links": "linkinator dist --recurse --skip 'mailto:|https://topogram.dev|github.com/attebury/topogram/(edit|blob)/'"
+    "check:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.34.0",
-    "astro": "^5.7.0",
+    "@astrojs/starlight": "^0.39.2",
+    "astro": "^6.3.8",
     "sharp": "^0.33.5"
   },
   "devDependencies": {
-    "linkinator": "^6.3.0",
+    "linkinator": "^7.6.1",
     "typescript": "^5.8.3"
   }
 }

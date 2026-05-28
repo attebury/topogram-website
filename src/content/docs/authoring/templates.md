@@ -55,7 +55,8 @@ Keep package files narrow:
 ```
 
 Do not publish consumer metadata such as `.topogram-template-trust.json` or
-`.topogram-template-files.json`.
+`.topogram-template-files.json`; those files are command-owned state in copied
+projects.
 
 ## Trust
 
@@ -65,6 +66,10 @@ projects record implementation hashes. Review code before running
 
 Template packs must not contain symlinks under `topo/`,
 `topogram.project.json`, or `implementation/`.
+
+Pure Topogram packages copied through the catalog or `topogram copy` must also
+avoid symlinks under `topo/`, `README.md`, and `topogram.project.json`. Copy
+real files instead.
 
 ## Verify
 

@@ -34,9 +34,9 @@ runtime files.
 
 ```bash
 topogram emit ui-widget-contract ./topo --json
-topogram emit widget-conformance-report ./topo --projection proj_web_surface --json
-topogram emit db-schema-snapshot ./topo --projection proj_db --json
-topogram emit sql-migration ./topo --projection proj_db --from-snapshot ./state/current.json
+topogram emit widget-conformance-report ./topo --surface proj_web --json
+topogram emit db-schema-snapshot ./topo --surface proj_db --json
+topogram emit sql-migration ./topo --surface proj_db --from-snapshot ./state/current.json
 ```
 
 `emit` prints to stdout by default. It writes files only with `--write`:

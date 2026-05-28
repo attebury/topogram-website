@@ -32,7 +32,7 @@ platform UI tests.
 
 ## Contract Shape
 
-The v1 model is the `accessibility` block on `ui_contract` projections:
+The v1 model is the `accessibility` block on `semantic_ui` surfaces:
 
 ```tg
 accessibility {
@@ -60,6 +60,26 @@ real behavior.
 A screen or widget slice should include only the accessibility obligations
 relevant to that work target, plus related message keys, glossary terms, and
 proof commands.
+
+## Generated Web Realization
+
+React and SvelteKit generators now carry v1 accessibility obligations into
+generated web output where static markup can prove them:
+
+- generated screen, widget, and action containers include
+  `data-topogram-accessibility-target`;
+- safe semantic attributes such as `role`, `aria-label`, and `aria-live` are
+  emitted when the obligation provides enough intent;
+- keyboard, focus, and live-region models are preserved as
+  `data-topogram-keyboard-model`, `data-topogram-focus-model`, and
+  `data-topogram-live`;
+- `generation-coverage.json` and `ui-realization-report` classify obligations
+  as `rendered`, `contract_only`, `implementation_owned`, or `failed`.
+
+Complex keyboard and focus models such as `data_grid`, `roving_tabindex`, and
+focus traps are intentionally `contract_only` unless runtime tests or manual
+audit evidence proves behavior. Topogram carries the obligation; app tooling
+proves the interaction.
 
 ## Current Contract
 
