@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Sync docs/, llms.txt, and llms-full.txt from attebury/topogram.
- * Preserves src/content/docs/index.mdx (site homepage).
+ * Preserves site-local docs under src/content/docs/index.mdx and post/.
  */
 import { execSync } from "node:child_process";
 import crypto from "node:crypto";
@@ -9,7 +9,6 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { discoverFieldNotes } from "../src/lib/field-notes.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -30,13 +29,14 @@ const GITHUB_BLOB = `https://github.com/${repo}/blob/${ref}`;
 const FIELD_NOTES_START = "<!-- topogram-website:field-notes:start -->";
 const FIELD_NOTES_END = "<!-- topogram-website:field-notes:end -->";
 
+const SITE_LOCAL_DOCS = new Set(["index.mdx", "post"]);
+const SKIP_UPSTREAM_DOC_ENTRIES = new Set(["README.md", "post"]);
+
 function run(cmd, opts = {}) {
   execSync(cmd, { stdio: "inherit", ...opts });
 }
 
-const SKIP_DOC_FILES = new Set(["README.md"]);
-
-function copyDir(src, dest, { skip = SKIP_DOC_FILES } = {}) {
+function copyDir(src, dest, { skip = SKIP_UPSTREAM_DOC_ENTRIES } = {}) {
   fs.mkdirSync(dest, { recursive: true });
   for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
     if (skip.has(entry.name)) continue;
@@ -68,11 +68,13 @@ function ensureStarlightFrontmatter(filePath) {
   fs.writeFileSync(filePath, frontmatter + content, "utf8");
 }
 
-function walkMarkdownFiles(dir, visit) {
+function walkMarkdownFiles(dir, visit, { rootDir = dir, skipDirs = new Set() } = {}) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      walkMarkdownFiles(full, visit);
+      const rel = path.relative(rootDir, full).split(path.sep).join("/");
+      if (skipDirs.has(rel)) continue;
+      walkMarkdownFiles(full, visit, { rootDir, skipDirs });
     } else if (entry.name.endsWith(".md")) {
       visit(full);
     }
@@ -194,35 +196,7 @@ function injectFieldNotesBlock(relativePath, items) {
   fs.writeFileSync(target, `${content.trimEnd()}\n\n${fieldNotesBlock(items)}\n`, "utf8");
 }
 
-function writeFieldNotesLandingPage() {
-  const postDir = path.join(docsOut, "post");
-  const fieldNotes = discoverFieldNotes(docsOut);
-  const fieldNotesIntro =
-    fieldNotes.length === 0
-      ? "Field notes will appear here after upstream posts are synced."
-      : "Short narrative guides for the product ideas behind Topogram.";
-  fs.mkdirSync(postDir, { recursive: true });
-  fs.writeFileSync(
-    path.join(postDir, "index.mdx"),
-    `---
-title: Field Notes
-description: Narrative guides for understanding Topogram's app-map model, slices, and proof workflow.
----
-
-import FieldNotesList from '../../../components/FieldNotesList.astro';
-
-# Field Notes
-
-${fieldNotesIntro}
-
-<FieldNotesList />
-`,
-    "utf8",
-  );
-}
-
 function applyFieldNotesIntegration() {
-  writeFieldNotesLandingPage();
   injectFieldNotesBlock("concepts/topogram-model.md", [
     {
       title: "Topogram Layers and Slices",
@@ -277,15 +251,20 @@ if (fs.existsSync(preservedHome)) {
 }
 
 fs.mkdirSync(docsOut, { recursive: true });
-removeExcept(docsOut, new Set(["index.mdx"]));
+removeExcept(docsOut, SITE_LOCAL_DOCS);
 copyDir(upstreamDocs, docsOut);
 
 if (savedHome !== null) {
   fs.writeFileSync(preservedHome, savedHome, "utf8");
 }
 
-walkMarkdownFiles(docsOut, ensureStarlightFrontmatter);
-walkMarkdownFiles(docsOut, rewriteMarkdownLinks);
+const siteLocalMarkdownDirs = new Set(["post"]);
+walkMarkdownFiles(docsOut, ensureStarlightFrontmatter, {
+  skipDirs: siteLocalMarkdownDirs,
+});
+walkMarkdownFiles(docsOut, rewriteMarkdownLinks, {
+  skipDirs: siteLocalMarkdownDirs,
+});
 const syncedReadme = path.join(docsOut, "README.md");
 if (fs.existsSync(syncedReadme)) {
   fs.rmSync(syncedReadme);
