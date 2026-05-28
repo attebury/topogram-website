@@ -1,10 +1,10 @@
 ---
 import { LinkCard } from "@astrojs/starlight/components";
-import { fileURLToPath } from "node:url";
+import path from "node:path";
 import { discoverFieldNotes } from "../lib/field-notes.mjs";
 
 const { limit } = Astro.props;
-const docsRoot = fileURLToPath(new URL("../content/docs", import.meta.url));
+const docsRoot = path.join(process.cwd(), "src", "content", "docs");
 const notes = discoverFieldNotes(docsRoot);
 const visibleNotes = typeof limit === "number" ? notes.slice(0, limit) : notes;
 ---
