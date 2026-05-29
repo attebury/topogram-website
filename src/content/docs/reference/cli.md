@@ -216,8 +216,9 @@ verification, then implementation entry. Its examples cover `domain`, `entity`,
 `work next` is the first implementation-agent command for a task. It returns
 one `state`, one `do_now`, a `success_condition`, allowed and blocked actions,
 operation-level `edit_targets`, current endpoint/seed/verification contracts,
-and a compact `checkpoint` for context reset. The model-facing payload is
-`agent_packet`; full context stays behind `drill_down` commands.
+packet-owned `actions`, and a compact `checkpoint` for context reset. The
+model-facing payload is `agent_packet`; full context stays behind `drill_down`
+commands.
 
 When the task links to a `feature`, `work next` uses that feature's entities,
 capabilities, endpoints, seed data, and verification refs as the implementation
@@ -230,7 +231,9 @@ coverage is missing it returns `proposed_model_work` snippets for the current
 feature only. When matching model records exist but the task is not linked, it
 returns `task_record_edit`. When code is ready, `code_edit_targets` name endpoint ids,
 HTTP methods, API paths, seed sources, marker anchors, patch intent, and proof
-commands.
+commands. `actions` groups exact model edits, scaffold steps, or endpoint
+patches into the preferred next operation when the caller has an executor for
+packet-owned actions.
 
 Use `--mode maintained-app-edit` when implementation code has become maintained
 after an initial scaffold. In that mode, missing or stale scaffold markers stay

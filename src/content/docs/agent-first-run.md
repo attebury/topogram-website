@@ -120,12 +120,14 @@ Good `work next` output has one `state`, one `do_now`, and a compact
 - `allowed_actions`;
 - `blocked_actions`;
 - `edit_targets`;
+- preferred packet-owned `actions`, when available;
 - current endpoint/seed/verification contracts;
 - a `checkpoint` summary for safe context reset.
 
 Read `agent_packet` first. It is the model-facing packet: current state, exact
 next instruction, operation-level code or model targets, seed summaries,
-scaffold status, proof commands, omitted sections, and drill-down commands.
+scaffold status, preferred actions, proof commands, omitted sections, and
+drill-down commands.
 
 Use these drill-downs only when the packet asks for them:
 
