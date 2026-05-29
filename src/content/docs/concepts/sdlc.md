@@ -22,8 +22,9 @@ protected changes.
 
 ## Why It Helps Agents
 
-An SDLC-backed task gives an agent:
+An SDLC-backed feature and task give an agent:
 
+- explicit product scope before implementation scope;
 - the requirement and acceptance criteria behind the work;
 - blockers, decisions, rules, and ownership context;
 - focused query commands and `work next` packets;
@@ -79,16 +80,24 @@ Use one record per file for SDLC kinds.
 | `pitch` | Explain why a backlog theme matters. |
 | `requirement` | State durable behavior the project commits to. |
 | `acceptance_criterion` | Define observable proof, usually `Given ... when ... then ...`. |
+| `feature` | Define semantic product scope for new work: entities, capabilities, endpoints, seeds, and proof targets. |
 | `task` | Hold one implementation-sized slice. |
 | `bug` | Record a violated rule, requirement, or verified expectation. |
 | `decision` | Preserve a durable choice and rationale. |
 | `verification` | Name a proof command, test, check, or CI gate. |
 | `plan` | Optional nested execution notes for a task. |
 
+Tasks may link to a `feature` and may declare `phase`, `scope`, `intent`,
+`success`, `non_goals`, and `entrypoints`. Valid phases are `modeling`,
+`implementation`, `verification`, `polish`, and `release`. Valid scopes are
+`current_feature`, `cross_cutting`, `maintenance`, and `bugfix`.
+
 Done tasks require valid `satisfies`, `acceptance_refs`, and
 `verification_refs`.
 
 ## Normal Loop
+
+Use a task-first path for existing backlog:
 
 Start read-only:
 
@@ -113,6 +122,21 @@ topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram query verification-runs ./topo --task <task-id> --json
 ```
 
+Use a feature-first path for new product work:
+
+```bash
+topogram onboard . --json
+topogram feature new <slug> . --intent "<feature intent>" --write --json
+topogram sdlc new task <slug> . --feature feature_<slug> --phase implementation --scope current_feature --start --actor actor_coding_agent --write --json
+topogram work next ./topo --task task_<slug> --mode implementation --json
+```
+
+`topogram feature new` is read-only unless `--write` is present. `topogram sdlc
+new task --start` creates the task as unclaimed and then uses the normal
+command-owned start transition, so history remains auditable. If SDLC has not
+been adopted, task creation/start returns `needs_sdlc_adoption` with exact init
+guidance.
+
 Before closeout:
 
 ```bash
@@ -124,6 +148,12 @@ topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
 
 ```bash
 topogram sdlc verify record <verification-id> . --task <task-id> --actor actor_coding_agent --command "<command you ran>" --status pass --write --json
+```
+
+For multiple already-run proof commands, prefer one batch receipt write:
+
+```bash
+topogram sdlc verify record-batch . --task <task-id> --actor actor_coding_agent --from-file receipts.json --write --json
 ```
 
 ## Backlog And Grooming

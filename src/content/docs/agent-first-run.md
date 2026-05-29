@@ -82,8 +82,32 @@ topogram query show <name> --json
 topogram check --json
 ```
 
-For implementation work tied to an SDLC task, start with the canonical work
-packet:
+There are two normal entry paths:
+
+- Existing backlog work starts from an available SDLC task.
+- New product work starts from a feature, then creates a feature-linked task.
+
+For existing backlog work:
+
+```bash
+topogram query sdlc-ready ./topo --json
+topogram sdlc start <task-id> . --actor <actor-id> --write --json
+topogram work next ./topo --task <task-id> --mode implementation --json
+```
+
+For new product work:
+
+```bash
+topogram feature new <slug> . --intent "<feature intent>" --write --json
+topogram sdlc new task <slug> . --feature feature_<slug> --phase implementation --scope current_feature --start --actor <actor-id> --write --json
+topogram work next ./topo --task task_<slug> --mode implementation --json
+```
+
+`feature` is the product scope. `task` is the work item. Linking the task to a
+feature lets `work next` derive endpoint contracts, seed records, edit targets,
+and proof targets from structured scope instead of inferring them from prose.
+
+For implementation work tied to an SDLC task, the canonical packet is:
 
 ```bash
 topogram work next ./topo --task <task-id> --mode implementation --json
@@ -119,7 +143,7 @@ reason to inspect it.
 
 ## SDLC Task Loop
 
-When SDLC is adopted, inspect and start work through the CLI:
+When SDLC is adopted, inspect and start existing backlog work through the CLI:
 
 ```bash
 topogram query sdlc-ready ./topo --json
@@ -131,6 +155,16 @@ topogram sdlc start <task-id> . --actor <actor-id> --write --json
 The first `sdlc start` is read-only. Use `--write` only after reviewing
 blockers, decisions, rules, ownership, and verification targets. Status
 history is command-owned; do not hand-edit SDLC sidecars to make checks pass.
+
+For new work, create feature scope before task scope:
+
+```bash
+topogram feature new <slug> . --intent "<feature intent>" --write --json
+topogram sdlc new task <slug> . --feature feature_<slug> --phase implementation --scope current_feature --start --actor <actor-id> --write --json
+```
+
+If SDLC is not adopted, task creation and task start return
+`needs_sdlc_adoption` with the exact `topogram init --adopt-sdlc` guidance.
 
 ## Edit Boundaries
 
@@ -196,6 +230,13 @@ actually ran:
 
 ```bash
 topogram sdlc verify record <verification-id> . --task <task-id> --actor <actor-id> --command "<command>" --status pass --write --json
+```
+
+When several proof commands already ran, write a small `receipts.json` and use
+one command-owned batch write instead of parallel receipt commands:
+
+```bash
+topogram sdlc verify record-batch . --task <task-id> --actor <actor-id> --from-file receipts.json --write --json
 ```
 
 Good closeout means proof gaps are empty, verification evidence is current, and

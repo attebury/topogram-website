@@ -43,6 +43,8 @@ selector, standard profile for `--task`, and bug profile for `--bug`.
 topogram init
 topogram init . --adopt-sdlc
 topogram init ./existing-app --json
+topogram feature new <slug> . --intent "<feature intent>" --json
+topogram feature new <slug> . --intent "<feature intent>" --write --json
 topogram template list
 topogram copy --list
 topogram copy hello-web ./my-app
@@ -55,6 +57,11 @@ Use `topogram init` first for existing or maintained repos. Use `topogram copy`
 when you want to copy a starter template and generate an app/runtime bundle.
 Successful `init` output includes a `Scaffolded:` summary; JSON output includes
 `scaffold[]` entries with each path, kind, status, and purpose.
+
+Use `topogram feature new` for new product work after a workspace exists. It is
+read-only unless `--write` is present and writes a draft `feature_<slug>` record
+under `topo/features/`. Pair it with `topogram sdlc new task --feature` when
+SDLC is adopted.
 
 Remote catalog and GitHub reads are size-limited before parsing. Override the
 default only when you have reviewed the source. These can be set in the
@@ -100,9 +107,11 @@ runtimes, links web to API and API to database, and reports the next
 ```bash
 topogram agent brief --json
 topogram work next ./topo --task <task-id> --mode implementation --json
+topogram work next ./topo --task <task-id> --mode maintained-app-edit --json
 topogram query list --json
 topogram query show <name> --json
 topogram query slice ./topo --task <task-id> --json
+topogram query slice ./topo --feature <feature-id> --detail compact --json
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --json
 topogram query slice ./topo --task <task-id> --detail compact --format markdown
 topogram query slice ./topo --task <task-id> --detail compact --format html
@@ -190,11 +199,16 @@ operation-level `edit_targets`, current endpoint/seed/verification contracts,
 and a compact `checkpoint` for context reset. The model-facing payload is
 `agent_packet`; full context stays behind `drill_down` commands.
 
+When the task links to a `feature`, `work next` uses that feature's entities,
+capabilities, endpoints, seed data, and verification refs as the implementation
+scope. When no feature link exists, it suggests matching existing features
+before falling back to current-feature modeling guidance.
+
 `work next` states are `model_invalid`, `model_missing`, `model_link_needed`,
 `scaffold_needed`, `code_edit_ready`, `verify_ready`, and `done`. When model
 coverage is missing it returns `proposed_model_work` snippets for the current
 feature only. When matching model records exist but the task is not linked, it
-returns `task_patch`. When code is ready, `code_edit_targets` name endpoint ids,
+returns `task_record_edit`. When code is ready, `code_edit_targets` name endpoint ids,
 HTTP methods, API paths, seed sources, marker anchors, patch intent, and proof
 commands.
 
@@ -231,9 +245,12 @@ as `--task`, `--bug`, `--screen`, `--widget`, `--capability`, `--entity`,
 
 ```bash
 topogram sdlc policy explain --json
+topogram sdlc new task <slug> . --feature <feature-id> --phase implementation --scope current_feature --json
+topogram sdlc new task <slug> . --feature <feature-id> --phase implementation --scope current_feature --start --actor actor_coding_agent --write --json
 topogram sdlc start <task-id> . --actor actor_coding_agent --json
 topogram sdlc start <task-id> . --actor actor_coding_agent --write --json
 topogram sdlc verify record <verification-id> . --task <task-id> --actor actor_coding_agent --command "<command you ran>" --status pass --write --json
+topogram sdlc verify record-batch . --task <task-id> --actor actor_coding_agent --from-file receipts.json --write --json
 topogram sdlc complete <task-id> . --verification <verification-id> --actor actor_coding_agent --write
 topogram sdlc prep commit . --base origin/main --head HEAD --json
 topogram sdlc check . --strict
@@ -242,6 +259,27 @@ topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
 
 `sdlc start` is read-only by default. It returns the implementation packet for a
 task; `--write` claims and starts the task through command-owned history.
+`sdlc verify record-batch` accepts a JSON array or `{ "receipts": [...] }`
+file, takes the SDLC write lock once, and records append-only verification
+receipts sequentially.
+
+```json
+{
+  "receipts": [
+    {
+      "verification_id": "verification_engine_gate",
+      "command": "bash ./scripts/verify-engine.sh",
+      "status": "pass",
+      "summary": "Engine gate passed."
+    }
+  ]
+}
+```
+`sdlc new task` also previews by default. With `--write`, it creates a task
+record. With `--start`, it creates the task as unclaimed and then uses the
+normal start transition so status history remains command-owned. Task creation
+and start require adopted SDLC; non-adopted workspaces return
+`needs_sdlc_adoption` with init guidance.
 
 ## Widgets
 

@@ -56,6 +56,7 @@ Common statement kinds:
 - identity and language: `actor`, `role`, `term`, `domain`;
 - data and contracts: `entity`, `shape`, `enum`, `seed_data`;
 - behavior: `rule`, `capability`, `workflow`, `verification`;
+- product scope: `feature`;
 - UI work map: `navpoint`, `screen`, `section`, `widget`, `region`, `layout`,
   `theme`, `design_language`, `component_map`;
 - API behavior: `endpoint`;
@@ -82,7 +83,17 @@ Stack-specific frameworks may still use terms such as route files, controllers,
 or handlers. Those are implementation details. Topogram's public model keeps
 the product boundary explicit.
 
-## Capabilities, Persistence, And Seed Data
+## Features, Capabilities, Persistence, And Seed Data
+
+`feature` records define current product scope in a way agents can act on.
+A feature names the intent and points to the entities, capabilities, endpoints,
+seed data, and verification records that belong together. New product work
+should normally start with a feature, then a feature-linked SDLC task.
+
+This keeps agent packets from guessing feature boundaries from task prose.
+When a task links to a feature, `work next` can select the right endpoint
+contracts, seed records, edit targets, and proof targets directly from the
+model.
 
 `capability` records describe user or system behavior. Persistence contracts
 connect capabilities to entities through read/create/update/delete intent.

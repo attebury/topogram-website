@@ -45,6 +45,7 @@ names.
 - `rule`
 - `capability`
 - `seed_data`
+- `feature`
 - `theme`
 - `widget`
 - `section`
@@ -68,6 +69,54 @@ names.
 - `bug`
 
 Documents are markdown files with frontmatter under `topo/docs/**`.
+
+## Features
+
+`feature` records define semantic product scope for new work. They group the
+model records an agent should use for the current product capability: entities,
+capabilities, endpoints, seed data, and proof targets.
+
+Feature identifiers must use the `feature_<slug>` form. Valid statuses are
+`draft`, `active`, and `deprecated`.
+
+```text
+feature feature_waitlist_reminders_no_shows {
+  name "Waitlist Reminders And No-Shows"
+  description "Waitlist, reminder, and no-show operations."
+  intent "Let clinic staff view waitlist pressure, inspect reminder gaps, and record no-show outcomes."
+  entities [entity_waitlist_entry entity_reminder entity_no_show]
+  capabilities [cap_list_waitlist cap_list_reminders cap_record_no_show]
+  endpoints [endpoint_list_waitlist endpoint_list_reminders endpoint_create_no_show]
+  seed_data [seed_waitlist_entries seed_reminders seed_no_shows]
+  verification_refs [verification_waitlist_smoke]
+  status active
+}
+```
+
+Use features as task scope:
+
+```text
+task task_waitlist_implementation {
+  name "Waitlist Implementation"
+  description "Implement the waitlist feature."
+  feature feature_waitlist_reminders_no_shows
+  phase implementation
+  scope current_feature
+  intent "Add the current feature without changing unrelated clinic behavior."
+  success "Waitlist, reminder, and no-show endpoints pass smoke checks."
+  non_goals ["Do not rebuild the base patient dashboard."]
+  entrypoints ["/api/waitlist" "/api/reminders" "/api/no-shows"]
+  disposition active
+  priority high
+  work_type implementation
+  change_type sdlc
+  status unclaimed
+}
+```
+
+Valid task phases are `modeling`, `implementation`, `verification`, `polish`,
+and `release`. Valid task scopes are `current_feature`, `cross_cutting`,
+`maintenance`, and `bugfix`.
 
 ## Rule status
 

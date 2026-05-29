@@ -7,24 +7,25 @@ description: "Topogram gives agents structured app context that harnesses, tools
 
 - **Status:** Current
 - **Created:** 2026-05-28
-- **Modified:** 2026-05-28
+- **Modified:** 2026-05-29
 - **Read time:** ~3 minutes
 - **Audience:** Developers, product owners, and technical evaluators
 - **Use when:** You need to explain where Topogram fits beside agent harnesses, graph tools, rules, and skills.
 
-Topogram is easy to confuse with other parts of an AI coding workflow. It is not
-the harness that runs an agent. It is not a repository graph tool. It is not a
-rule file. It is not a skill that teaches a repeated workflow.
+Topogram is easy to confuse with the rest of an AI coding workflow.
 
-Topogram is the app map those pieces can use.
+That's understandable. The workflow is getting crowded. Harnesses run agents.
+Tools inspect repos. Rules constrain behavior. Skills teach repeated workflows.
 
-That distinction matters because most agent failures are not caused by a lack
-of instructions. They happen because the agent does not know enough about the
-specific system it is changing. It reads files, infers intent, makes a local
-plan, and hopes the surrounding architecture agrees.
+Topogram is different. It is the **app map those pieces can use**.
 
-Harnesses, tools, rules, and skills all help. They just solve different
-problems.
+That distinction matters because many agent failures aren't caused by a lack of
+instructions. They happen because the agent doesn't know enough about the system
+it is changing. It reads files, infers intent, makes a local plan, and hopes the
+surrounding architecture agrees.
+
+Harnesses, tools, rules, and skills all help. They just solve **different
+coordination problems**.
 
 ## Harnesses run the agent
 
@@ -40,9 +41,9 @@ A good harness answers questions like:
 - Who approves risky actions?
 - How does a patch become a commit?
 
-That is important infrastructure, but it is not the product model. A harness can
-give the agent access to a repository. It does not automatically explain the
-repository's intent, ownership, contracts, or proof expectations.
+That's important infrastructure, but it isn't the product model. A harness can
+give the agent access to a repository. It doesn't automatically explain the
+repository's **intent**, **ownership**, **contracts**, or **proof expectations**.
 
 Topogram is useful inside a harness because it gives the harness a better source
 of project context.
@@ -57,10 +58,10 @@ Rules are valuable because they are simple and portable. They set expectations
 without requiring a database or a runtime.
 
 The limit is that rules are usually broad. A rule can say "read focused context
-before editing." It cannot, by itself, know which capability, surface, workflow,
+before editing." It can't, by itself, know which capability, surface, workflow,
 or verification applies to a specific task.
 
-Topogram can connect a change to those concrete project records.
+Topogram can connect the rule to **concrete project records**.
 
 ## Skills teach workflows
 
@@ -72,11 +73,11 @@ Skills are strongest when the task pattern repeats across projects. They reduce
 setup cost and keep the agent from relearning a workflow every time.
 
 The limit is that a skill is still mostly procedural. It can say how to work,
-but it usually does not contain the current app graph. It does not know which
+but it usually doesn't contain the current app graph. It doesn't know which
 entity owns a workflow, which rule a task must respect, or which verification
 proves the change.
 
-Topogram supplies that project-specific graph.
+Topogram supplies the **project-specific graph**.
 
 ## Tools inspect the repo
 
@@ -95,7 +96,8 @@ parts are generated, which rules are binding, which decisions are current, or
 which verification proves a new change.
 
 Topogram can work beside those tools. A repository graph can help explain the
-current code. Topogram explains the app map the team wants agents to work from.
+current code. Topogram explains the **app map the team wants agents to work
+from**.
 
 ## Topogram maps the app and the work
 
@@ -118,12 +120,12 @@ target.
 
 ## The practical benefit
 
-Topogram does not replace harnesses, tools, rules, or skills. It makes them more
+Topogram doesn't replace harnesses, tools, rules, or skills. It makes them more
 useful.
 
-The harness runs the agent. Tools inspect the repo. Rules constrain the agent.
-Skills teach the agent. Topogram tells the agent what is true about this app and
-this change.
+The harness runs the agent. Tools inspect the repo. Rules constrain behavior.
+Skills teach workflows. Topogram tells the agent **what is true about this app
+and this change**.
 
 That is the benefit: less repo rediscovery, fewer guesses about ownership and
 intent, and clearer proof that a change matches the system the team meant to

@@ -79,7 +79,9 @@ conversation focused on the current workflow step while preserving the complete
 evidence packet for audit and debugging.
 
 For the Topogram arm, model validity is a harness-enforced boundary. The agent
-uses `work next` as the first workflow packet. It may call
+uses feature-linked SDLC tasks and `work next` as the first workflow packet.
+The feature record names the current wave's endpoint, seed, and verification
+scope; the task records the work state. The agent may call
 `modeling-guide`, `repair-model`, or `slice` only when the CLI packet asks for
 drill-down context. After any `topo/**` edit the harness blocks app code writes
 and app checks until the packet/check flow reports an implementation-ready state

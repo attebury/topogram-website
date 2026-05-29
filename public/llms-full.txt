@@ -12,6 +12,7 @@ Topogram uses these public command verbs:
 - `adopt` promotes reviewed candidates into canonical `topo/` source.
 - `generate` writes app/runtime outputs from the app map.
 - `emit` prints or writes contracts, reports, snapshots, context, and plans.
+- `feature new` creates read-only or written feature scope for new product work.
 - `work next` gives agents one directive next-action packet for a task.
 - `query` gives agents focused slices, plans, proof gaps, and review packets.
 
@@ -398,8 +399,32 @@ topogram query show <name> --json
 topogram check --json
 ```
 
-For implementation work tied to an SDLC task, start with the canonical work
-packet:
+There are two normal entry paths:
+
+- Existing backlog work starts from an available SDLC task.
+- New product work starts from a feature, then creates a feature-linked task.
+
+For existing backlog work:
+
+```bash
+topogram query sdlc-ready ./topo --json
+topogram sdlc start <task-id> . --actor <actor-id> --write --json
+topogram work next ./topo --task <task-id> --mode implementation --json
+```
+
+For new product work:
+
+```bash
+topogram feature new <slug> . --intent "<feature intent>" --write --json
+topogram sdlc new task <slug> . --feature feature_<slug> --phase implementation --scope current_feature --start --actor <actor-id> --write --json
+topogram work next ./topo --task task_<slug> --mode implementation --json
+```
+
+`feature` is the product scope. `task` is the work item. Linking the task to a
+feature lets `work next` derive endpoint contracts, seed records, edit targets,
+and proof targets from structured scope instead of inferring them from prose.
+
+For implementation work tied to an SDLC task, the canonical packet is:
 
 ```bash
 topogram work next ./topo --task <task-id> --mode implementation --json
@@ -435,7 +460,7 @@ reason to inspect it.
 
 ## SDLC Task Loop
 
-When SDLC is adopted, inspect and start work through the CLI:
+When SDLC is adopted, inspect and start existing backlog work through the CLI:
 
 ```bash
 topogram query sdlc-ready ./topo --json
@@ -447,6 +472,16 @@ topogram sdlc start <task-id> . --actor <actor-id> --write --json
 The first `sdlc start` is read-only. Use `--write` only after reviewing
 blockers, decisions, rules, ownership, and verification targets. Status
 history is command-owned; do not hand-edit SDLC sidecars to make checks pass.
+
+For new work, create feature scope before task scope:
+
+```bash
+topogram feature new <slug> . --intent "<feature intent>" --write --json
+topogram sdlc new task <slug> . --feature feature_<slug> --phase implementation --scope current_feature --start --actor <actor-id> --write --json
+```
+
+If SDLC is not adopted, task creation and task start return
+`needs_sdlc_adoption` with the exact `topogram init --adopt-sdlc` guidance.
 
 ## Edit Boundaries
 
@@ -512,6 +547,13 @@ actually ran:
 
 ```bash
 topogram sdlc verify record <verification-id> . --task <task-id> --actor <actor-id> --command "<command>" --status pass --write --json
+```
+
+When several proof commands already ran, write a small `receipts.json` and use
+one command-owned batch write instead of parallel receipt commands:
+
+```bash
+topogram sdlc verify record-batch . --task <task-id> --actor <actor-id> --from-file receipts.json --write --json
 ```
 
 Good closeout means proof gaps are empty, verification evidence is current, and
@@ -799,6 +841,7 @@ Common statement kinds:
 - identity and language: `actor`, `role`, `term`, `domain`;
 - data and contracts: `entity`, `shape`, `enum`, `seed_data`;
 - behavior: `rule`, `capability`, `workflow`, `verification`;
+- product scope: `feature`;
 - UI work map: `navpoint`, `screen`, `section`, `widget`, `region`, `layout`,
   `theme`, `design_language`, `component_map`;
 - API behavior: `endpoint`;
@@ -825,7 +868,17 @@ Stack-specific frameworks may still use terms such as route files, controllers,
 or handlers. Those are implementation details. Topogram's public model keeps
 the product boundary explicit.
 
-## Capabilities, Persistence, And Seed Data
+## Features, Capabilities, Persistence, And Seed Data
+
+`feature` records define current product scope in a way agents can act on.
+A feature names the intent and points to the entities, capabilities, endpoints,
+seed data, and verification records that belong together. New product work
+should normally start with a feature, then a feature-linked SDLC task.
+
+This keeps agent packets from guessing feature boundaries from task prose.
+When a task links to a feature, `work next` can select the right endpoint
+contracts, seed records, edit targets, and proof targets directly from the
+model.
 
 `capability` records describe user or system behavior. Persistence contracts
 connect capabilities to entities through read/create/update/delete intent.
@@ -3850,8 +3903,9 @@ protected changes.
 
 ## Why It Helps Agents
 
-An SDLC-backed task gives an agent:
+An SDLC-backed feature and task give an agent:
 
+- explicit product scope before implementation scope;
 - the requirement and acceptance criteria behind the work;
 - blockers, decisions, rules, and ownership context;
 - focused query commands and `work next` packets;
@@ -3907,16 +3961,24 @@ Use one record per file for SDLC kinds.
 | `pitch` | Explain why a backlog theme matters. |
 | `requirement` | State durable behavior the project commits to. |
 | `acceptance_criterion` | Define observable proof, usually `Given ... when ... then ...`. |
+| `feature` | Define semantic product scope for new work: entities, capabilities, endpoints, seeds, and proof targets. |
 | `task` | Hold one implementation-sized slice. |
 | `bug` | Record a violated rule, requirement, or verified expectation. |
 | `decision` | Preserve a durable choice and rationale. |
 | `verification` | Name a proof command, test, check, or CI gate. |
 | `plan` | Optional nested execution notes for a task. |
 
+Tasks may link to a `feature` and may declare `phase`, `scope`, `intent`,
+`success`, `non_goals`, and `entrypoints`. Valid phases are `modeling`,
+`implementation`, `verification`, `polish`, and `release`. Valid scopes are
+`current_feature`, `cross_cutting`, `maintenance`, and `bugfix`.
+
 Done tasks require valid `satisfies`, `acceptance_refs`, and
 `verification_refs`.
 
 ## Normal Loop
+
+Use a task-first path for existing backlog:
 
 Start read-only:
 
@@ -3941,6 +4003,21 @@ topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 topogram query verification-runs ./topo --task <task-id> --json
 ```
 
+Use a feature-first path for new product work:
+
+```bash
+topogram onboard . --json
+topogram feature new <slug> . --intent "<feature intent>" --write --json
+topogram sdlc new task <slug> . --feature feature_<slug> --phase implementation --scope current_feature --start --actor actor_coding_agent --write --json
+topogram work next ./topo --task task_<slug> --mode implementation --json
+```
+
+`topogram feature new` is read-only unless `--write` is present. `topogram sdlc
+new task --start` creates the task as unclaimed and then uses the normal
+command-owned start transition, so history remains auditable. If SDLC has not
+been adopted, task creation/start returns `needs_sdlc_adoption` with exact init
+guidance.
+
 Before closeout:
 
 ```bash
@@ -3952,6 +4029,12 @@ topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
 
 ```bash
 topogram sdlc verify record <verification-id> . --task <task-id> --actor actor_coding_agent --command "<command you ran>" --status pass --write --json
+```
+
+For multiple already-run proof commands, prefer one batch receipt write:
+
+```bash
+topogram sdlc verify record-batch . --task <task-id> --actor actor_coding_agent --from-file receipts.json --write --json
 ```
 
 ## Backlog And Grooming
@@ -5027,6 +5110,8 @@ selector, standard profile for `--task`, and bug profile for `--bug`.
 topogram init
 topogram init . --adopt-sdlc
 topogram init ./existing-app --json
+topogram feature new <slug> . --intent "<feature intent>" --json
+topogram feature new <slug> . --intent "<feature intent>" --write --json
 topogram template list
 topogram copy --list
 topogram copy hello-web ./my-app
@@ -5039,6 +5124,11 @@ Use `topogram init` first for existing or maintained repos. Use `topogram copy`
 when you want to copy a starter template and generate an app/runtime bundle.
 Successful `init` output includes a `Scaffolded:` summary; JSON output includes
 `scaffold[]` entries with each path, kind, status, and purpose.
+
+Use `topogram feature new` for new product work after a workspace exists. It is
+read-only unless `--write` is present and writes a draft `feature_<slug>` record
+under `topo/features/`. Pair it with `topogram sdlc new task --feature` when
+SDLC is adopted.
 
 Remote catalog and GitHub reads are size-limited before parsing. Override the
 default only when you have reviewed the source. These can be set in the
@@ -5084,9 +5174,11 @@ runtimes, links web to API and API to database, and reports the next
 ```bash
 topogram agent brief --json
 topogram work next ./topo --task <task-id> --mode implementation --json
+topogram work next ./topo --task <task-id> --mode maintained-app-edit --json
 topogram query list --json
 topogram query show <name> --json
 topogram query slice ./topo --task <task-id> --json
+topogram query slice ./topo --feature <feature-id> --detail compact --json
 topogram query slice ./topo --mode implementation --task <task-id> --detail compact --json
 topogram query slice ./topo --task <task-id> --detail compact --format markdown
 topogram query slice ./topo --task <task-id> --detail compact --format html
@@ -5174,11 +5266,16 @@ operation-level `edit_targets`, current endpoint/seed/verification contracts,
 and a compact `checkpoint` for context reset. The model-facing payload is
 `agent_packet`; full context stays behind `drill_down` commands.
 
+When the task links to a `feature`, `work next` uses that feature's entities,
+capabilities, endpoints, seed data, and verification refs as the implementation
+scope. When no feature link exists, it suggests matching existing features
+before falling back to current-feature modeling guidance.
+
 `work next` states are `model_invalid`, `model_missing`, `model_link_needed`,
 `scaffold_needed`, `code_edit_ready`, `verify_ready`, and `done`. When model
 coverage is missing it returns `proposed_model_work` snippets for the current
 feature only. When matching model records exist but the task is not linked, it
-returns `task_patch`. When code is ready, `code_edit_targets` name endpoint ids,
+returns `task_record_edit`. When code is ready, `code_edit_targets` name endpoint ids,
 HTTP methods, API paths, seed sources, marker anchors, patch intent, and proof
 commands.
 
@@ -5215,9 +5312,12 @@ as `--task`, `--bug`, `--screen`, `--widget`, `--capability`, `--entity`,
 
 ```bash
 topogram sdlc policy explain --json
+topogram sdlc new task <slug> . --feature <feature-id> --phase implementation --scope current_feature --json
+topogram sdlc new task <slug> . --feature <feature-id> --phase implementation --scope current_feature --start --actor actor_coding_agent --write --json
 topogram sdlc start <task-id> . --actor actor_coding_agent --json
 topogram sdlc start <task-id> . --actor actor_coding_agent --write --json
 topogram sdlc verify record <verification-id> . --task <task-id> --actor actor_coding_agent --command "<command you ran>" --status pass --write --json
+topogram sdlc verify record-batch . --task <task-id> --actor actor_coding_agent --from-file receipts.json --write --json
 topogram sdlc complete <task-id> . --verification <verification-id> --actor actor_coding_agent --write
 topogram sdlc prep commit . --base origin/main --head HEAD --json
 topogram sdlc check . --strict
@@ -5226,6 +5326,27 @@ topogram sdlc gate . --base origin/main --head HEAD --require-adopted --json
 
 `sdlc start` is read-only by default. It returns the implementation packet for a
 task; `--write` claims and starts the task through command-owned history.
+`sdlc verify record-batch` accepts a JSON array or `{ "receipts": [...] }`
+file, takes the SDLC write lock once, and records append-only verification
+receipts sequentially.
+
+```json
+{
+  "receipts": [
+    {
+      "verification_id": "verification_engine_gate",
+      "command": "bash ./scripts/verify-engine.sh",
+      "status": "pass",
+      "summary": "Engine gate passed."
+    }
+  ]
+}
+```
+`sdlc new task` also previews by default. With `--write`, it creates a task
+record. With `--start`, it creates the task as unclaimed and then uses the
+normal start transition so status history remains command-owned. Task creation
+and start require adopted SDLC; non-adopted workspaces return
+`needs_sdlc_adoption` with init guidance.
 
 ## Widgets
 
@@ -5399,6 +5520,7 @@ names.
 - `rule`
 - `capability`
 - `seed_data`
+- `feature`
 - `theme`
 - `widget`
 - `section`
@@ -5422,6 +5544,54 @@ names.
 - `bug`
 
 Documents are markdown files with frontmatter under `topo/docs/**`.
+
+## Features
+
+`feature` records define semantic product scope for new work. They group the
+model records an agent should use for the current product capability: entities,
+capabilities, endpoints, seed data, and proof targets.
+
+Feature identifiers must use the `feature_<slug>` form. Valid statuses are
+`draft`, `active`, and `deprecated`.
+
+```tg
+feature feature_waitlist_reminders_no_shows {
+  name "Waitlist Reminders And No-Shows"
+  description "Waitlist, reminder, and no-show operations."
+  intent "Let clinic staff view waitlist pressure, inspect reminder gaps, and record no-show outcomes."
+  entities [entity_waitlist_entry entity_reminder entity_no_show]
+  capabilities [cap_list_waitlist cap_list_reminders cap_record_no_show]
+  endpoints [endpoint_list_waitlist endpoint_list_reminders endpoint_create_no_show]
+  seed_data [seed_waitlist_entries seed_reminders seed_no_shows]
+  verification_refs [verification_waitlist_smoke]
+  status active
+}
+```
+
+Use features as task scope:
+
+```tg
+task task_waitlist_implementation {
+  name "Waitlist Implementation"
+  description "Implement the waitlist feature."
+  feature feature_waitlist_reminders_no_shows
+  phase implementation
+  scope current_feature
+  intent "Add the current feature without changing unrelated clinic behavior."
+  success "Waitlist, reminder, and no-show endpoints pass smoke checks."
+  non_goals ["Do not rebuild the base patient dashboard."]
+  entrypoints ["/api/waitlist" "/api/reminders" "/api/no-shows"]
+  disposition active
+  priority high
+  work_type implementation
+  change_type sdlc
+  status unclaimed
+}
+```
+
+Valid task phases are `modeling`, `implementation`, `verification`, `polish`,
+and `release`. Valid task scopes are `current_feature`, `cross_cutting`,
+`maintenance`, and `bugfix`.
 
 ## Rule status
 
@@ -7624,7 +7794,9 @@ conversation focused on the current workflow step while preserving the complete
 evidence packet for audit and debugging.
 
 For the Topogram arm, model validity is a harness-enforced boundary. The agent
-uses `work next` as the first workflow packet. It may call
+uses feature-linked SDLC tasks and `work next` as the first workflow packet.
+The feature record names the current wave's endpoint, seed, and verification
+scope; the task records the work state. The agent may call
 `modeling-guide`, `repair-model`, or `slice` only when the CLI packet asks for
 drill-down context. After any `topo/**` edit the harness blocks app code writes
 and app checks until the packet/check flow reports an implementation-ready state
