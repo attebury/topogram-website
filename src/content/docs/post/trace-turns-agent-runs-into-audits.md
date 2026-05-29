@@ -15,34 +15,37 @@ description: "Topogram trace turns completed agent runs into evidence for trust,
 
 Agent work is easy to watch and hard to audit.
 
-You can read the final diff. You can skim the transcript. You can count tokens.
-You can ask whether the tests passed.
+You can:
 
-Those are useful signals. They are not enough.
+- read the final diff
+- skim the transcript
+- count tokens
+- review tests
+
+Those are useful signals, but they aren't enough.
 
 The useful question is sharper:
 
 **Did the run deserve trust?**
 
-That is what Topogram trace is for. It turns a completed agent run into
-evidence that can be reviewed, compared, and improved.
+Topogram trace turns a completed agent run into evidence that can be **reviewed**, **compared**, and **improved**.
 
 ## The diff is not the whole run
 
 A finished diff can look reasonable while hiding the cost of getting there.
 
-Maybe the agent read half the repo before finding the right file. Maybe it asked
-for the same next action three times. Maybe it skipped the proof. Maybe the
-app-map packet named the right scaffold, but the run never used it.
+Maybe the agent read half the repo before finding the right file. Maybe it
+asked for the same next action three times. Maybe it skipped the proof. Maybe
+it never used the scaffold named in the app-map packet.
 
 The change may still pass.
 
-That does not mean the workflow was good.
+That doesn't mean the workflow was good.
 
-Agent performance is not only final output. It is **how the run moved through
-the work**.
+Agent performance is **how the run moved through the work**, not just the final
+output.
 
-If the path was noisy, that noise is product feedback.
+If the path was noisy, that noise is _product feedback_.
 
 It may mean the packet was too broad. It may mean the next command was unclear.
 It may mean the docs hid the real workflow. It may mean the harness surfaced
@@ -56,8 +59,8 @@ Trace gives that review somewhere to happen.
 `topogram trace` reads a completed run and asks what actually happened.
 
 It can look at run manifests, usage logs, tool results, model calls, proof
-outcomes, and transcripts when they exist. With an audit bundle, it can compare
-the observed run against the workflow context the agent was expected to use.
+outcomes, and transcripts when they exist. With an audit bundle, it can **compare
+the observed run against the workflow context** the agent was expected to use.
 
 The command shape is intentionally direct:
 
@@ -69,9 +72,7 @@ topogram trace compare <run-a> <run-b> --json
 
 The input can come from any run that matters enough to inspect.
 
-The point is not to make a perfect judge.
-
-The point is to make the run **inspectable**.
+We want an **inspectable** run, not a perfect judge.
 
 An audit should answer practical questions:
 
@@ -95,34 +96,35 @@ because the target was not clear. Maybe the docs pointed at the right concept
 but not the right file. Maybe the agent repeated the same command state because
 the next action was not decisive.
 
-Token totals do not tell the whole story.
-
-They are still a useful smoke alarm.
+Token totals do not tell the whole story, but they are a useful smoke alarm.
 
 The real value is not "this run used fewer tokens." A cheap run can skip proof.
-A costly run can produce durable learning. The useful question is whether the
-tokens were spent on **relevant context** or on avoidable wandering.
+A costly run can produce durable learning.
 
-That is why trace pairs usage with path evidence. It can show model calls,
-observed tools, files read, proof outcomes, and packet estimates together. The
-team can see whether a token spike came from necessary work, weak guidance, or
-missing structure.
+The useful question is whether the tokens were spent on **relevant context** or
+on avoidable wandering.
+
+Trace pairs usage with path evidence. It can show model calls,
+observed tools, files read, proof outcomes, and packet estimates together.
+
+The team can see whether a token spike came from necessary work, weak guidance,
+or missing structure.
 
 That makes token usage less like a scoreboard and more like a diagnostic.
 
 ## Smells are product feedback
 
-Trace reports attention smells.
+`topogram trace` reports attention smells. They are not hard failures by
+default, but they do flag the need for further review.
 
-That word matters.
-
-These are not hard failures by default. They are signals a human should inspect.
-
-A large actual-vs-packet token delta may mean the packet did not localize the
-work. Repeated `work next` states may mean the next action was not decisive
-enough. Excessive file reads may mean edit targets were too broad. Skipped
-proof may mean the result is weaker than it looks. Expected scaffold that was
-not used may mean generator status or harness gating needs review.
+- A large actual-vs-packet token delta may mean the packet did not localize the
+  work.
+- Repeated `work next` states may mean the next action was not decisive
+  enough.
+- Excessive file reads may mean edit targets were too broad.
+- Skipped proof may mean the result is weaker than it looks.
+- Expected scaffold that was not used may mean generator status or harness
+  gating needs review.
 
 None of that automatically means the run was bad.
 
@@ -139,11 +141,9 @@ Ask what the smell says about the system. Then decide whether it should become
 a CLI packet improvement, generator improvement, docs improvement, harness fix,
 or backlog note.
 
-## The trace is the after-action record
+## After-action record
 
-The important part of trace is not the report file.
-
-The important part is the after-action record.
+The after-action record is the most important part of a trace.
 
 After a meaningful agent run, the team should be able to answer a few basic
 questions without reconstructing the whole session from memory:
@@ -160,22 +160,21 @@ That is a different posture from "the diff looks fine."
 
 The diff is the artifact. The trace is the **path evidence**.
 
-That matters because agent work creates a new review problem. The human may not
-have watched every step. The agent may have made reasonable choices for bad
+That matters because agent work creates a **new review problem**. The human may
+not have watched every step. The agent may have made reasonable choices for bad
 reasons. The tests may pass while the run still shows weak context, missing
 proof, or unclear ownership.
 
-Trace gives the team a place to inspect that path.
+Trace gives the team a place to **inspect that path**.
 
-If the run failed, ask whether the app map, packet, scaffold, docs, or proof
-surface made failure more likely. If the run passed, ask whether it passed with
-clean attention or got lucky. If proof was absent, treat the result as weaker
-evidence. If the agent had to read widely, ask whether the packet localized the
-work well enough.
+- If the run failed, ask whether the app map, packet, scaffold, docs, or proof
+  surface made failure more likely.
+- If the run passed, ask whether it passed with clean attention or got lucky.
+- If proof was absent, treat the result as weaker evidence.
+- If the agent had to read widely, ask whether the packet localized the
+  work well enough.
 
-The goal is not to grade the agent after the fact.
-
-The goal is to make the **next run more explainable**.
+We want to make the **next run more explainable**.
 
 ## Auditing makes claims safer
 
@@ -189,10 +188,6 @@ Not just screenshots. Not just polished demos. Not just final diffs.
 It needs **auditable runs** that show what the agent was expected to do, what it
 actually did, where it spent attention, what proof it ran, and what the team
 changed after learning from the result.
-
-That is especially important while Topogram is pre-beta.
-
-Early product work should not pretend to be finished.
 
 It should show its **learning loop**.
 
@@ -227,8 +222,6 @@ That creates a stronger workflow:
 - Run again.
 
 This is not faster editing. It is **better structure around agent work**.
-
-The durable takeaway is simple.
 
 If agents are going to change important code, teams need to audit more than the
 final diff.

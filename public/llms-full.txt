@@ -72,6 +72,8 @@ Topogram uses these public command verbs:
 
 - [Proof Walkthrough](docs/proof-walkthrough.md): Runnable proof/demo program and branch/tag convention.
 - [Slice Benefit Experiment](docs/proof-slice-benefit-experiment.md): Repeatable clinic-ops comparison between Topogram slice-guided and unguided app coding.
+- [Experiment Trace Loop](docs/maintainers/experiment-trace-loop.md): Maintainer loop for trace, improvement, stabilization, comparison, and publishing.
+- [Evaluation Matrix](docs/maintainers/evaluation-matrix.md): Scenario taxonomy and evidence vocabulary for Topogram trace/evaluation runs.
 - [Generated/Maintained Proof Repo](https://github.com/attebury/topogram-proof-content-approval-v3): Current beta-story generated-to-maintained proof repository.
 - [Brownfield Proof Repo](https://github.com/attebury/topogram-proof-content-approval-brownfield-v3): Current beta-story brownfield extract/adopt and cross-stack proof repository.
 - [Widget Design Realization Proof Repo](https://github.com/attebury/topogram-proof-widget-design-realization): Focused proof for widget-first component maps, including the Markdown design matrix from `ui-design-coverage --format markdown`.
@@ -139,7 +141,7 @@ If you need the product framing before commands, read
 | Map a real component system | [Map A Real Component System](./design/map-a-real-component-system.md) |
 | Compare Topogram slices to unguided app coding | [Slice Benefit Experiment](./proof-slice-benefit-experiment.md) |
 | Author templates, generators, or extractors | [Template Authoring](./authoring/templates.md), [Generator Packs](./authoring/generator-packs.md), [Extractor Packs](./authoring/extractor-packs.md) |
-| Maintain this repo | [Engine Development](./maintainers/engine-development.md), [Testing](./maintainers/testing.md), [Experiment Trace Loop](./maintainers/experiment-trace-loop.md), [Releasing](./maintainers/releasing.md) |
+| Maintain this repo | [Engine Development](./maintainers/engine-development.md), [Testing](./maintainers/testing.md), [Experiment Trace Loop](./maintainers/experiment-trace-loop.md), [Evaluation Matrix](./maintainers/evaluation-matrix.md), [Releasing](./maintainers/releasing.md) |
 
 ## Proof Repositories
 
@@ -5177,6 +5179,7 @@ runtimes, links web to API and API to database, and reports the next
 ```bash
 topogram agent brief --json
 topogram work next ./topo --task <task-id> --mode implementation --json
+topogram work advance ./topo --task <task-id> --mode implementation --json
 topogram work next ./topo --task <task-id> --mode maintained-app-edit --json
 topogram query list --json
 topogram query show <name> --json
@@ -5225,7 +5228,8 @@ the slice-benefit run directory shape: `run-manifest.json`,
 `wave-results.json`, `usage-log.jsonl`, `tool-results/`, and transcripts when
 present. It compares expected workflow evidence from an optional experiment
 audit bundle with observed tool calls, model calls, proof outcomes, actual API
-tokens, estimated packet tokens, and attention smells.
+tokens, estimated packet tokens, attention smells, matrix position, publication
+readiness, and declared evidence gaps.
 
 Trace smells are advisory, not gates. A large actual-vs-packet token delta,
 repeated `work next` state, skipped proof, excessive file reads, or unused
@@ -5288,6 +5292,12 @@ operation-level `edit_targets`, current endpoint/seed/verification contracts,
 packet-owned `actions`, and a compact `checkpoint` for context reset. The
 model-facing payload is `agent_packet`; full context stays behind `drill_down`
 commands.
+
+`work advance` is the read-only preview for runners that batch packet-owned
+actions. It wraps the same `work next` packet, exposes the preferred executable
+action, and states the stop condition. The public CLI does not edit files from
+`work advance`; automation harnesses may execute only the exact action payloads
+the packet emits and must record the edits and proof results.
 
 When the task links to a `feature`, `work next` uses that feature's entities,
 capabilities, endpoints, seed data, and verification refs as the implementation
@@ -7756,8 +7766,10 @@ Use when: you want a repeatable comparison between Topogram-guided and unguided 
 This is an advanced evaluation path, not the first evaluator step. Start with
 [First 30 Minutes](./start/first-30-minutes.md) to inspect the local CLI and
 [Beta Demo Path](./start/beta-demo-path.md) to choose a runnable proof repo.
-Use this experiment when you want to measure agent efficiency and quality under
-controlled conditions.
+Use this experiment when you want to measure agent efficiency and API behavior
+under controlled conditions. It is one scenario in the
+[Evaluation Matrix](./maintainers/evaluation-matrix.md), not the whole
+Topogram evaluation product.
 
 The slice benefit experiment compares two agent arms on the same clinic
 operations app:
@@ -7778,6 +7790,12 @@ that visible contract. The Topogram bootstrap is local harness setup and is
 reported in the run manifest; Topogram modeling cost performed by the agent
 counts toward the Topogram arm so the result can be unfavorable or inconclusive
 without being hidden.
+
+Run artifacts include an `evaluation_context` that states the supported claim,
+scenario, run class, score dimensions, and dimensions not scored. Current
+clinic-ops API runs do not score full product UX quality, visual design quality,
+accessibility usability, or blind maintainability review; trace output lists
+those as evidence gaps.
 
 The harness also supports a separate seeded-model mode:
 `--seed-topogram-model full`. In that mode, the Topogram arm starts from a
@@ -7962,8 +7980,9 @@ Each workspace also receives a local copy of `seed-fixture.json` at its root so
 both arms can read the same canonical fixture without relying on prompt memory.
 
 The report shows exact API usage fields when the real provider returns them. It
-also separates full Topogram cost from post-model amortized feature cost and
-keeps approximate `context-savings` estimates separate from API token usage.
+also separates full Topogram cost, measured work cost, explicit agent-modeling
+cost, and seeded-model footprint, and keeps approximate `context-savings`
+estimates separate from API token usage.
 Reports include per-wave token/pass-rate breakdowns and tool-usage summaries so
 readers can distinguish base-app success, later-wave regressions, Topogram
 context use, and provider/output-limit failures.
@@ -7987,3 +8006,138 @@ topogram trace report ./.tmp/slice-benefit-demo/mock-run --format markdown
 Mock provider runs prove the harness, not Topogram's product value. Publishable
 claims require real API runs plus blind human review receipts for UX,
 maintainability, traceability, and code clarity.
+
+---
+
+# Source: docs/maintainers/experiment-trace-loop.md
+
+# Experiment Trace Loop
+
+> Use experiments to improve Topogram, not only to publish favorable numbers.
+
+Status: current
+Audience: maintainers running proof or product-learning experiments
+Use when: you need a repeatable experiment → trace → improvement loop.
+
+## Loop
+
+```text
+trace -> improve -> stabilize -> compare -> publish
+```
+
+1. Pick the smallest useful scenario from the
+   [Evaluation Matrix](./evaluation-matrix.md). Prefer Topogram-only
+   stabilization until
+   the Topogram arm can complete the workflow.
+2. Read `report.json` for evaluation context, pass rate, wave completion, token totals, and tool
+   counts.
+3. Read `trace-analysis.json` for the supported claim, matrix position,
+   evidence gaps, attention smells, and improvement categories.
+4. Convert each actionable finding into one of: CLI packet improvement,
+   generator/scaffold improvement, docs/agent UX improvement, harness fix, or
+   backlog-only note.
+5. Run one stabilization pilot after the improvement before resuming paired
+   comparison.
+6. Use `posts/experiment-lessons/<run-id>.md` as a draft, not a publish-ready
+   post.
+
+## Commands
+
+```bash
+npm run experiment:slice-benefit:run -- --provider mock --arms topogram --trials 1 --json
+topogram trace analyze ./.tmp/slice-benefit-clinic-ops/mock-run --json
+topogram trace report ./.tmp/slice-benefit-clinic-ops/mock-run --format markdown
+```
+
+For focused expected-workflow evidence:
+
+```bash
+topogram emit audit-bundle ./topo --task <task-id> --profile experiment --write --out-dir ./artifacts
+topogram trace analyze <run-dir> --audit-bundle ./artifacts/audit-bundle/<task-id> --json
+```
+
+## Interpreting Smells
+
+Trace smells are advisory. They explain where an agent spent attention.
+Evidence gaps are also advisory: they explain what the run does not score.
+
+- Large actual-vs-packet token deltas suggest the packet did not localize work.
+- Repeated `work next` states suggest the next action was not decisive enough.
+- Excessive file reads suggest edit targets or anchors were too broad.
+- Skipped proof means the run may be functionally correct but weak evidence.
+- Scaffold expected-but-not-run means generator status or harness gating needs
+  review.
+
+Do not turn smells into hard gates without a specific product reason. A costly
+run can be justified when it creates durable model, proof, or traceability
+value.
+
+---
+
+# Source: docs/maintainers/evaluation-matrix.md
+
+# Topogram Evaluation Matrix
+
+> A shared vocabulary for traceable Topogram evaluation work.
+
+Status: current
+Audience: maintainers designing proof runs, trace analysis, and publishable evaluation material
+Use when: you need to classify what a run proves, what it does not prove, and which scenario should run next.
+
+## Vocabulary
+
+- `trace`: evidence from one agent or human work run.
+- `run`: one execution of a traceable workflow.
+- `trial`: one repeated run under the same condition.
+- `arm`: one compared work style, such as Topogram-guided or unguided.
+- `scenario`: the product/work situation being tested.
+- `evaluation_suite`: a set of related scenarios and fixtures.
+- `experiment`: a controlled comparison across arms or trials.
+- `benchmark`: a stable, repeated, externally credible evaluation suite.
+
+## Initial Matrix
+
+| Scenario | Topogram mode | Primary question |
+| --- | --- | --- |
+| `greenfield_generated_owned` | generated-owned | Can a model generate and verify a working app without maintained edits? |
+| `greenfield_model_first` | model-only | Does modeling help or slow down first implementation? |
+| `seeded_model_implementation` | model-only | Does an existing model help implementation and feature evolution? |
+| `progressive_scaffold_to_maintained` | scaffolded-maintained | Does scaffold leverage reduce long-lived feature cost after the app becomes maintained? |
+| `brownfield_adoption` | model-after-extract | Can Topogram pay off after onboarding an existing app? |
+| `bugfix_regression` | maintained | Does Topogram reduce search and repair cost? |
+| `ux_product_workflow` | semantic-ui | Does Topogram improve real user-facing app quality? |
+| `multi_surface` | multi-runtime | Does the model keep web, API, database, mobile, or CLI surfaces consistent? |
+| `audit_only` | trace-only | Does Topogram help humans or agents understand a repo faster? |
+| `generated_owned_evolution` | generated-owned | Can teams evolve generated-owned apps without maintained-code drift? |
+
+## Current Clinic-Ops Suite
+
+`slice-benefit-clinic-ops` is one evaluation suite. Its current strongest
+scenario is `progressive_scaffold_to_maintained_api`: both arms start from
+equivalent base API behavior, Topogram receives a base model plus API scaffold,
+and measured work starts at feature wave 1.
+
+This suite currently scores API correctness, token/tool efficiency, workflow
+friction, traceability, and proof discipline. It does not yet score full product
+UX quality, visual design quality, accessibility usability, or blind
+maintainability review. Trace output must list those dimensions as evidence
+gaps when they are not scored.
+
+## Run Classes
+
+- `stabilization`: one arm is being made reliable before comparison.
+- `paired_comparison`: two or more arms run the same scenario.
+- `diagnostic_trace`: a run is used to inspect workflow behavior.
+- `regression_check`: a run verifies that a prior improvement did not regress.
+- `benchmark_candidate`: a stable paired run that could support publication
+  after evidence gaps are closed.
+
+## Evaluation Context
+
+Run artifacts should include `evaluation_context` rather than ad hoc experiment
+metadata. Required fields are `suite_id`, `scenario_id`, `claim`, `run_class`,
+`topogram_mode`, `score_dimensions`, `primary_success_metric`,
+`secondary_metrics`, and `not_scored`.
+
+Trace analysis uses this context to explain the matrix position, publication
+readiness, and evidence gaps before token totals.

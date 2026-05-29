@@ -14,8 +14,10 @@ Use when: you want a repeatable comparison between Topogram-guided and unguided 
 This is an advanced evaluation path, not the first evaluator step. Start with
 [First 30 Minutes](/start/first-30-minutes/) to inspect the local CLI and
 [Beta Demo Path](/start/beta-demo-path/) to choose a runnable proof repo.
-Use this experiment when you want to measure agent efficiency and quality under
-controlled conditions.
+Use this experiment when you want to measure agent efficiency and API behavior
+under controlled conditions. It is one scenario in the
+[Evaluation Matrix](/maintainers/evaluation-matrix/), not the whole
+Topogram evaluation product.
 
 The slice benefit experiment compares two agent arms on the same clinic
 operations app:
@@ -36,6 +38,12 @@ that visible contract. The Topogram bootstrap is local harness setup and is
 reported in the run manifest; Topogram modeling cost performed by the agent
 counts toward the Topogram arm so the result can be unfavorable or inconclusive
 without being hidden.
+
+Run artifacts include an `evaluation_context` that states the supported claim,
+scenario, run class, score dimensions, and dimensions not scored. Current
+clinic-ops API runs do not score full product UX quality, visual design quality,
+accessibility usability, or blind maintainability review; trace output lists
+those as evidence gaps.
 
 The harness also supports a separate seeded-model mode:
 `--seed-topogram-model full`. In that mode, the Topogram arm starts from a
@@ -220,8 +228,9 @@ Each workspace also receives a local copy of `seed-fixture.json` at its root so
 both arms can read the same canonical fixture without relying on prompt memory.
 
 The report shows exact API usage fields when the real provider returns them. It
-also separates full Topogram cost from post-model amortized feature cost and
-keeps approximate `context-savings` estimates separate from API token usage.
+also separates full Topogram cost, measured work cost, explicit agent-modeling
+cost, and seeded-model footprint, and keeps approximate `context-savings`
+estimates separate from API token usage.
 Reports include per-wave token/pass-rate breakdowns and tool-usage summaries so
 readers can distinguish base-app success, later-wave regressions, Topogram
 context use, and provider/output-limit failures.

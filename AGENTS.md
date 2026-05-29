@@ -31,6 +31,7 @@ edited directly after reading focused packets.
 - Use contractions where they make the post sound more human, such as `didn't`, `that's`, `doesn't`, and `it's`.
 - Use `may`, `might`, and `if` for speculative claims instead of presenting uncertain futures as facts.
 - Use bold emphasis sparingly for the phrase the reader should retain, not as decoration.
+- Preserve the user's current Field Notes voice: short plain sentences, conversational contractions, and scan-friendly bullets for questions, checklists, or concrete signals. Use prose for setup examples when a list would flatten the rhythm.
 - Prefer compact argument beats: claim, example, consequence.
 - Use plain, concrete nouns such as `operators`, `platforms`, `intent`, `boundaries`, `proof`, and `app map`.
 - Use contrast to clarify the point: not replacement, compression; not easier, difficulty moves; not faster editing, better structure.

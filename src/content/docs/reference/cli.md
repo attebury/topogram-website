@@ -108,6 +108,7 @@ runtimes, links web to API and API to database, and reports the next
 ```bash
 topogram agent brief --json
 topogram work next ./topo --task <task-id> --mode implementation --json
+topogram work advance ./topo --task <task-id> --mode implementation --json
 topogram work next ./topo --task <task-id> --mode maintained-app-edit --json
 topogram query list --json
 topogram query show <name> --json
@@ -156,7 +157,8 @@ the slice-benefit run directory shape: `run-manifest.json`,
 `wave-results.json`, `usage-log.jsonl`, `tool-results/`, and transcripts when
 present. It compares expected workflow evidence from an optional experiment
 audit bundle with observed tool calls, model calls, proof outcomes, actual API
-tokens, estimated packet tokens, and attention smells.
+tokens, estimated packet tokens, attention smells, matrix position, publication
+readiness, and declared evidence gaps.
 
 Trace smells are advisory, not gates. A large actual-vs-packet token delta,
 repeated `work next` state, skipped proof, excessive file reads, or unused
@@ -219,6 +221,12 @@ operation-level `edit_targets`, current endpoint/seed/verification contracts,
 packet-owned `actions`, and a compact `checkpoint` for context reset. The
 model-facing payload is `agent_packet`; full context stays behind `drill_down`
 commands.
+
+`work advance` is the read-only preview for runners that batch packet-owned
+actions. It wraps the same `work next` packet, exposes the preferred executable
+action, and states the stop condition. The public CLI does not edit files from
+`work advance`; automation harnesses may execute only the exact action payloads
+the packet emits and must record the edits and proof results.
 
 When the task links to a `feature`, `work next` uses that feature's entities,
 capabilities, endpoints, seed data, and verification refs as the implementation

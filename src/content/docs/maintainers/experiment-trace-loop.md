@@ -14,14 +14,17 @@ Use when: you need a repeatable experiment → trace → improvement loop.
 ## Loop
 
 ```text
-experiment -> trace analyze -> improve -> stabilize -> compare -> publish
+trace -> improve -> stabilize -> compare -> publish
 ```
 
-1. Run the smallest useful experiment. Prefer Topogram-only stabilization until
+1. Pick the smallest useful scenario from the
+   [Evaluation Matrix](/maintainers/evaluation-matrix/). Prefer Topogram-only
+   stabilization until
    the Topogram arm can complete the workflow.
-2. Read `report.json` for pass rate, wave completion, token totals, and tool
+2. Read `report.json` for evaluation context, pass rate, wave completion, token totals, and tool
    counts.
-3. Read `trace-analysis.json` for attention smells and improvement categories.
+3. Read `trace-analysis.json` for the supported claim, matrix position,
+   evidence gaps, attention smells, and improvement categories.
 4. Convert each actionable finding into one of: CLI packet improvement,
    generator/scaffold improvement, docs/agent UX improvement, harness fix, or
    backlog-only note.
@@ -48,6 +51,7 @@ topogram trace analyze <run-dir> --audit-bundle ./artifacts/audit-bundle/<task-i
 ## Interpreting Smells
 
 Trace smells are advisory. They explain where an agent spent attention.
+Evidence gaps are also advisory: they explain what the run does not score.
 
 - Large actual-vs-packet token deltas suggest the packet did not localize work.
 - Repeated `work next` states suggest the next action was not decisive enough.
