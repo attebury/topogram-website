@@ -16,7 +16,7 @@ export default defineConfig({
     starlight({
       title: "Topogram",
       description:
-        "Living app map for humans, agents, and code — bounded context, contracts, ownership, and proof.",
+        "Pre-beta living app map for humans, agents, and code — bounded context, contracts, ownership, and proof.",
       logo: {
         src: "./src/assets/logo.svg",
         replacesTitle: false,
@@ -169,6 +169,7 @@ export default defineConfig({
         },
       ],
       components: {
+        Banner: "./src/components/Banner.astro",
         Head: "./src/components/Head.astro",
         Footer: "./src/components/Footer.astro",
         EditLink: "./src/components/EditLink.astro",

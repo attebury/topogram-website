@@ -139,7 +139,7 @@ If you need the product framing before commands, read
 | Map a real component system | [Map A Real Component System](./design/map-a-real-component-system.md) |
 | Compare Topogram slices to unguided app coding | [Slice Benefit Experiment](./proof-slice-benefit-experiment.md) |
 | Author templates, generators, or extractors | [Template Authoring](./authoring/templates.md), [Generator Packs](./authoring/generator-packs.md), [Extractor Packs](./authoring/extractor-packs.md) |
-| Maintain this repo | [Engine Development](./maintainers/engine-development.md), [Testing](./maintainers/testing.md), [Releasing](./maintainers/releasing.md) |
+| Maintain this repo | [Engine Development](./maintainers/engine-development.md), [Testing](./maintainers/testing.md), [Experiment Trace Loop](./maintainers/experiment-trace-loop.md), [Releasing](./maintainers/releasing.md) |
 
 ## Proof Repositories
 
@@ -5072,7 +5072,7 @@ commands, graph nodes linked to work, verification before done.
 
 # CLI Reference
 
-> Public Topogram commands are organized around onboard, init, work, copy, extract, adopt, generate, emit, query, and policy workflows.
+> Public Topogram commands are organized around onboard, init, work, trace, copy, extract, adopt, generate, emit, query, and policy workflows.
 
 Status: current
 Audience: CLI users and agents executing Topogram commands
@@ -5154,6 +5154,7 @@ topogram emit glossary ./topo --check docs/concepts/glossary.md
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --bug <bug-id> --profile bug --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --profile adoption --write --out-dir ./artifacts
+topogram emit audit-bundle ./topo --task <task-id> --profile experiment --write --out-dir ./artifacts
 ```
 
 ## Runtime topology
@@ -5208,6 +5209,25 @@ topogram query verification-runs ./topo --task <task-id> --json
 topogram query sdlc-metrics ./topo --json
 topogram query sdlc-stale-work ./topo --json
 ```
+
+## Trace
+
+```bash
+topogram trace analyze <run-dir> --audit-bundle <bundle-dir> --json
+topogram trace report <run-dir> --audit-bundle <bundle-dir> --format markdown
+topogram trace compare <run-a> <run-b> --json
+```
+
+`trace` turns a completed agent or experiment run into evidence. V1 supports
+the slice-benefit run directory shape: `run-manifest.json`,
+`wave-results.json`, `usage-log.jsonl`, `tool-results/`, and transcripts when
+present. It compares expected workflow evidence from an optional experiment
+audit bundle with observed tool calls, model calls, proof outcomes, actual API
+tokens, estimated packet tokens, and attention smells.
+
+Trace smells are advisory, not gates. A large actual-vs-packet token delta,
+repeated `work next` state, skipped proof, excessive file reads, or unused
+scaffold means the agent spent attention somewhere worth reviewing.
 
 Focused query reports:
 
@@ -5307,6 +5327,8 @@ as `--task`, `--bug`, `--screen`, `--widget`, `--capability`, `--entity`,
 - `adoption`: workspace-level first-run evidence when no selector is supplied,
   including agent brief, check summary, SDLC reports, context report, domain
   list, and source inventory.
+- `experiment`: focused expected-workflow evidence for trace analysis, plus the
+  standard focused packet, context savings, proof targets, and source excerpts.
 
 ## SDLC
 
@@ -7879,7 +7901,8 @@ npm run experiment:slice-benefit:run -- --provider openai --arms both --trials 3
 ```
 
 Real runs are not part of fast CI. The harness writes run manifests, frozen input
-copies, usage logs, wave results, and Markdown/JSON reports under `.tmp/` by
+copies, usage logs, wave results, Markdown/JSON reports, trace analysis, and a
+publication draft under `.tmp/` by
 default. The harness loads ignored local secrets from `.env.local` by default,
 or from a relative file passed with `--env-file <path>`. Existing process
 environment values win over env-file values, and secret values are never written
@@ -7939,6 +7962,20 @@ keeps approximate `context-savings` estimates separate from API token usage.
 Reports include per-wave token/pass-rate breakdowns and tool-usage summaries so
 readers can distinguish base-app success, later-wave regressions, Topogram
 context use, and provider/output-limit failures.
+
+Each run also writes `trace-analysis.json`, `trace-report.md`, and
+`posts/experiment-lessons/<run-id>.md`. Trace analysis compares expected
+Topogram workflow with observed tool calls, token accounting, proof outcomes,
+and attention smells such as repeated packet states, large packet-to-actual
+token deltas, skipped proof, or scaffold work that was expected but not run.
+These smells are product feedback signals, not pass/fail gates.
+
+To analyze a run explicitly:
+
+```bash
+topogram trace analyze ./.tmp/slice-benefit-demo/mock-run --json
+topogram trace report ./.tmp/slice-benefit-demo/mock-run --format markdown
+```
 
 ## Caveats
 

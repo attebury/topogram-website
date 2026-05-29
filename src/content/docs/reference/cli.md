@@ -1,11 +1,11 @@
 ---
 title: "CLI Reference"
-description: "Public Topogram commands are organized around onboard, init, work, copy, extract, adopt, generate, emit, query, and policy workflows."
+description: "Public Topogram commands are organized around onboard, init, work, trace, copy, extract, adopt, generate, emit, query, and policy workflows."
 ---
 
 # CLI Reference
 
-> Public Topogram commands are organized around onboard, init, work, copy, extract, adopt, generate, emit, query, and policy workflows.
+> Public Topogram commands are organized around onboard, init, work, trace, copy, extract, adopt, generate, emit, query, and policy workflows.
 
 Status: current
 Audience: CLI users and agents executing Topogram commands
@@ -87,6 +87,7 @@ topogram emit glossary ./topo --check docs/concepts/glossary.md
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --bug <bug-id> --profile bug --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --profile adoption --write --out-dir ./artifacts
+topogram emit audit-bundle ./topo --task <task-id> --profile experiment --write --out-dir ./artifacts
 ```
 
 ## Runtime topology
@@ -141,6 +142,25 @@ topogram query verification-runs ./topo --task <task-id> --json
 topogram query sdlc-metrics ./topo --json
 topogram query sdlc-stale-work ./topo --json
 ```
+
+## Trace
+
+```bash
+topogram trace analyze <run-dir> --audit-bundle <bundle-dir> --json
+topogram trace report <run-dir> --audit-bundle <bundle-dir> --format markdown
+topogram trace compare <run-a> <run-b> --json
+```
+
+`trace` turns a completed agent or experiment run into evidence. V1 supports
+the slice-benefit run directory shape: `run-manifest.json`,
+`wave-results.json`, `usage-log.jsonl`, `tool-results/`, and transcripts when
+present. It compares expected workflow evidence from an optional experiment
+audit bundle with observed tool calls, model calls, proof outcomes, actual API
+tokens, estimated packet tokens, and attention smells.
+
+Trace smells are advisory, not gates. A large actual-vs-packet token delta,
+repeated `work next` state, skipped proof, excessive file reads, or unused
+scaffold means the agent spent attention somewhere worth reviewing.
 
 Focused query reports:
 
@@ -240,6 +260,8 @@ as `--task`, `--bug`, `--screen`, `--widget`, `--capability`, `--entity`,
 - `adoption`: workspace-level first-run evidence when no selector is supplied,
   including agent brief, check summary, SDLC reports, context report, domain
   list, and source inventory.
+- `experiment`: focused expected-workflow evidence for trace analysis, plus the
+  standard focused packet, context savings, proof targets, and source excerpts.
 
 ## SDLC
 

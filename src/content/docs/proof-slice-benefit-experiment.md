@@ -164,7 +164,8 @@ npm run experiment:slice-benefit:run -- --provider openai --arms both --trials 3
 ```
 
 Real runs are not part of fast CI. The harness writes run manifests, frozen input
-copies, usage logs, wave results, and Markdown/JSON reports under `.tmp/` by
+copies, usage logs, wave results, Markdown/JSON reports, trace analysis, and a
+publication draft under `.tmp/` by
 default. The harness loads ignored local secrets from `.env.local` by default,
 or from a relative file passed with `--env-file <path>`. Existing process
 environment values win over env-file values, and secret values are never written
@@ -224,6 +225,20 @@ keeps approximate `context-savings` estimates separate from API token usage.
 Reports include per-wave token/pass-rate breakdowns and tool-usage summaries so
 readers can distinguish base-app success, later-wave regressions, Topogram
 context use, and provider/output-limit failures.
+
+Each run also writes `trace-analysis.json`, `trace-report.md`, and
+`posts/experiment-lessons/<run-id>.md`. Trace analysis compares expected
+Topogram workflow with observed tool calls, token accounting, proof outcomes,
+and attention smells such as repeated packet states, large packet-to-actual
+token deltas, skipped proof, or scaffold work that was expected but not run.
+These smells are product feedback signals, not pass/fail gates.
+
+To analyze a run explicitly:
+
+```bash
+topogram trace analyze ./.tmp/slice-benefit-demo/mock-run --json
+topogram trace report ./.tmp/slice-benefit-demo/mock-run --format markdown
+```
 
 ## Caveats
 

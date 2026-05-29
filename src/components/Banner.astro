@@ -1,0 +1,51 @@
+---
+const { banner } = Astro.locals.starlightRoute.entry.data;
+---
+
+<div class="pre-beta-banner" data-pagefind-ignore>
+  <strong>Pre-beta.</strong> Topogram is for evaluation, experiments, and proof
+  work. It is not ready for production workflows yet.
+  <a href="/start/first-30-minutes/">Start with the first 30 minutes.</a>
+</div>
+
+{banner && <div class="sl-banner" data-pagefind-ignore set:html={banner.content} />}
+
+<style>
+  @layer starlight.core {
+    .pre-beta-banner,
+    .sl-banner {
+      padding: var(--sl-nav-pad-y) var(--sl-nav-pad-x);
+      line-height: var(--sl-line-height-headings);
+      text-align: center;
+      text-wrap: balance;
+      box-shadow: var(--sl-shadow-sm);
+    }
+
+    .pre-beta-banner {
+      background: color-mix(in srgb, var(--sl-color-accent-low) 65%, var(--sl-color-bg));
+      border-bottom: 1px solid var(--sl-color-accent);
+      color: var(--sl-color-text);
+      font-size: var(--sl-text-sm);
+    }
+
+    .pre-beta-banner strong {
+      color: var(--sl-color-text-accent);
+      font-weight: 700;
+    }
+
+    .pre-beta-banner a {
+      color: var(--sl-color-text-accent);
+      font-weight: 600;
+    }
+
+    .sl-banner {
+      --__sl-banner-text: var(--sl-color-banner-text, var(--sl-color-text-invert));
+      background-color: var(--sl-color-banner-bg, var(--sl-color-bg-accent));
+      color: var(--__sl-banner-text);
+    }
+
+    .sl-banner :global(a) {
+      color: var(--__sl-banner-text);
+    }
+  }
+</style>
