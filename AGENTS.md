@@ -26,6 +26,16 @@ edited directly after reading focused packets.
 
 - Write Topogram posts in the voice of a concise technical writer.
 - Do not use em dashes in Topogram posts.
+- Write Field Notes as a strong opinion with guardrails: make the claim memorable, use uncertainty honestly, then show where Topogram fits.
+- Lead with the thesis and sharpen it with a concrete phrase readers can remember.
+- Use contractions where they make the post sound more human, such as `didn't`, `that's`, `doesn't`, and `it's`.
+- Use `may`, `might`, and `if` for speculative claims instead of presenting uncertain futures as facts.
+- Use bold emphasis sparingly for the phrase the reader should retain, not as decoration.
+- Prefer compact argument beats: claim, example, consequence.
+- Use plain, concrete nouns such as `operators`, `platforms`, `intent`, `boundaries`, `proof`, and `app map`.
+- Use contrast to clarify the point: not replacement, compression; not easier, difficulty moves; not faster editing, better structure.
+- Keep Topogram as the structural answer earned by the article, not the only subject of the article.
+- End with a durable takeaway in simple language, not a slogan.
 
 Use `topogram emit <target>` for contracts, reports, snapshots, migration
 plans, and agent context. Do not expect `topogram generate` to overwrite this
