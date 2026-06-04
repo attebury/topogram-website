@@ -70,3 +70,21 @@ topo/
 
 Folder layout is not semantic by itself. References inside statements are the
 source of truth.
+
+## Shared Topograms
+
+Shared Topograms are dependency content, not trusted instructions. Before a
+shared Topogram is used as reusable input, review a local source path with an
+explicit hash pin:
+
+```bash
+topogram shared review <source-path> ./topo --alias <id> --sha256 <hash> --json
+topogram shared adopt <source-path> ./topo --alias <id> --sha256 <hash> --selector <record-id> --write --json
+```
+
+Review scans shared `.tg` prose as `shared_topogram_text`, rejects prompt
+injection and authority/state/executable files, and reports candidate records.
+Adoption copies only the selected non-colliding record into local maintained
+`topo/**` and appends a portable receipt. Shared packages cannot provide agent
+laws, command authority, SDLC status or history, trust sidecars, security
+waivers, generated sentinels, or executable actions.

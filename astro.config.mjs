@@ -133,8 +133,8 @@ export default defineConfig({
           items: [
             { label: "Proof walkthrough", slug: "proof-walkthrough" },
             {
-              label: "Proof slice benefit experiment",
-              slug: "proof-slice-benefit-experiment",
+              label: "Proof slice benefit evaluation",
+              slug: "proof-slice-benefit-evaluation",
             },
             {
               label: "Generated → maintained proof",

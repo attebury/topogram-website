@@ -45,6 +45,10 @@ topogram init . --adopt-sdlc
 topogram init ./existing-app --json
 topogram feature new <slug> . --intent "<feature intent>" --json
 topogram feature new <slug> . --intent "<feature intent>" --write --json
+topogram dsl explain screen --format markdown
+topogram dsl new entity entity_patient --format tg
+topogram format ./topo --check
+topogram format ./topo --write
 topogram template list
 topogram copy --list
 topogram copy hello-web ./my-app
@@ -75,13 +79,25 @@ environment or in `topogram.config.json` under `limits`.
 
 ```bash
 topogram check
+topogram security status . --json
+topogram security scan . --json
+topogram security scan . --from-git --base origin/main --head HEAD --json
+topogram security explain <finding-id> . --json
+topogram security inventory . --from-git --json
+topogram security waivers list . --json
+topogram security waive <finding-id> . --task <task-id> --actor <actor-id> --reason "<reviewed reason>" --write --json
+topogram shared review <source-path> . --alias <id> --sha256 <hash> --json
+topogram shared adopt <source-path> . --alias <id> --sha256 <hash> --selector <record-id> --write --json
 topogram onboard --strict --json
 topogram generate
 topogram generate ./topo --out ./app
 topogram emit <target> ./topo --json
 topogram emit <target> ./topo --write --out-dir ./artifacts
+topogram scaffold contract ./topo --surface proj_web --json
+topogram scaffold emit ./topo --surface proj_web --target node-http --seed-file seed-fixture.json --write --out-dir ./generated-scaffold
 topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
 topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --write --out-dir ./generated-scaffold
+topogram emit api-scaffold-contract ./topo --surface proj_api --json
 topogram emit glossary ./topo --write --out-dir docs/concepts
 topogram emit glossary ./topo --check docs/concepts/glossary.md
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
@@ -89,6 +105,47 @@ topogram emit audit-bundle ./topo --bug <bug-id> --profile bug --write --out-dir
 topogram emit audit-bundle ./topo --profile adoption --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --task <task-id> --profile experiment --write --out-dir ./artifacts
 ```
+
+`topogram security status` is the recommended security entrypoint. It summarizes
+prompt-boundary scan, inventory, waivers, shared-source receipts,
+provider-boundary readiness, and SDLC gate impact as `pass`, `advisory`, or
+`blocked`.
+
+`topogram security scan` classifies project-authored `.tg` prose and generated
+agent/provider packets at the prompt boundary. High-confidence prompt-injection
+errors fail `topogram check`, `sdlc prep commit`, `sdlc gate`, and provider
+export unless a command-owned waiver matches the exact finding hash. Warnings
+and info findings remain evidence. JSON agent-facing packets include
+`content_trust` sidecars so agents can separate trusted CLI structure from
+untrusted project text.
+
+`topogram security explain` resolves a current finding by id or hash and shows
+why it matters, the safe fix, and the exact waiver command for reviewed false
+positives. `topogram security waivers list` reports active, stale, invalid, and
+shadowed waiver receipts.
+
+`topogram security inventory` lists agent-facing prose surfaces and whether
+their JSON, Markdown, or HTML outputs declare trust handling. With `--from-git`,
+it also reports changed agent-facing command and packet surfaces that are
+covered or missing from the inventory. Changed registered surfaces also ratchet
+their declared quality evidence: JSON `content_trust`, Markdown/HTML untrusted
+project-prose labels, and test coverage must be present or concretely not
+applicable. `topogram check` includes inventory health, and commit prep/gate
+block newly changed unregistered surfaces or changed registered surfaces with
+quality gaps.
+
+Provider input packets are covered by the `provider_input` inventory entry in
+addition to prompt-boundary scanning and sanitized export policy. The provider
+boundary rejects export when that inventory coverage is missing or lacks JSON
+`content_trust`, packet scan, or test evidence; redaction reports include the
+inventory trust status so reports can distinguish sanitized packets from
+inventory-backed packets.
+
+`topogram shared review` and `topogram shared adopt` are V1 local-path shared
+Topogram commands. Review requires a pinned source hash, scans shared `.tg`
+prose as `shared_topogram_text`, rejects authority/state/executable files, and
+adoption copies only the selected non-colliding record into local maintained
+`topo/**` with an append-only receipt.
 
 ## Runtime topology
 
@@ -109,7 +166,7 @@ runtimes, links web to API and API to database, and reports the next
 topogram agent brief --json
 topogram work next ./topo --task <task-id> --mode implementation --json
 topogram work advance ./topo --task <task-id> --mode implementation --json
-topogram work next ./topo --task <task-id> --mode maintained-app-edit --json
+topogram work next ./topo --task <task-id> --mode maintained-app-edit --implementer node-http-maintained --app-state maintained --json
 topogram query list --json
 topogram query show <name> --json
 topogram query slice ./topo --task <task-id> --json
@@ -130,6 +187,8 @@ topogram query repair-model ./topo --json
 topogram query repair-model ./topo --format markdown
 topogram query modeling-guide ./topo --json
 topogram query modeling-guide ./topo --mode greenfield-app --format markdown
+topogram query dsl-reference ./topo --json
+topogram query dsl-reference ./topo --format markdown
 topogram query work-map ./topo --surface proj_web --screen item_list --format markdown
 topogram query work-map ./topo --surface proj_web --json
 topogram query sdlc-grooming ./topo --json
@@ -150,19 +209,28 @@ topogram query sdlc-stale-work ./topo --json
 topogram trace analyze <run-dir> --audit-bundle <bundle-dir> --json
 topogram trace report <run-dir> --audit-bundle <bundle-dir> --format markdown
 topogram trace compare <run-a> <run-b> --json
+topogram trace review-packet <run-dir> --kind visual --write --json
+topogram trace review-ingest <run-dir> --receipt <receipt.json> --json
+topogram trace review-receipts <run-dir> list --json
 ```
 
 `trace` turns a completed agent or experiment run into evidence. V1 supports
 the slice-benefit run directory shape: `run-manifest.json`,
-`wave-results.json`, `usage-log.jsonl`, `tool-results/`, and transcripts when
-present. It compares expected workflow evidence from an optional experiment
-audit bundle with observed tool calls, model calls, proof outcomes, actual API
-tokens, estimated packet tokens, attention smells, matrix position, publication
-readiness, and declared evidence gaps.
+`event-log.jsonl`, `usage-log.jsonl`, `wave-results.json`, and wave-local
+evidence under `trials/<trial>/<arm>/<wave>/`. It compares expected workflow
+evidence from an optional experiment audit bundle with observed tool calls,
+model calls, proof outcomes, actual API tokens, estimated packet tokens,
+attention smells, matrix position, publication readiness, and declared evidence
+gaps.
 
 Trace smells are advisory, not gates. A large actual-vs-packet token delta,
 repeated `work next` state, skipped proof, excessive file reads, or unused
 scaffold means the agent spent attention somewhere worth reviewing.
+
+For slice-benefit human review evidence, `trace review-packet` writes the
+blind local review form under `reviews/<kind>/review.html`, `trace
+review-ingest` validates a downloaded receipt and regenerates report/trace
+artifacts, and `trace review-receipts` lists or voids stored receipts.
 
 Focused query reports:
 
@@ -172,6 +240,7 @@ Focused query reports:
 | `context-savings` | `topogram query context-savings ./topo --task <task-id> --detail compact --format markdown` |
 | `repair-model` | `topogram query repair-model ./topo --format markdown` |
 | `modeling-guide` | `topogram query modeling-guide ./topo --mode greenfield-app --format markdown` |
+| `dsl-reference` | `topogram query dsl-reference ./topo --format markdown` |
 | `verification-targets` | `topogram query verification-targets ./topo --task <task-id> --json` |
 | `widget-behavior` | `topogram query widget-behavior ./topo --surface proj_web --json` |
 | `ui-design-coverage` | `topogram query ui-design-coverage ./topo --surface proj_web --json` |
@@ -217,10 +286,10 @@ verification, then implementation entry. Its examples cover `domain`, `entity`,
 
 `work next` is the first implementation-agent command for a task. It returns
 one `state`, one `do_now`, a `success_condition`, allowed and blocked actions,
-operation-level `edit_targets`, current endpoint/seed/verification contracts,
-packet-owned `actions`, and a compact `checkpoint` for context reset. The
-model-facing payload is `agent_packet`; full context stays behind `drill_down`
-commands.
+stack-neutral `operation_targets`, current endpoint/seed/verification
+contracts, optional stack-neutral `experience_targets`, optional `implementer`
+output, and a compact `checkpoint` for context reset. The model-facing payload
+is `agent_packet`; full context stays behind `drill_down` commands.
 
 `work advance` is the read-only preview for runners that batch packet-owned
 actions. It wraps the same `work next` packet, exposes the preferred executable
@@ -237,11 +306,22 @@ before falling back to current-feature modeling guidance.
 `scaffold_needed`, `code_edit_ready`, `verify_ready`, and `done`. When model
 coverage is missing it returns `proposed_model_work` snippets for the current
 feature only. When matching model records exist but the task is not linked, it
-returns `task_record_edit`. When code is ready, `code_edit_targets` name endpoint ids,
-HTTP methods, API paths, seed sources, marker anchors, patch intent, and proof
-commands. `actions` groups exact model edits, scaffold steps, or endpoint
-patches into the preferred next operation when the caller has an executor for
-packet-owned actions.
+returns `task_record_edit`. When code is ready, `operation_targets` name the
+endpoint operations, response expectations, seed summaries, and proof targets.
+When product UI evidence is included, `experience_targets` name route, role,
+copy, structure, forbidden-placeholder expectations, and explicit UX evidence
+such as visible actions, state copy, and role affordances without naming a
+framework or file. Stack-specific filenames, anchors, HTML, and executable patch
+shapes live under `implementer`. The built-in clinic evaluation uses
+`implementer.id: "node-http-maintained"` for vanilla `node:http` maintained
+apps; other stacks should add named implementers rather than putting stack
+details in core packets. Callers can pass `--implementer <id>` to select a named
+implementer and `--app-state unknown|minimal_placeholder|maintained` to describe
+the current ownership state. Implementers may use that explicit app-state
+context to decide whether whole-entrypoint replacement is safe; they should not
+infer replaceability from a small file alone. `actions` groups exact model edits, scaffold steps, or
+implementer-owned endpoint patches into the preferred next operation when the
+caller has an executor for packet-owned actions.
 
 Use `--mode maintained-app-edit` when implementation code has become maintained
 after an initial scaffold. In that mode, missing or stale scaffold markers stay
@@ -324,9 +404,31 @@ topogram emit work-map-report ./topo --surface proj_web --format markdown
 topogram emit work-map-report ./topo --surface proj_web --format markdown --write --out-dir ./artifacts
 topogram emit context-slice ./topo --task <task-id> --format html --write --out-dir ./artifacts
 topogram emit audit-bundle ./topo --task <task-id> --profile standard --write --out-dir ./artifacts
+topogram emit web-scaffold-contract ./topo --surface proj_web --json
+topogram emit api-scaffold-contract ./topo --surface proj_api --json
+topogram scaffold plan ./topo --surface proj_web --target node-http --json
 topogram emit node-http-api-scaffold ./topo --seed-file seed-fixture.json --json
+topogram emit node-http-fullstack-static-ui-scaffold ./topo --seed-file seed-fixture.json --ui-contract-file product-ui-contract.json --json
 topogram emit glossary ./topo --json
 ```
+
+Surface scaffold contracts are the normalized obligation layer between
+Topogram source and stack-specific renderers or generator packages.
+`web-scaffold-contract` is the concrete contract for web surfaces. It is derived
+from Topogram source, server contracts, UI surface contracts, seed data, and
+optional evaluator UI hints. Its JSON includes routes, screens, regions, widget
+usage rows, operations, data sources, states, events/actions, proof markers,
+ownership, coverage rows, and input hashes. `api-scaffold-contract` is the
+first non-web scaffold target; it carries endpoint obligations with method,
+path, status, auth, request/response contract refs, proof markers, ownership,
+coverage rows, and input hashes.
+
+`topogram scaffold contract` is the preferred generic command. It selects the
+concrete scaffold target from the requested surface type: web surfaces emit
+`web-scaffold-contract`; API surfaces emit `api-scaffold-contract`.
+`topogram scaffold emit --target node-http` is the preferred Node web/API
+scaffold command. The older `topogram emit node-http-*scaffold` commands remain
+available for compatibility.
 
 `node-http-api-scaffold` emits a vanilla `node:http` `server.mjs` and
 `topogram-scaffold-manifest.json`. GET endpoints with response entities are
@@ -335,6 +437,15 @@ records; other business endpoints remain explicit TODO/501 regions for
 maintained implementation. Once a scaffolded app has meaningful maintained
 code, use `topogram work next --mode maintained-app-edit` rather than treating
 scaffold marker drift as a blocking generator failure.
+
+`node-http-fullstack-static-ui-scaffold` uses the same endpoint scaffold path
+and also reads a local `product-ui-contract.json` to emit a styled, semantic
+dashboard route with role variants, visible actions, state copy, and
+`topogram:experience dashboard` markers. It consumes the web scaffold contract,
+and emits generic `views/<screen-id>.mjs` modules plus `views/index.mjs`.
+Legacy `dashboard-view.mjs` artifacts are accepted as compatibility evidence
+when present, but current renderer output does not use that as the primary view
+module.
 
 ## Brownfield extract/adopt
 
@@ -395,6 +506,7 @@ topogram trust status
 topogram trust diff
 topogram trust template
 topogram template policy check
+topogram generator init ./topogram-generator-web --surface web --package @scope/topogram-generator-web
 topogram generator list
 topogram generator show @topogram/generator-react-web
 topogram generator check ./generator-package
@@ -405,8 +517,17 @@ topogram extractor policy check
 topogram sdlc policy explain
 ```
 
-Generator command safety: `generator list` and `generator show` read manifests
-only. `generator check` and `topogram generate` load generator package code.
+Generator command safety: `generator init` writes a private package scaffold and
+does not load third-party package code. `generator list` and `generator show`
+read manifests only. `generator check` and `topogram generate` load generator
+package code.
+When a generator manifest declares scaffold contract support, `generator check`
+passes a smoke scaffold contract through `context.contracts.scaffold` and
+reports that input in the check result.
+For web generator manifests this smoke input is `web-scaffold-contract`; for
+API generator manifests it is `api-scaffold-contract`. `context.contracts`
+also includes `surfaceScaffoldContracts`, while `webScaffold` is a web-only V1
+alias.
 Topogram does not install generator packages; install them with npm, pin their
 manifest version through `topogram.generator-policy.json`, run `topogram check`,
 then verify generated output with the stack's own commands.

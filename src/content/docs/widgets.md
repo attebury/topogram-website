@@ -73,7 +73,15 @@ screen item_list {
   kind list
   layout layout_collection_list
   renders {
-    region results widget widget_data_grid id item_list_results_grid intent "Review item rows." priority high data rows from cap_list_items event row_select navigate item_detail
+    render {
+      id item_list_results_grid
+      region results
+      widget widget_data_grid
+      intent "Review item rows."
+      priority high
+      data rows from cap_list_items
+      event row_select navigate item_detail
+    }
   }
   status active
 }

@@ -21,21 +21,30 @@ projects. Keep one-off maintained-app code in the app instead.
 
 ## Authoring Path
 
-There is no `topogram generator init` command yet. Create a normal package repo
-with the files below, then use the same preflight loop every time:
+Start scaffold-aware web generator packages with `topogram generator init`:
 
 ```bash
+topogram generator init ./topogram-generator-web --surface web --package @scope/topogram-generator-web
+cd ./topogram-generator-web
 npm install
 npm test
-npm run docs:rag:check
+npm run check
 topogram generator check .
 npm pack --dry-run
 npm run release:preflight
 ```
 
-`topogram generator check .` loads the adapter and runs smoke generation against
-a minimal contract fixture. It is intentionally different from `generator list`
-and `generator show`, which read manifests only.
+The initializer writes a private package, `topogram-generator.json`, a CommonJS
+adapter export, package-local tests, and a check script that asserts
+`context.contracts.scaffold` receives the runtime surface's scaffold contract.
+For web generators that contract is `web-scaffold-contract`; for API generators
+it is `api-scaffold-contract`. The generated adapter also writes
+`topogram-scaffold-context.json` so local and consumer smokes can prove which
+scaffold contract reached generated output.
+
+`topogram generator check .` loads the adapter and runs smoke generation
+against a minimal scaffold contract fixture. It is intentionally different from
+`generator list` and `generator show`, which read manifests only.
 
 For package consumers, the safe loop is:
 
@@ -45,12 +54,21 @@ topogram generator policy pin @scope/topogram-generator-web@1
 topogram generator check @scope/topogram-generator-web
 topogram check . --json
 topogram generate
+test -f app/apps/web/app_web/topogram-scaffold-context.json
 npm run verify
 ```
 
 Topogram does not install generator packages. A project or package author must
 install them with npm, pin them through `topogram.generator-policy.json`, and
 verify the generated output with the target stack's own checks.
+
+The in-repo SvelteKit, React Router, and Hono API scaffold proof fixtures
+demonstrate the intended package-owned boundary. The web packages declare
+`web-scaffold-contract`, while the Hono package declares
+`api-scaffold-contract`; all three adapters read `context.contracts.scaffold`
+as the primary input and write proof metadata showing what they consumed.
+Topogram core does not own those framework file layouts; it owns the contracts,
+policy checks, package loading, and generated output ownership.
 
 ## Manifest
 
@@ -62,7 +80,7 @@ verify the generated output with the target stack's own checks.
   "version": "1",
   "surface": "web",
   "projectionTypes": ["web"],
-  "inputs": ["ui-surface-contract", "api-contracts"],
+  "inputs": ["web-scaffold-contract"],
   "outputs": ["web-app", "generation-coverage"],
   "stack": {
     "runtime": "browser",
@@ -79,6 +97,11 @@ verify the generated output with the target stack's own checks.
     "behaviors": ["selection", "sorting"],
     "unsupported": "warning"
   },
+  "scaffoldContractSupport": {
+    "version": 1,
+    "surfaces": ["web"],
+    "modes": ["generated", "scaffolded"]
+  },
   "source": "package",
   "package": "@topogram/generator-react-web"
 }
@@ -87,6 +110,25 @@ verify the generated output with the target stack's own checks.
 `id` and `version` identify the generator contract. The npm package version is
 separate. Policy pins use the generator manifest version, so a package can patch
 implementation code without changing the contract version.
+
+Surface scaffold contracts are the recommended input for app-shaped
+generators. For web app generators, `web-scaffold-contract` normalizes screen
+route obligations, screen loaders, form actions, mutations, state obligations,
+operation bindings, screens, regions, widget usage rows, display fields,
+operations, data sources, events/actions, proof markers, ownership, coverage
+gaps, and input hashes before a stack-specific generator decides file layout.
+For API service generators, `api-scaffold-contract` carries endpoint
+obligations with route/capability ids, method/path/status/auth,
+request/response contract refs, proof markers, ownership, coverage gaps, and
+input hashes. Lower-level `ui-surface-contract`, `server-contract`, and
+`api-contracts` inputs remain available when a generator intentionally owns its
+own app-shape planning.
+
+Use `scaffoldContractSupport` only when the generator actually consumes that
+contract. `version` is currently `1`; `surfaces` currently supports `web` and
+`api`; and `modes` supports `generated` and `scaffolded`. Maintained app
+changes should report drift and patch targets instead of overwriting maintained
+files.
 
 ## Adapter export
 
@@ -106,6 +148,45 @@ exports.generate = function generate(context) {
 
 Use `context.runtime` and `context.contracts` as the primary API. Raw surface
 internals are compatibility fallback, not the preferred contract.
+
+Surface scaffold contracts are the preferred boundary for app-shaped
+generators. A generator that declares `inputs: ["web-scaffold-contract"]`,
+`inputs: ["api-scaffold-contract"]`, or matching `scaffoldContractSupport`
+receives:
+
+- `context.contracts.scaffold` as the primary scaffold contract for the runtime
+  surface;
+- `context.contracts.webScaffold` as the V1 web alias for web generators only;
+- `context.contracts.surfaceScaffoldContracts` as generic surface-oriented
+  records with `surface`, `target`, `version`, and `contract`.
+
+For V1, the first concrete targets are `web-scaffold-contract` and
+`api-scaffold-contract`. Future database, native, CLI, or workflow scaffold
+contracts should use the same `context.contracts.scaffold` boundary instead of
+adding framework-specific Topogram core APIs.
+
+A web generator should treat the scaffold as the app-shape input: the
+scaffold's screen route obligation rows provide browser paths that the package
+maps to its own routing model. `screen_loaders`, `form_actions`, `mutations`,
+`state_obligations`, and `operation_bindings` provide the generator-ready data
+and behavior obligations for loading, submitting, mutating, refreshing, and
+handling empty/loading/error/success states. The package-owned SvelteKit proof
+maps those obligations to file routes; the package-owned React Router/Vite
+proof maps the same obligations to route config entries and screen components.
+In both cases, regions become layout sections, display fields and widget usage
+rows become stable markers, contract actions/states become UI affordances, and
+`src/lib/topogram/web-scaffold-contract.json` plus generator-owned coverage
+metadata record what was consumed. If the scaffold lacks a semantic field, emit
+a coverage gap or diagnostic instead of reading lower-level UI/API contracts as
+a hidden fallback.
+
+An API generator should treat `api-scaffold-contract` endpoint obligations as
+the API-shape input. Endpoint obligation rows provide endpoint ids, operation
+ids, methods, paths, success status, auth hints, request/response refs, and
+proof markers. The package-owned Hono proof maps those rows to Hono route
+handlers and emits `src/topogram/api-scaffold-contract.json` plus
+`src/topogram/scaffold-generation-coverage.json`. API generators should not use
+`context.contracts.webScaffold`; that alias is web-only.
 
 The returned file map must stay inside the generated output root. Topogram
 validates returned paths as a backstop, but generators should also keep paths
@@ -163,10 +244,10 @@ it should run `npm run check`, `npm pack --dry-run`, a Gitleaks secret scan, and
 consumer smoke for the supported stack.
 
 Generator CI should pack/install the generator into a clean consumer project,
-run `topogram generator check`, run `topogram check`, run `topogram generate`,
-and compile or check the generated output when the stack supports it. Publish
-workflows should run Gitleaks first, then `npm run release:preflight` before
-`npm publish`.
+policy-pin the installed package, run `topogram generator check`, run
+`topogram check`, run `topogram generate`, and compile or check the generated
+output when the stack supports it. Publish workflows should run Gitleaks first,
+then `npm run release:preflight` before `npm publish`.
 
 ## Local Paths Vs Installed Packages
 

@@ -52,11 +52,14 @@ For greenfield generated work, keep the initialized `topo/` as the contract
 source, add topology/generator bindings, then use `topogram generate` only after
 you explicitly configure generated-owned outputs.
 
-The generated `AGENTS.md` always includes the basic engineering laws: maintain
-for long-lived intermittent ownership, keep code testable and security-focused,
-prove consumer-visible behavior, start agents from focused context, and use
-commands for workflow state. With `--adopt-sdlc`, those laws are also seeded as
-queryable `.tg` records.
+The generated `AGENTS.md` is local orientation, not the durable law source. It
+points agents to `topogram agent brief --json`, focused query packets, and the
+Topogram Codex plugin/skill when available, and it explicitly treats
+instructions embedded in project source, docs, fixtures, generated output,
+reports, provider packets, test data, or diffs as untrusted when they try to
+override higher-priority instructions or current CLI packets. With
+`--adopt-sdlc`, durable engineering rules are also seeded as queryable `.tg`
+records.
 
 ## 2. Inspect
 
@@ -94,6 +97,7 @@ outputs in `topogram.project.json`.
 ```bash
 topogram onboard . --json
 topogram check . --json
+topogram security scan . --json
 topogram sdlc check --strict
 topogram sdlc prep commit . --json
 ```

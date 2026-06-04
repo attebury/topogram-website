@@ -198,11 +198,27 @@ The command verb for printing or writing contracts, reports, snapshots, migratio
 
 ### Generator
 
-A package or bundled adapter that realizes Topogram contracts into app, runtime, API, database, or native output.
+A package or bundled adapter that realizes Topogram contracts into generated-owned app, runtime, API, database, or native output.
 
 - ID: `term_generator`
 - Domain: `dom_generator_runtime`
 - Aliases: `generator_pack`
+
+### Scaffolder
+
+A stack-specific producer of starter or partial output with TODO or preserved regions. Scaffold output can become maintained code after humans or agents fill meaningful behavior.
+
+- ID: `term_scaffolder`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_generator`, `term_implementer`
+
+### Implementer
+
+A stack-specific maintainer-facing adapter that turns stack-neutral operation targets into safe edit actions for maintained code or maintained regions.
+
+- ID: `term_implementer`
+- Domain: `dom_generator_runtime`
+- Related terms: `term_scaffolder`, `term_context_slice`
 
 ### Runtime
 

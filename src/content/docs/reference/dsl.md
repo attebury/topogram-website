@@ -11,6 +11,17 @@ Status: current
 Audience: Topogram authors and tooling implementers
 Use when: you need DSL statement and field reference material.
 
+This page is the human reference. The executable reference is generated from
+engine validator metadata:
+
+```bash
+topogram query dsl-reference ./topo --json
+topogram query dsl-reference ./topo --format markdown
+topogram dsl explain screen --format markdown
+topogram dsl new entity entity_patient --format tg
+topogram format ./topo --check
+```
+
 Topogram files use `.tg` statements:
 
 ```text
@@ -24,6 +35,17 @@ kind identifier {
 
 The parser accepts generic statement syntax. The validator defines the public
 grammar.
+
+The same parser handles two authoring mental models:
+
+- app map DSL: product/runtime records such as `domain`, `entity`,
+  `capability`, `screen`, `navpoint`, `endpoint`, `surface`, `seed_data`, and
+  `verification`;
+- Topogram workflow DSL: SDLC/proof records such as `feature`, `pitch`,
+  `requirement`, `acceptance_criterion`, `task`, `plan`, and `bug`.
+
+New app authors should start with the app map DSL. Adopt the workflow DSL when
+the repo needs enforced task/proof tracking.
 
 ## Portable identifiers
 
@@ -69,6 +91,74 @@ names.
 - `bug`
 
 Documents are markdown files with frontmatter under `topo/docs/**`.
+
+## Canonical named UI blocks
+
+Complex UI declarations should use named block entries. The older positional
+form may still be parsed internally while fixtures migrate, but public examples
+should use the canonical form.
+
+Screen render entries:
+
+```text
+screen screen_dashboard {
+  name "Dashboard"
+  description "Current operational dashboard."
+  kind dashboard
+  layout layout_dashboard
+  title "Dashboard"
+  renders {
+    render {
+      id dashboard_summary
+      region main
+      section section_dashboard_summary
+      intent "Show summary content."
+      priority high
+    }
+  }
+  status active
+}
+```
+
+Surface navigation entries:
+
+```text
+surface surface_web {
+  name "Web"
+  description "Web surface."
+  type web
+  realizes [cap_list_items]
+  outputs [app]
+  screens [screen_dashboard]
+  navpoints {
+    navpoint nav_dashboard
+  }
+  navigation {
+    group {
+      id primary
+      label "Primary"
+      placement primary
+    }
+    item {
+      navpoint nav_dashboard
+      group primary
+      label "Dashboard"
+      order 10
+      visible true
+      default true
+      sitemap include
+      pattern primary
+    }
+  }
+  status active
+}
+```
+
+Toolkit generators should consume scaffold contract obligations, not repair
+missing app shape by reading raw UI/API contracts. For web, `screen_routes`
+owns where screens live; `screen_loaders`, `form_actions`, `mutations`,
+`state_obligations`, and `operation_bindings` own what screens load, submit,
+refresh, and show on failure.
 
 ## Features
 

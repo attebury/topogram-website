@@ -45,6 +45,7 @@ pin installed packages through generator policy.
 ## Inspect
 
 ```bash
+topogram generator init ./topogram-generator-web --surface web --package @scope/topogram-generator-web
 topogram generator list
 topogram generator show @topogram/generator-react-web
 topogram generator check ./generator-package
@@ -75,7 +76,10 @@ resulting app with the stack's own commands.
 
 ## Contracts by surface
 
-- Web generators receive `ui-surface-contract` and related API contracts.
+- Web generators should prefer `web-scaffold-contract` through
+  `context.contracts.scaffold` when they generate app-shaped output. Lower-level
+  `ui-surface-contract` and related API contracts remain available for
+  generators that intentionally own their own app-shape planning.
 - API generators receive server/API contracts and optional database runtime
   context.
 - Database generators receive DB contract and lifecycle plan.
@@ -86,6 +90,7 @@ resulting app with the stack's own commands.
 Generator authors should prove both sides of the package:
 
 ```bash
+topogram generator init ./topogram-generator-web --surface web --package @scope/topogram-generator-web
 topogram generator check ./generator-package
 npm pack --dry-run
 ```

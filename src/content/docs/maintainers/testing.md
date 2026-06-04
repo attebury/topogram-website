@@ -47,6 +47,18 @@ npm run release:preflight
 The release preflight runs docs/RAG checks, root Topogram validation, strict SDLC
 validation, secret scanning, engine verification, and packed CLI smoke.
 
+## Evaluation harness tests
+
+The slice-benefit tests in the fast engine suite cover reusable evaluation
+harness behavior: scenario resolution, mock runs, scaffold/implementer contracts,
+report and trace artifacts, review packet generation, security boundaries, and
+portable output. They must stay deterministic and local.
+
+Fast CI does not run paid provider trials, human review, subjective visual
+judgment, or optional browser evidence. Those remain manual or scheduled
+evidence lanes. When testing generated UI in fast CI, assert semantic structure
+and role visibility rather than exact presentation casing or incidental copy.
+
 ## Generated runtime E2E
 
 ```bash
@@ -73,12 +85,33 @@ starter's verification surface after generation.
 
 ```bash
 npm run test:boundary-strength
+npm run test:boundary-strength:ratchet
 ```
 
 This advisory report scans generated-output tests for heavy reliance on
 existence, marker, and string checks versus boundary checks such as CLI status,
 JSON contract parsing, npm compile commands, runtime checks, and runtime E2E
-proofs. It is a ratchet aid, not a release gate.
+proofs.
+
+`test:boundary-strength` is the readable advisory report. The ratchet command
+compares the current scan against `scripts/test-boundary-strength-baseline.json`
+and fails only when high-risk/watch counts or a tracked file's
+heuristic-to-boundary ratio gets worse.
+
+## Optional browser review-form proof
+
+Static review-form tests run in the fast suite. The browser interaction proof is
+optional because Playwright is not a core dependency:
+
+```bash
+npm install --no-save playwright
+npx playwright install chromium
+node --test engine/tests/active/slice-benefit-evaluation.test.js
+```
+
+When Playwright is available, the test opens a generated local `review.html`,
+fills blind subject scores, exports receipt JSON, and proves
+`review-ingest` accepts it. Without Playwright, that subtest skips cleanly.
 
 ## Docs
 

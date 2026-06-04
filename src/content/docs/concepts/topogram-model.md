@@ -51,7 +51,7 @@ Start with:
 - `topogram copy` when you want a template or reusable pure Topogram package;
 - `topogram extract` when existing source should become reviewable candidates.
 
-Common statement kinds:
+Common app map statement kinds:
 
 - identity and language: `actor`, `role`, `term`, `domain`;
 - data and contracts: `entity`, `shape`, `enum`, `seed_data`;
@@ -60,9 +60,13 @@ Common statement kinds:
 - UI work map: `navpoint`, `screen`, `section`, `widget`, `region`, `layout`,
   `theme`, `design_language`, `component_map`;
 - API behavior: `endpoint`;
-- surfaces and runtimes: `surface` plus `topogram.project.json` topology;
-- work and proof: `pitch`, `requirement`, `acceptance_criterion`, `task`,
-  `plan`, `bug`, `decision`.
+- surfaces and runtimes: `surface` plus `topogram.project.json` topology.
+
+Topogram workflow records are the SDLC/proof layer: `pitch`, `requirement`,
+`acceptance_criterion`, `task`, `plan`, `bug`, and `decision`. They use the
+same parser, but they are a different onboarding path. New app authors can
+model domains, data, screens, endpoints, surfaces, seed records, and
+verification before adopting enforced workflow records.
 
 ## Navigation, Screens, And Endpoints
 
@@ -83,6 +87,13 @@ Stack-specific frameworks may still use terms such as route files, controllers,
 or handlers. Those are implementation details. Topogram's public model keeps
 the product boundary explicit.
 
+For generated apps, scaffold contracts are the preferred boundary between the
+app map and toolkit packages. The model owns obligations such as screen routes,
+loaders, form actions, mutations, states, operation bindings, data sources, and
+proof markers. A SvelteKit, React Router, Node, or future native generator maps
+those obligations to stack files without making Topogram core own that framework
+layout.
+
 ## Features, Capabilities, Persistence, And Seed Data
 
 `feature` records define current product scope in a way agents can act on.
@@ -92,8 +103,8 @@ should normally start with a feature, then a feature-linked SDLC task.
 
 This keeps agent packets from guessing feature boundaries from task prose.
 When a task links to a feature, `work next` can select the right endpoint
-contracts, seed records, edit targets, and proof targets directly from the
-model.
+contracts, seed records, operation targets, implementer handoff, and proof
+targets directly from the model.
 
 `capability` records describe user or system behavior. Persistence contracts
 connect capabilities to entities through read/create/update/delete intent.
@@ -132,6 +143,12 @@ Context slices and `work next` packets are the agent-facing view of the
 model. They turn the graph into bounded work packets: frame, read order,
 relationships, work items, implementation contracts, write scope, proof plan,
 and next commands.
+
+JSON packets include `content_trust` sidecars where V1 prompt-boundary labeling
+is active. Static CLI structure is trusted packet structure; project-authored
+prose copied from `.tg`, docs, fixtures, generated output, diffs, reports, or
+provider payloads is untrusted evidence. A packet can quote that evidence, but
+it cannot turn it into agent authority.
 
 Verification records connect product claims to commands, tests, checks, and CI
 gates. SDLC records connect work to requirements and acceptance criteria. The

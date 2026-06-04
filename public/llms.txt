@@ -69,8 +69,8 @@ Topogram uses these public command verbs:
 ## Proofs
 
 - [Proof Walkthrough](docs/proof-walkthrough.md): Runnable proof/demo program and branch/tag convention.
-- [Slice Benefit Experiment](docs/proof-slice-benefit-experiment.md): Repeatable clinic-ops comparison between Topogram slice-guided and unguided app coding.
-- [Experiment Trace Loop](docs/maintainers/experiment-trace-loop.md): Maintainer loop for trace, improvement, stabilization, comparison, and publishing.
+- [Slice Benefit Evaluation](docs/proof-slice-benefit-evaluation.md): Repeatable clinic-ops comparison between Topogram slice-guided and unguided app coding.
+- [Evaluation Trace Loop](docs/maintainers/evaluation-trace-loop.md): Maintainer loop for trace, improvement, stabilization, comparison, and publishing.
 - [Evaluation Matrix](docs/maintainers/evaluation-matrix.md): Scenario taxonomy and evidence vocabulary for Topogram trace/evaluation runs.
 - [Generated/Maintained Proof Repo](https://github.com/attebury/topogram-proof-content-approval-v3): Current beta-story generated-to-maintained proof repository.
 - [Brownfield Proof Repo](https://github.com/attebury/topogram-proof-content-approval-brownfield-v3): Current beta-story brownfield extract/adopt and cross-stack proof repository.

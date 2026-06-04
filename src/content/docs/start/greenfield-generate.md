@@ -71,6 +71,10 @@ Read:
 3. `topogram.project.json`
 4. `topo/**`
 
+Use the Topogram Codex plugin/skill when it is installed. Without it,
+`topogram agent brief --json` and focused query packets are the machine-readable
+fallback, and `AGENTS.md` is local orientation only.
+
 ## 3. Edit the source
 
 Edit `topo/**` for the model and `topogram.project.json` for topology,
