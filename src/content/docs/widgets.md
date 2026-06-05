@@ -277,10 +277,10 @@ topogram emit work-map-report ./topo --surface proj_web --format markdown --writ
 
 For the short screen-to-widget chain, see [UI Work Map By Example](/design/ui-work-map-by-example/).
 For the end-to-end mapping workflow, see [Map A Design System](/design/map-design-system/).
-For a concrete designer packet over a running operations SaaS app, see
-[Map A Real Component System](/design/map-a-real-component-system/) and the
-[Operations Design Review Proof](https://github.com/attebury/topogram-proof-operations-design-review).
-Use the Storybook proof when the source evidence is component-library metadata.
+For a concrete designer packet shape, see
+[Map A Real Component System](/design/map-a-real-component-system/).
+Use the Storybook walkthrough when the source evidence is component-library
+metadata.
 
 ## Required checks
 
@@ -341,12 +341,11 @@ work. It must be shown as `contract_only`, `unsupported`, or explicit
 implementation work in reports and focused slices; it must not silently
 disappear or be replaced by an unmarked generic fallback.
 
-## Web UI beta proof
+## Web UI proof
 
-Topogram's beta UI proof is web-first and semantic. React and SvelteKit
-generation must preserve the same screens, navpoints, regions, widget usages,
-display fields, behavior coverage, and design-token intent from one
-`semantic_ui`.
+Topogram's UI proof is web-first and semantic. Web generation must preserve the
+same screens, navpoints, regions, widget usages, display fields, behavior
+coverage, and design-token intent from one `semantic_ui`.
 
 Use these proof commands when UI contracts or generator support change:
 
@@ -358,10 +357,7 @@ topogram emit widget-conformance-report ./topo --surface proj_web --json
 topogram query slice ./topo --surface proj_web --screen <screen-id> --json
 ```
 
-The current beta bar is compile plus deterministic contract/coverage assertions.
-Semantic i18n and accessibility obligations are part of that contract now.
-Screenshot comparison, visual diffing, locale catalog completeness, and
-automated accessibility audits are future proof layers.
-
-See [Beta Readiness](/beta-readiness/) for the release-level UI proof bar and
-what remains preview-only.
+The current public bar is compile plus deterministic contract/coverage
+assertions. Semantic i18n and accessibility obligations are part of that
+contract now. Screenshot comparison, visual diffing, locale catalog
+completeness, and automated accessibility audits are future proof layers.

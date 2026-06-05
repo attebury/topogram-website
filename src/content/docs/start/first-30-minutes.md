@@ -1,19 +1,19 @@
 ---
 title: "First 30 Minutes"
-description: "The canonical evaluator path for understanding, inspecting, running, and verifying Topogram from this repo."
+description: "The canonical evaluator path for understanding, inspecting, running, and verifying Topogram with the installed CLI."
 ---
 
 # First 30 Minutes
 
-> The canonical evaluator path for understanding, inspecting, running, and verifying Topogram from this repo.
+> The canonical evaluator path for understanding, inspecting, running, and verifying Topogram with the installed CLI.
 
 Status: current
 Audience: evaluators, technical leads, technical buyers, and agents doing a first pass
-Use when: you want the shortest useful route through the current repo before choosing a deeper proof or implementation task.
+Use when: you want the shortest useful route through Topogram before choosing a deeper modeling or implementation task.
 
-Run commands from the Topogram repo root. This path is intentionally narrow:
-it helps you judge whether Topogram gives humans and agents a smaller,
-verified operating surface than rediscovering the repo from scratch.
+Run commands from a project you want to evaluate. This path is intentionally
+narrow: it helps you judge whether Topogram gives humans and agents a smaller,
+verified operating surface than rediscovering a repository from scratch.
 
 ## 1. Understand
 
@@ -30,17 +30,18 @@ evidence instead of broad guessing.
 
 ## 2. Inspect
 
-Install dependencies if this checkout has not been prepared:
+Install the CLI if the project does not already have it:
 
 ```bash
-npm install
+npm install --save-dev @topogram/cli
+npx topogram doctor
 ```
 
 Then ask the CLI for the current adoption state and agent briefing:
 
 ```bash
-node ./engine/src/cli.js onboard . --json
-node ./engine/src/cli.js agent brief . --json
+npx topogram onboard . --json
+npx topogram agent brief . --json
 ```
 
 Good output:
@@ -57,51 +58,44 @@ Good output:
 Validate the app map and inspect one focused packet:
 
 ```bash
-node ./engine/src/cli.js check . --json
-node ./engine/src/cli.js query slice ./topo --journey journey_greenfield_start_from_template --detail compact --format markdown
+npx topogram check . --json
+npx topogram query list --json
 ```
 
 Good output:
 
 - `check` reports `ok: true` for the current workspace.
-- The slice has a frame, read order, work items, proof plan, related records,
-  and next commands for one bounded focus.
-- The slice should be useful without requiring a reader to inspect every
-  `topo/**/*.tg` file.
+- `query list` shows the focused packets and reports available for the current
+  `topo/` workspace.
+- The available packets should be useful without requiring a reader to inspect
+  every `topo/**/*.tg` file.
 
-For a human-readable view of the same packet, render the static HTML cockpit:
-
-```bash
-node ./engine/src/cli.js query slice ./topo --journey journey_greenfield_start_from_template --detail compact --format html
-```
-
-For a rough context-size comparison, run:
+When the project has a task, screen, widget, or capability to inspect, query the
+smallest matching slice:
 
 ```bash
-node ./engine/src/cli.js query context-savings ./topo --journey journey_greenfield_start_from_template --detail compact --format markdown
+npx topogram query slice ./topo --task <task-id> --detail compact --format markdown
 ```
-
-`context-savings` uses approximate local token estimates. Treat it as an
-attention-budget signal, not exact model-token accounting.
 
 ## 4. Verify
 
-Run the smallest docs/repo proof for this evaluator pass:
+Run the proof named by the project or the slice packet. Common first checks are:
 
 ```bash
-npm run docs:check
+npx topogram check . --json
+npx topogram security status . --json
 ```
 
 Good output:
 
-- documented command surfaces still match the current CLI;
-- `llms.txt` and the generated retrieval bundle stay in sync;
-- public docs keep stable headings, audience metadata, and current links.
+- validation reports no graph or ownership errors;
+- security status reports no blocking boundary issues;
+- the packet's proof commands identify the project-specific checks to run next.
 
 When you want a portable evidence bundle instead of terminal output, write one:
 
 ```bash
-node ./engine/src/cli.js onboard . --write --out-dir ./artifacts
+npx topogram onboard . --write --out-dir ./artifacts
 ```
 
 The bundle should contain a manifest, check summary, agent brief, SDLC reports,
@@ -109,9 +103,6 @@ context inventory, source excerpts, and portable paths.
 
 ## Deeper Routes
 
-- [Beta Demo Path](/start/beta-demo-path/): which public proof to run first.
-- [Proof Walkthrough](/proof-walkthrough/): full proof catalog and how to
-  read checkpoints.
 - [Brownfield Extract/Adopt](/start/brownfield-import/): existing app discovery.
 - [Greenfield Generate](/start/greenfield-generate/): starting from authored
   Topogram or a template.

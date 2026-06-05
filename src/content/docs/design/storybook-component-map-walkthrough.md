@@ -65,6 +65,8 @@ topogram query ui-design-coverage ./topo --surface <surface> --format markdown
 topogram query slice ./topo --surface <surface> --widget <widget> --detail compact --format markdown
 ```
 
-## Proof
+## Review Closeout
 
-The [real component-system proof](https://github.com/attebury/topogram-proof-real-component-system-map) shows this flow across six checkpoints: component baseline, semantic app map, manual component map, Storybook candidates, reviewed adoption, and designer/agent closeout.
+Close the flow by comparing the extract plan, dry-run adoption output,
+designer-readable coverage matrix, and widget slice. The important result is a
+reviewed canonical `component_map`, not an inferred source import path.

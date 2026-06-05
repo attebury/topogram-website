@@ -5,7 +5,7 @@ const { head } = Astro.locals.starlightRoute;
 {head.map(({ tag: Tag, attrs, content }) => <Tag {...attrs} set:html={content} />)}
 
 <script>
-  import { init, track } from "@plausible-analytics/tracker";
+  import { init } from "@plausible-analytics/tracker";
 
   const domain = "topogram.dev";
   const host = window.location.hostname;
@@ -20,28 +20,7 @@ const { head } = Astro.locals.starlightRoute;
       domain,
       autoCapturePageviews: true,
       outboundLinks: true,
-      fileDownloads: { fileExtensions: ["txt"] },
       logging: false,
     });
-
-    document.addEventListener(
-      "click",
-      (event) => {
-        const link = event.target instanceof Element ? event.target.closest("a[href]") : null;
-        if (!(link instanceof HTMLAnchorElement)) return;
-
-        const url = new URL(link.href, window.location.href);
-        if (url.origin !== window.location.origin) return;
-        if (url.pathname !== "/llms.txt" && url.pathname !== "/llms-full.txt") return;
-
-        track("LLM File: Click", {
-          props: {
-            url: url.href,
-            label: link.textContent?.replace(/\s+/g, " ").trim().slice(0, 80) || "LLM file",
-          },
-        });
-      },
-      { capture: true },
-    );
   }
 </script>

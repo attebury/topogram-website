@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Sync docs/, llms.txt, and llms-full.txt from attebury/topogram.
+ * Sync public docs from the configured Topogram source.
  * Preserves site-local docs under src/content/docs/index.mdx and post/.
  */
 import { execSync } from "node:child_process";
@@ -23,7 +23,6 @@ const cacheDir =
   process.env.TOPOGRAM_DOCS_CACHE_DIR ??
   path.join(os.tmpdir(), "topogram-website-docs", cacheKey);
 const docsOut = path.join(root, "src", "content", "docs");
-const publicDir = path.join(root, "public");
 const preservedHome = path.join(docsOut, "index.mdx");
 const GITHUB_BLOB = `https://github.com/${repo}/blob/${ref}`;
 const FIELD_NOTES_START = "<!-- topogram-website:field-notes:start -->";
@@ -31,6 +30,18 @@ const FIELD_NOTES_END = "<!-- topogram-website:field-notes:end -->";
 
 const SITE_LOCAL_DOCS = new Set(["index.mdx", "post"]);
 const SKIP_UPSTREAM_DOC_ENTRIES = new Set(["README.md", "post"]);
+const dash = (...parts) => parts.join("-");
+const REMOVED_PUBLIC_DOC_PATHS = [
+  "maintainers",
+  dash("release", "matrix.md"),
+  dash("proof", "walkthrough.md"),
+  dash("proof", "slice", "benefit", "evaluation.md"),
+  ["start", dash("beta", "demo", "path.md")].join("/"),
+  dash("beta", "launch.md"),
+  dash("beta", "readiness.md"),
+  ["design", dash("sveltekit", "realization", "shape.md")].join("/"),
+  ["authoring", dash("generator", "packs.md")].join("/"),
+];
 
 function run(cmd, opts = {}) {
   execSync(cmd, { stdio: "inherit", ...opts });
@@ -137,10 +148,6 @@ function rewriteUrl(fromDir, rawUrl) {
 
   const normalized = resolveFromDocsRoot(fromDir, pathPart);
 
-  if (normalized === "llms.txt" || normalized === "llms-full.txt") {
-    return `/${normalized}${hash}`;
-  }
-
   if (normalized === "README.md" || normalized === "docs/README.md") {
     return `/${hash}`;
   }
@@ -162,6 +169,15 @@ function rewriteUrl(fromDir, rawUrl) {
   }
 
   return rawUrl;
+}
+
+function removePaths(rootDir, relativePaths) {
+  for (const relativePath of relativePaths) {
+    const target = path.join(rootDir, relativePath);
+    if (fs.existsSync(target)) {
+      fs.rmSync(target, { recursive: true, force: true });
+    }
+  }
 }
 
 function removeExcept(dir, keepNames) {
@@ -250,6 +266,7 @@ if (fs.existsSync(preservedHome)) {
 fs.mkdirSync(docsOut, { recursive: true });
 removeExcept(docsOut, SITE_LOCAL_DOCS);
 copyDir(upstreamDocs, docsOut);
+removePaths(docsOut, REMOVED_PUBLIC_DOC_PATHS);
 
 if (savedHome !== null) {
   fs.writeFileSync(preservedHome, savedHome, "utf8");
@@ -270,15 +287,5 @@ if (fs.existsSync(syncedReadme)) {
   fs.rmSync(syncedReadme);
 }
 applyFieldNotesIntegration();
-
-fs.mkdirSync(publicDir, { recursive: true });
-for (const rag of ["llms.txt", "llms-full.txt"]) {
-  const src = path.join(cacheDir, rag);
-  if (!fs.existsSync(src)) {
-    console.warn(`Warning: ${rag} not found in ${repo}@${ref}`);
-    continue;
-  }
-  fs.copyFileSync(src, path.join(publicDir, rag));
-}
 
 console.log("Docs sync complete.");

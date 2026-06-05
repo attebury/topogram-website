@@ -14,11 +14,8 @@ hero:
     - text: Agent first run
       icon: right-arrow
       link: /agent-first-run/
-    - text: Proof walkthrough
-      link: /proof-walkthrough/
-    - text: GitHub
-      link: https://github.com/attebury/topogram
-      variant: minimal
+    - text: What Topogram is
+      link: /concepts/what-is-topogram/
 ---
 
 import { LinkCard } from '@astrojs/starlight/components';
@@ -51,31 +48,11 @@ Topogram is available for evaluation, experiments, and proof work. It is not rea
 />
 
 <LinkCard
-  title="Verify the claim"
-  description="Run proof repos and compare the app-map workflow against normal repo rediscovery."
-  href="/proof-walkthrough/"
+  title="Understand the model"
+  description="Learn how app intent, ownership, contracts, surfaces, and proof fit into one map."
+  href="/concepts/topogram-model/"
 />
 
-</div>
-
-## Proof
-
-<div class="proof-band">
-  <LinkCard
-    title="Proof walkthrough"
-    description="Follow the runnable checkpoint path and verify each stage with the proof repos."
-    href="/proof-walkthrough/"
-  />
-  <LinkCard
-    title="Slice benefit evaluation"
-    description="Compare broad context against focused Topogram slices for the same implementation task."
-    href="/proof-slice-benefit-evaluation/"
-  />
-  <LinkCard
-    title="Proof repositories"
-    description="Inspect generated-to-maintained and brownfield proof repos on GitHub."
-    href="https://github.com/attebury?q=topogram-proof&type=repositories"
-  />
 </div>
 
 ## Install
@@ -87,7 +64,7 @@ npm install --save-dev @topogram/cli
 npx topogram doctor
 ```
 
-Documentation is synced from [attebury/topogram](https://github.com/attebury/topogram). Agents can also load [/llms.txt](/llms.txt) or the bundled [/llms-full.txt](/llms-full.txt).
+Use the start guides and reference docs on this site for public evaluation.
 
 ## Field Notes
 

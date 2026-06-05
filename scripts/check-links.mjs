@@ -8,8 +8,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
 const distDir = path.join(root, "dist");
-const skipPattern =
-  "mailto:|https://topogram.dev|github.com/attebury/topogram/(edit|blob)/";
+const skipPattern = "mailto:|https://topogram.dev";
 
 if (!fs.existsSync(distDir)) {
   console.error("Missing dist/. Run npm run build before npm run check:links.");

@@ -168,18 +168,13 @@ Adopted workflow candidates become graph-native `workflow` records. A workflow
 slice includes states, transitions, related context, write-scope guidance, and
 proof commands without requiring an agent to infer behavior from Markdown docs.
 
-## Proof Repo
+## End-To-End Shape
 
-Use the focused proof repo to see the path end to end:
-
-- [XState Workflow Proof](https://github.com/attebury/topogram-proof-xstate-workflow)
-- [Step Functions Workflow Proof](https://github.com/attebury/topogram-proof-step-functions-workflow)
-
-The proof starts with an XState app, extracts workflow candidates through
-`@topogram/extractor-xstate-workflows`, adopts reviewed workflow records,
-uses compact agent context for a maintained source change, and refreshes drift.
-The Step Functions proof follows the same path with local Amazon States
-Language and `@topogram/extractor-step-functions-workflows`.
+The workflow path starts with workflow-native source, extracts candidates
+through a package-backed extractor, adopts reviewed workflow records, uses
+compact agent context for maintained source work, and refreshes drift. XState
+uses `@topogram/extractor-xstate-workflows`; local Amazon States Language uses
+`@topogram/extractor-step-functions-workflows`.
 
 ## Failure Modes
 
@@ -198,4 +193,3 @@ Language and `@topogram/extractor-step-functions-workflows`.
 - [Extractors](/concepts/extractors/)
 - [Extractor Packs](/authoring/extractor-packs/)
 - [Extract/Adopt JSON](/reference/import-json/)
-- [Proof Walkthrough](/proof-walkthrough/)

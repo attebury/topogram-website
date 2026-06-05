@@ -1,20 +1,6 @@
 ---
 const route = Astro.locals.starlightRoute;
-const websiteEditBase = "https://github.com/attebury/topogram-website/edit/main/";
-const entryPath = route.entry.filePath.replaceAll("\\", "/");
-const isFieldNote = route.id === "post" || route.id.startsWith("post/");
-const isHomepage = entryPath.endsWith("src/content/docs/index.mdx");
-const isSiteLocal = isHomepage || isFieldNote;
-let editUrl = isSiteLocal
-  ? new URL(route.entry.filePath, websiteEditBase).href
-  : route.editUrl?.href;
-
-if (editUrl && !isSiteLocal) {
-  editUrl = editUrl.replace(
-    /\/docs\/src\/content\/docs\//,
-    "/docs/",
-  );
-}
+const editUrl = route.editUrl?.href;
 ---
 
 {

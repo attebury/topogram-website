@@ -36,17 +36,16 @@ native modifiers, or pixel layout.
 
 ## Designer Review Packet
 
-For substantial UI review, start with the operations design-review proof:
+For substantial UI review, emit a work-map report and design coverage matrix
+from the project being reviewed:
 
 ```bash
-git clone https://github.com/attebury/topogram-proof-operations-design-review.git
-cd topogram-proof-operations-design-review
-npm install
-npm run verify
+topogram emit work-map-report ./topo --surface <surface> --format markdown --write --out-dir ./artifacts
+topogram query ui-design-coverage ./topo --surface <surface> --format markdown
 ```
 
-Read `proof/artifacts/step-06-designer-closeout/final-designer-packet.md`
-first. It is generated from `work-map` data and shows:
+Read the generated work-map report first. It is generated from `work-map` data
+and shows:
 
 - executive summary;
 - screen inventory;
@@ -62,38 +61,27 @@ you need to edit the map.
 
 ## Five-Minute Review
 
-If you want the Storybook extraction path, inspect the real component-system
-proof:
+If you want the Storybook extraction path, run the extractor against a component
+library with explicit Topogram metadata:
 
 ```bash
-git clone https://github.com/attebury/topogram-proof-real-component-system-map.git
-cd topogram-proof-real-component-system-map
-npm install
-npm run verify
+topogram extractor check @topogram/extractor-storybook-design --json
+topogram extract ./component-library --out ./extracted-topogram --from ui --extractor @topogram/extractor-storybook-design --json
+topogram adopt component-mappings ./extracted-topogram --dry-run --json
 ```
 
-Start with `proof/artifacts/step-06-designer-review-checklist.md`,
-`proof/artifacts/step-06-work-map.md`, and
-`proof/artifacts/step-06-widget-slice.json`. That proof shows a small React
-component system, Storybook metadata, review-only component mapping candidates,
-and accepted canonical `component_map` rows.
+Start with the dry-run adoption output, work-map report, and widget slice. This
+path shows review-only component mapping candidates before any canonical
+`component_map` rows are accepted.
 
-If you only want to see the compact DSL shape, inspect the focused widget proof:
+If you only want to see the compact DSL shape, inspect these records in your
+own `topo/` workspace:
 
-```bash
-git clone https://github.com/attebury/topogram-proof-widget-design-realization.git
-cd topogram-proof-widget-design-realization
-npm install
-npm run verify
-```
-
-Then open:
-
-- `topo/widgets/widget-data-grid.tg`: the semantic widget.
-- `topo/design-languages/design-company-web.tg`: platform and token scope.
-- `topo/component-maps/component-map-company-web-widgets.tg`: widget-to-platform component mappings.
-- `proof/artifacts/ui-design-coverage.md`: the designer-readable matrix.
-- `proof/artifacts/widget-slice.json`: the agent packet for changing the widget.
+- the semantic widget record;
+- the design language record for platform and token scope;
+- the component map record for widget-to-platform mappings;
+- the designer-readable `ui-design-coverage` matrix;
+- the widget slice for changing the widget.
 
 The matrix is the first artifact to read. It groups the widget by platform,
 viewport, density, component ref, behavior support, and review state, so design

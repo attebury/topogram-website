@@ -7,8 +7,8 @@
   },
   "scripts": {
     "docs:sync": "node scripts/sync-docs.mjs",
-    "dev": "npm run docs:sync && astro dev",
-    "build": "npm run docs:sync && astro build",
+    "dev": "astro dev",
+    "build": "astro build",
     "preview": "astro preview",
     "check:links": "node scripts/check-links.mjs"
   },

@@ -38,21 +38,13 @@ which proof commands show the change is safe?
 - Not a promise of pixel-perfect UI parity. UI beta proof is semantic: contracts,
   display fields, markers, compile checks, and realization reports.
 
-## Best First Demo
+## Best First Path
 
-Use the brownfield proof when you want to see the main differentiator quickly:
-
-```bash
-git clone https://github.com/attebury/topogram-proof-content-approval-brownfield-v3.git
-cd topogram-proof-content-approval-brownfield-v3
-git checkout proof-03-adopt-app-map
-npm install
-npm run verify
-```
-
-That checkpoint shows existing React/Express/Prisma code becoming reviewed
-`topo/` source. Extraction evidence stays separate, the original app remains
-maintained, and agents get focused packets before feature work.
+Start with [First 30 Minutes](/start/first-30-minutes/) when you want the
+shortest installed-CLI path. Use [Brownfield Extract/Adopt](/start/brownfield-import/)
+when you want to see the main differentiator: existing source becoming
+reviewable app-map evidence, then reviewed records becoming canonical `topo/`
+source.
 
 ## When To Use It
 

@@ -20,48 +20,44 @@ Topogram asks teams to map four things:
 
 The graph is not a render tree. It is a work map. Designers should start from the matrix, not raw `.tg` files.
 
-## Five-Minute Substantial Proof
+## Five-Minute Review
 
-Use the operations design-review proof when you want a running SaaS UI and one
-designer-readable packet:
-
-```bash
-git clone https://github.com/attebury/topogram-proof-operations-design-review.git
-cd topogram-proof-operations-design-review
-npm install
-npm run verify
-```
-
-Open these files first:
-
-- `proof/artifacts/step-06-designer-closeout/final-designer-packet.md`
-- `proof/artifacts/step-06-designer-closeout/designer-review-checklist.md`
-- `proof/artifacts/step-06-designer-closeout/final-screen-slice.md`
-- `proof/artifacts/step-04-designer-report-packet/design-coverage.md`
-- `topo/component-maps/operations-component-map.tg`
-
-This is the most concrete designer/front-end-lead path: a maintained React app,
-Acme Operations UI component refs, semantic layouts, regions, and render entries, a
-component map, a polished Markdown packet, and a slice-guided UI change.
-
-## Storybook Mapping Proof
+Use these commands when you want one designer-readable packet for a real app:
 
 ```bash
-git clone https://github.com/attebury/topogram-proof-real-component-system-map.git
-cd topogram-proof-real-component-system-map
-npm install
-npm run verify
+topogram emit work-map-report ./topo --surface <surface> --format markdown --write --out-dir ./artifacts
+topogram query ui-design-coverage ./topo --surface <surface> --format markdown
+topogram query slice ./topo --surface <surface> --screen <screen> --detail compact --format markdown
 ```
 
-Open these files first:
+Open these artifacts first:
 
-- `proof/artifacts/step-06-designer-review-checklist.md`
-- `proof/artifacts/step-06-work-map.md`
-- `proof/artifacts/step-06-screen-slice.md`
-- `proof/artifacts/step-06-widget-slice.json`
-- `topo/component-maps/component-map-acme-ops-widgets.tg`
+- the generated work-map report;
+- the design coverage matrix;
+- the compact screen slice;
+- the component map records under `topo/`.
 
-Use this proof when the important question is Storybook evidence and explicit
+This is the concrete designer/front-end-lead path: component refs, semantic
+layouts, regions, render entries, a component map, a Markdown packet, and
+slice-guided UI work.
+
+## Storybook Mapping
+
+```bash
+topogram extractor check @topogram/extractor-storybook-design --json
+topogram extract ./component-library --out ./extracted-topogram --from ui --extractor @topogram/extractor-storybook-design --json
+topogram extract plan ./extracted-topogram --json
+topogram adopt component-mappings ./extracted-topogram --dry-run --json
+```
+
+Review these outputs first:
+
+- the extract plan;
+- the dry-run adoption output;
+- the generated work-map report after adoption;
+- the screen and widget slices for affected mappings.
+
+Use this path when the important question is Storybook evidence and explicit
 candidate review. The useful review question is: which semantic widget maps to
 which trusted component ref, on which platform, with which behavior and state
 coverage?

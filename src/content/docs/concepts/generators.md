@@ -104,6 +104,3 @@ topogram check . --json
 topogram generate
 npm run verify
 ```
-
-See [Generator Packs](/authoring/generator-packs/) for manifest, adapter,
-policy, and publish guidance.
