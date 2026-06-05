@@ -1,70 +1,19 @@
 ---
 title: Topogram
-description: Pre-beta living app map for humans, agents, and code.
+description: Field Notes from Topogram.
 template: splash
 hero:
-  tagline: Give humans and coding agents a living map of app intent, ownership, and proof before they change the code.
+  tagline: Field Notes on app maps, agents, proof, and how software work is changing.
   image:
     file: ../../assets/homepage-app-map-hero.png
     alt: Abstract app map showing bounded context, ownership, contracts, and proof checkpoints
   actions:
-    - text: First 30 minutes
+    - text: Field Notes
       variant: primary
-      link: /start/first-30-minutes/
-    - text: Agent first run
-      icon: right-arrow
-      link: /agent-first-run/
-    - text: What Topogram is
-      link: /concepts/what-is-topogram/
+      link: /post/
 ---
 
-import { LinkCard } from '@astrojs/starlight/components';
 import FieldNotesList from '../../components/FieldNotesList.astro';
-
-:::caution[Pre-beta]
-Topogram is available for evaluation, experiments, and proof work. It is not ready for production workflows yet.
-:::
-
-## Choose your path
-
-<div class="path-grid">
-
-<LinkCard
-  title="Evaluate Topogram"
-  description="Start with the first 30 minutes: what to read, what to run, and what a useful result looks like."
-  href="/start/first-30-minutes/"
-/>
-
-<LinkCard
-  title="Add it to a repo"
-  description="Initialize a topo/ workspace, model maintained code, or import reviewable brownfield candidates."
-  href="/start/init-workspace/"
-/>
-
-<LinkCard
-  title="Use it with an agent"
-  description="Give coding agents a safe read order, bounded slices, ownership rules, and proof gates."
-  href="/agent-first-run/"
-/>
-
-<LinkCard
-  title="Understand the model"
-  description="Learn how app intent, ownership, contracts, surfaces, and proof fit into one map."
-  href="/concepts/topogram-model/"
-/>
-
-</div>
-
-## Install
-
-Use this for local evaluation only while Topogram is pre-beta.
-
-```bash
-npm install --save-dev @topogram/cli
-npx topogram doctor
-```
-
-Use the start guides and reference docs on this site for public evaluation.
 
 ## Field Notes
 

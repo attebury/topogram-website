@@ -91,9 +91,6 @@ Layouts say where work belongs. Widgets say what reusable semantic UI is needed.
 Component maps say which platform components implement each widget. Concrete
 surfaces inherit placement; they do not re-own it.
 
-See [Topogram Model](/concepts/topogram-model/) and
-[UI Work Map By Example](/design/ui-work-map-by-example/) for depth.
-
 ## Slices: bounded context for real work
 
 A **context slice** is a focused packet cut from the full map, small enough
@@ -256,11 +253,3 @@ topogram query sdlc-proof-gaps ./topo --task <task-id> --json
 Topogram is not a generator that happens to have specs. It is a **living app
 map**: layers separate intent from implementation; slices give humans and
 agents a smaller, verified surface to work from.
-
-## Related
-
-- [What Topogram Is](/concepts/what-is-topogram/)
-- [Topogram Model](/concepts/topogram-model/)
-- [Agent First Run](/agent-first-run/)
-- [Generate vs Emit](/concepts/generate-vs-emit/)
-- [Glossary](/concepts/glossary/): `term_work_map`, `term_context_slice`, `term_slice_manifest`

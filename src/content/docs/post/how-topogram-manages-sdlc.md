@@ -51,8 +51,6 @@ profile keeps discipline lightweight: task start packets, proof gaps,
 `sdlc prep commit`, and `sdlc gate`, without enterprise audit metadata unless
 you choose the stricter `audit` profile.
 
-See [SDLC](/concepts/sdlc/) for commands, profiles, and the normal loop.
-
 ## Command-owned state: why mutations go through the CLI
 
 Topogram splits the workspace into two edit classes:
@@ -262,9 +260,3 @@ Topogram's product is the **living app map**. SDLC records exist so that:
 If SDLC feels heavy, use `mode: "advisory"` or defer the `audit` profile. The
 philosophy stays the same: declarative intent in `topo/`, derived state through
 commands, graph nodes linked to work, verification before done.
-
-## Related
-
-- [SDLC](/concepts/sdlc/): profiles, commands, grooming, and commit gates
-- [Agent First Run](/agent-first-run/): first commands for SDLC-adopted projects
-- [Glossary](/concepts/glossary/): `term_task`, `term_verification`, `term_enforced_rule`
